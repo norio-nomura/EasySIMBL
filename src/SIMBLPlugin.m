@@ -53,7 +53,7 @@
 	if (!(self = [super init]))
 		return nil;
 	[self setPath:_path];
-	[self setInfo:[NSDictionary dictionaryWithContentsOfFile:DTPathFromComponents(_path, @"Contents", @"Info.plist")]];
+	[self setInfo:[NSDictionary dictionaryWithContentsOfFile:[NSString pathWithComponents:[NSArray arrayWithObjects:_path, @"Contents", @"Info.plist", nil]]]];
 	return self;
 }
 

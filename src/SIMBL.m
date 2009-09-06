@@ -4,6 +4,7 @@
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
 
+#import "DTMacros.h"
 #import "SIMBL.h"
 #import "SIMBLPlugin.h"
 #import "NSAlert_SIMBL.h"
@@ -28,9 +29,12 @@
 
 static NSMutableDictionary* loadedBundleIdentifiers = nil;
 
-+ (void) load
+OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(installPlugins:) name:NSApplicationWillFinishLaunchingNotification object:nil];
+	OSErr resultCode = noErr;
+	NSLog(@"InjectEventHandler");
+	[SIMBL installPlugins:nil];			
+	return resultCode;	
 }
 
 + (void) installPlugins:(NSNotification*)_notification

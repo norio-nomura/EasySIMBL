@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>SIMBL</string>
-	<key>CFBundleGetInfoString</key>
-	<string>SIMBL 0.8.2, ©2006 Mike Solomon</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.culater.SIMBL</string>
+	<string>net.culater.${PRODUCT_NAME:identifier}.osax</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>SIMBL</string>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>0.8.2</string>
+	<string>osax</string>
 	<key>CFBundleSignature</key>
 	<string>SIM∞</string>
 	<key>CFBundleVersion</key>
-	<string>9</string>
-	<key>NSPrincipalClass</key>
-	<string>SIMBL</string>
+	<string>0.9.3</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.9.3</string>
+	<key>CFBundleGetInfoString</key>
+	<string>${EXECUTABLE_NAME} 0.9.3, ©2004-2009 Mike Solomon</string>
+	<key>OSAScriptingDefinition</key>
+	<string>${PRODUCT_NAME}.sdef</string>
+	<key>OSAXHandlers</key>
+	<dict>
+		<key>Events</key>
+		<dict>
+			<key>SIMeload</key>
+			<dict>
+				<key>Handler</key>
+				<string>InjectEventHandler</string>
+				<key>Threadsafe</key>
+				<false/>
+				<key>Context</key>
+				<string>Process</string>
+			</dict>
+			<key>SIMeleop</key>
+			<string>InjectEventHandler</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

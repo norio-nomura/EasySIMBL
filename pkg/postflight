@@ -1,0 +1,22 @@
+#!/bin/sh
+
+PACKAGE_PATH=$1
+INSTALL_PATH=$2
+INSTALL_VOLUME=$3
+SYSTEM_ROOT=$4
+
+RESOURCES="${PACKAGE_PATH}/Contents/Resources"
+
+# FIXME(mike) maybe we should copy this out of the bundle instead?
+LAUNCHD_PLIST="/Library/ScriptingAdditions/SIMBL.osax/Contents/Resources/SIMBL Agent.app/Contents/Resources/net.culater.SIMBL.Agent.plist"
+
+LAUNCH_AGENTS_DIR="/Library/LaunchAgents"
+if [ ! -d "$LAUNCH_AGENTS_DIR" ]; then
+	mkdir -p "$LAUNCH_AGENTS_DIR"
+fi
+
+cp "$LAUNCHD_PLIST" "$LAUNCH_AGENTS_DIR"
+
+# We handle this by just launching the agent.
+echo /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
+/bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
