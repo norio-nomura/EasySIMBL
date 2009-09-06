@@ -1,0 +1,3 @@
+0.9.3 - Rebuilt the SIMBL as a combination OSAX and Agent. This addresses the issue InputManagers and 64-bit behavior on Snow Leopard (10.6). This release is backward compatible with Leopard (10.5) as well. This version also includes the packaging process, which is non-trivial.
+
+0.8.3 - Imported the original SIMBL tree. Aside from minor source tweaks (adding license headers) this is functionally identical to 0.8.2.
