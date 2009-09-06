@@ -21,7 +21,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.9.3</string>
 	<key>CFBundleGetInfoString</key>
-	<string>${EXECUTABLE_NAME} 0.9.3, ©2004-2009 Mike Solomon</string>
+	<string>${EXECUTABLE_NAME} 0.9.3, ©2003-2009 Mike Solomon</string>
 	<key>OSAScriptingDefinition</key>
 	<string>${PRODUCT_NAME}.sdef</string>
 	<key>OSAXHandlers</key>

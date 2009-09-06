@@ -1,3 +1,9 @@
+/**
+ * Copyright 2003-2009, Mike Solomon <mas63@cornell.edu>
+ * SIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
+
 #import "SIMBLAgent.h"
 
 @implementation NSApplication (SystemVersion)
@@ -64,7 +70,6 @@ fail:
 	if ([task terminationStatus] != 0)
 		NSLog(@"launchctl returned %d", [task terminationStatus]);
 }
-
 
 #define SCRIPT_SRC_LEOPARD @"tell application \"%@\"\ninject SIMBL into Leopard\nend tell"
 #define SCRIPT_SRC_SNOW_LEOPARD @"tell application \"%@\"\ninject SIMBL into Snow Leopard\nend tell"

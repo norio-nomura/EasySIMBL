@@ -46,6 +46,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				E0B54A0D104F510200F78460 /* SIMBLAgent.m */,
+				E0B54A0E104F510200F78460 /* SIMBLAgent.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -91,8 +93,6 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				E0B54A0D104F510200F78460 /* SIMBLAgent.m */,
-				E0B54A0E104F510200F78460 /* SIMBLAgent.h */,
 				32CA4F630368D1EE00C91783 /* SIMBL Agent_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);

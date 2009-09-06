@@ -1,10 +1,8 @@
-//
-//  SIMBLAgent.h
-//  SIMBL Agent
-//
-//  Created by Mike Solomon on 9/2/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
-//
+/**
+ * Copyright 2003-2009, Mike Solomon <mas63@cornell.edu>
+ * SIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
 
 #import <Cocoa/Cocoa.h>
 

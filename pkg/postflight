@@ -1,4 +1,7 @@
 #!/bin/sh
+# Copyright 2003-2009, Mike Solomon <mas63@cornell.edu>
+# SIMBL is released under the GNU General Public License v2.
+# http://www.opensource.org/licenses/gpl-2.0.php
 
 PACKAGE_PATH=$1
 INSTALL_PATH=$2
@@ -7,7 +10,7 @@ SYSTEM_ROOT=$4
 
 RESOURCES="${PACKAGE_PATH}/Contents/Resources"
 
-# FIXME(mike) maybe we should copy this out of the bundle instead?
+# FIXME(mike) maybe we should copy this out of the install package instead?
 LAUNCHD_PLIST="/Library/ScriptingAdditions/SIMBL.osax/Contents/Resources/SIMBL Agent.app/Contents/Resources/net.culater.SIMBL.Agent.plist"
 
 LAUNCH_AGENTS_DIR="/Library/LaunchAgents"
@@ -15,8 +18,15 @@ if [ ! -d "$LAUNCH_AGENTS_DIR" ]; then
 	mkdir -p "$LAUNCH_AGENTS_DIR"
 fi
 
+# ensure that this loads on restart
 cp "$LAUNCHD_PLIST" "$LAUNCH_AGENTS_DIR"
 
-# We handle this by just launching the agent.
+# create a system-wide location for plugins
+SIMBL_PLUGINS_DIR="/Library/Application Support/SIMBL/Plugins"
+if [ ! -d "$SIMBL_PLUGINS_DIR" ]; then
+	mkdir -p "$SIMBL_PLUGINS_DIR"
+fi
+
+echo "Start SIMBL Agent"
 echo /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
 /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
