@@ -1,2 +1,4 @@
 build
 .DS_Store
+rez/SIMBL.r
+.*\.xcodeproj/.*\.(mode1v3|pbxuser)
