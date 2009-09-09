@@ -13,9 +13,16 @@ RESOURCES="${PACKAGE_PATH}/Contents/Resources"
 # FIXME(mike) maybe we should copy this out of the install package instead?
 LAUNCHD_PLIST="/Library/ScriptingAdditions/SIMBL.osax/Contents/Resources/SIMBL Agent.app/Contents/Resources/net.culater.SIMBL.Agent.plist"
 
+# remove old InputManager if it exists, otherwise these
+# two will contend when applications run under 32-bit mode
+SIMBL_INPUTMANAGER="/Library/InputManagers/SIMBL"
+if [ -d "$SIMBL_INPUTMANAGER" ]; then
+  rm -rf "$SIMBL_INPUTMANAGER"
+fi
+
 LAUNCH_AGENTS_DIR="/Library/LaunchAgents"
 if [ ! -d "$LAUNCH_AGENTS_DIR" ]; then
-	mkdir -p "$LAUNCH_AGENTS_DIR"
+  mkdir -p "$LAUNCH_AGENTS_DIR"
 fi
 
 # ensure that this loads on restart
@@ -24,7 +31,7 @@ cp "$LAUNCHD_PLIST" "$LAUNCH_AGENTS_DIR"
 # create a system-wide location for plugins
 SIMBL_PLUGINS_DIR="/Library/Application Support/SIMBL/Plugins"
 if [ ! -d "$SIMBL_PLUGINS_DIR" ]; then
-	mkdir -p "$SIMBL_PLUGINS_DIR"
+  mkdir -p "$SIMBL_PLUGINS_DIR"
 fi
 
 echo "Start SIMBL Agent"

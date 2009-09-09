@@ -17,11 +17,11 @@
 	<key>CFBundleSignature</key>
 	<string>SIM∞</string>
 	<key>CFBundleVersion</key>
-	<string>0.9.3</string>
+	<string>${PRODUCT_VERSION}</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.3</string>
+	<string>${PRODUCT_VERSION}</string>
 	<key>CFBundleGetInfoString</key>
-	<string>${EXECUTABLE_NAME} 0.9.3, ©2003-2009 Mike Solomon</string>
+	<string>${EXECUTABLE_NAME} ${PRODUCT_VERSION}, ©2003-2009 Mike Solomon</string>
 	<key>OSAScriptingDefinition</key>
 	<string>${PRODUCT_NAME}.sdef</string>
 	<key>OSAXHandlers</key>

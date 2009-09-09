@@ -5,6 +5,8 @@
  */
 
 #import "SIMBLAgent.h"
+#import <ScriptingBridge/ScriptingBridge.h>
+#import <Carbon/Carbon.h>
 
 @implementation NSApplication (SystemVersion)
 
@@ -74,7 +76,7 @@ fail:
 #define SCRIPT_SRC_LEOPARD @"tell application \"%@\"\ninject SIMBL into Leopard\nend tell"
 #define SCRIPT_SRC_SNOW_LEOPARD @"tell application \"%@\"\ninject SIMBL into Snow Leopard\nend tell"
 
-- (void) injectSIMBL:(NSNotification*)notification
+- (void) _injectSIMBL:(NSNotification*)notification
 {
 	/* injectSIMBL in a generic way that works, but it isn't specific to the
 	inbound notification. the code below is attempting to be more specific by
@@ -108,26 +110,63 @@ fail:
 		NSLog(@"errors %@", errorInfo);
 }
 
-- (void) _injectSIMBL:(NSNotification*)notification
+- (void) injectSIMBL:(NSNotification*)notification
 {
 	NSLog(@"received %@", [notification userInfo]);
 
-	// create the AppleEvent target
-	ProcessSerialNumber psn = {
-			[[[notification userInfo] objectForKey:@"NSApplicationProcessSerialNumberHigh"] unsignedIntValue],
-			[[[notification userInfo] objectForKey:@"NSApplicationProcessSerialNumberLow"] unsignedIntValue] };
-	NSAppleEventDescriptor* target = [NSAppleEventDescriptor descriptorWithDescriptorType:typeProcessSerialNumber
-			bytes:&psn length:sizeof(ProcessSerialNumber)];
-	 // set the method name and the list of parameters
-	 NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:'SIMe'
-																													 eventID:'load'
-																													 targetDescriptor:target
-																													 returnID:kAutoGenerateReturnID
-																													 transactionID:kAnyTransactionID];
+	unsigned majorOSVersion = 0;
+	unsigned minorOSVersion = 0;
+	unsigned buxfixOSVersion = 0;
+	[NSApp getSystemVersionMajor:&majorOSVersion minor:&minorOSVersion bugFix:&buxfixOSVersion];
+	
+	if (majorOSVersion != 10) {
+		NSLog(@"something fishy - OS X version %u", majorOSVersion);
+		return;
+	}
+
+	NSUInteger psnHigh = [[[notification userInfo] objectForKey:@"NSApplicationProcessSerialNumberHigh"] unsignedIntValue];
+	NSUInteger psnLow = [[[notification userInfo] objectForKey:@"NSApplicationProcessSerialNumberLow"] unsignedIntValue];
+	
+	ProcessSerialNumber psn = {psnHigh, psnLow};
+	AppleEvent event;
 	AppleEvent reply;
-	OSStatus aeErr = AESendMessage([event aeDesc], &reply, kAECanSwitchLayer,
-		kAEDefaultTimeout);
-	NSLog(@"inject err: %d", aeErr);
+
+	OSErr err = AEBuildAppleEvent(kASAppleScriptSuite, kGetAEUT, typeProcessSerialNumber, &psn, sizeof(psn), kAutoGenerateReturnID, kAnyTransactionID, &event, NULL, "");
+
+	if (err != noErr) {
+		NSLog(@"build load osax err: %d", err);
+		return;
+	}
+	
+	err = AESendMessage(&event, &reply, kAECanSwitchLayer, kAEDefaultTimeout);
+	AEDisposeDesc(&event);
+	if (err != noErr) {
+		NSLog(@"load osax err: %d", err);
+		return;
+	}			
+	AEDisposeDesc(&reply);
+
+	AEEventID eventID;
+	if (minorOSVersion > 5) {
+		eventID = 'load';
+	}
+	else {
+		eventID = 'leop';
+	}
+
+	err = AEBuildAppleEvent('SIMe', eventID, typeProcessSerialNumber, &psn, sizeof(psn), kAutoGenerateReturnID, kAnyTransactionID, &event, NULL, "");
+	if (err != noErr) {
+		NSLog(@"build inject err: %d", err);
+		return;
+	}
+			
+	err = AESendMessage(&event, &reply, kAECanSwitchLayer, kAEDefaultTimeout);
+	AEDisposeDesc(&event);
+	if (err != noErr) {
+		NSLog(@"inject err: %d", err);
+		return;
+	}
+	AEDisposeDesc(&reply);
 }
 
 @end
