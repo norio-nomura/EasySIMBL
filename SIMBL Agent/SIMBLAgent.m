@@ -114,6 +114,7 @@ fail:
 {
 	NSLog(@"received %@", [notification userInfo]);
 
+	// Get the right event ID for this version of OS X
 	unsigned majorOSVersion = 0;
 	unsigned minorOSVersion = 0;
 	unsigned buxfixOSVersion = 0;
@@ -123,50 +124,24 @@ fail:
 		NSLog(@"something fishy - OS X version %u", majorOSVersion);
 		return;
 	}
+	AEEventID eventID = minorOSVersion > 5 ? 'load' : 'leop';
 
-	NSUInteger psnHigh = [[[notification userInfo] objectForKey:@"NSApplicationProcessSerialNumberHigh"] unsignedIntValue];
-	NSUInteger psnLow = [[[notification userInfo] objectForKey:@"NSApplicationProcessSerialNumberLow"] unsignedIntValue];
 	
-	ProcessSerialNumber psn = {psnHigh, psnLow};
-	AppleEvent event;
-	AppleEvent reply;
-
-	OSErr err = AEBuildAppleEvent(kASAppleScriptSuite, kGetAEUT, typeProcessSerialNumber, &psn, sizeof(psn), kAutoGenerateReturnID, kAnyTransactionID, &event, NULL, "");
-
-	if (err != noErr) {
-		NSLog(@"build load osax err: %d", err);
+	// Find the process to target
+	pid_t pid = [[[notification userInfo] objectForKey: @"NSApplicationProcessIdentifier"] intValue];
+	SBApplication *app = [SBApplication applicationWithProcessIdentifier: pid];
+	if (!app) {
+		NSLog(@"Can't find app with pid %d", pid);
 		return;
 	}
+	[app setSendMode: kAENoReply];
 	
-	err = AESendMessage(&event, &reply, kAECanSwitchLayer, kAEDefaultTimeout);
-	AEDisposeDesc(&event);
-	if (err != noErr) {
-		NSLog(@"load osax err: %d", err);
-		return;
-	}			
-	AEDisposeDesc(&reply);
-
-	AEEventID eventID;
-	if (minorOSVersion > 5) {
-		eventID = 'load';
-	}
-	else {
-		eventID = 'leop';
-	}
-
-	err = AEBuildAppleEvent('SIMe', eventID, typeProcessSerialNumber, &psn, sizeof(psn), kAutoGenerateReturnID, kAnyTransactionID, &event, NULL, "");
-	if (err != noErr) {
-		NSLog(@"build inject err: %d", err);
-		return;
-	}
-			
-	err = AESendMessage(&event, &reply, kAECanSwitchLayer, kAEDefaultTimeout);
-	AEDisposeDesc(&event);
-	if (err != noErr) {
-		NSLog(@"inject err: %d", err);
-		return;
-	}
-	AEDisposeDesc(&reply);
+	
+	// Force AppleScript to initialize in the app, by getting the dictionary
+	[app sendEvent: kASAppleScriptSuite id: kGetAEUT parameters: 0];
+	
+	// Inject!
+	[app sendEvent: 'SIMe' id: eventID parameters: 0];
 }
 
 @end
