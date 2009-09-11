@@ -1,0 +1,17 @@
+#!/bin/sh
+# Copyright 2003-2009, Mike Solomon <mas63@cornell.edu>
+# SIMBL is released under the GNU General Public License v2.
+# http://www.opensource.org/licenses/gpl-2.0.php
+
+LAUNCHD_PLIST="/Library/LaunchAgents/net.culater.SIMBL.Agent.plist"
+# stop any running agent by unloading it
+echo "Stopping SIMBL Agent..."
+/bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
+
+echo "Removing SIMBL from LaunchAgents..."
+rm -f "$LAUNCHD_PLIST"
+
+echo "Removing SIMBL.osax..."
+rm -rf "/Library/ScriptingAdditions/SIMBL.osax"
+
+echo "SIMBL uninstalled."

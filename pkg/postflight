@@ -32,7 +32,22 @@ cp "$LAUNCHD_PLIST" "$LAUNCH_AGENTS_DIR"
 SIMBL_PLUGINS_DIR="/Library/Application Support/SIMBL/Plugins"
 if [ ! -d "$SIMBL_PLUGINS_DIR" ]; then
   mkdir -p "$SIMBL_PLUGINS_DIR"
+  chown root:admin "$SIMBL_PLUGINS_DIR"
+  chmod 775 "$SIMBL_PLUGINS_DIR"
 fi
+
+# ensure that ScriptingAdditions is world-readable
+SCRIPTING_ADDITIONS_DIR="/Library/ScriptingAdditions"
+if [ ! -d "$SCRIPTING_ADDITIONS_DIR" ]; then
+  chown root:admin "$SCRIPTING_ADDITIONS_DIR"
+  chmod 775 "$SCRIPTING_ADDITIONS_DIR"
+fi
+
+# stop any running agent by unloading it, in case we have made changes
+# to the agent that won't take effect until the application is restarted
+echo "Stop SIMBL Agent"
+echo /bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
+/bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
 
 echo "Start SIMBL Agent"
 echo /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"

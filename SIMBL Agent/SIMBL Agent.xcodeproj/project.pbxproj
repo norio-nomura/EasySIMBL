@@ -219,7 +219,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "SIMBL Agent";
-				PRODUCT_VERSION = 0.9.4;
+				PRODUCT_VERSION = 0.9.5;
 			};
 			name = Debug;
 		};
@@ -235,7 +235,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "SIMBL Agent";
-				PRODUCT_VERSION = 0.9.4;
+				PRODUCT_VERSION = 0.9.5;
 			};
 			name = Release;
 		};
