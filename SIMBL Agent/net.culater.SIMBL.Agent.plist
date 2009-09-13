@@ -7,7 +7,7 @@
 	<key>Program</key>
 	<string>/Library/ScriptingAdditions/SIMBL.osax/Contents/Resources/SIMBL Agent.app/Contents/MacOS/SIMBL Agent</string>
 	<key>RunAtLoad</key>
-	<true/>
+	<false/>
 	<key>LimitLoadToSessionType</key>
 	<string>Aqua</string>
 	<key>OnDemand</key>

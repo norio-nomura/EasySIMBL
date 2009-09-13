@@ -45,10 +45,24 @@ fi
 
 # stop any running agent by unloading it, in case we have made changes
 # to the agent that won't take effect until the application is restarted
+# NOTE: this runs *as* root, but $USER is the user that launched Installer.app
+# we don't want the agent running as root, nor do we want to force the user to
+# logout, so we try to kill any agents and then start the new version just for
+# this user.
 echo "Stop SIMBL Agent"
-echo /bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
+echo sudo -u $USER /bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
+sudo -u $USER /bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
+
+# This clears out any buggy instance we may have started with previous versions
+# of the package.
+echo "Stop root SIMBL Agent"
 /bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
 
+# If there are other users, kill the current agents - launchd will restart
+# them with the newly installed code
+/usr/bin/killall "SIMBL Agent"
+
 echo "Start SIMBL Agent"
-echo /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
-/bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
+echo sudo -u $USER /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
+sudo -u $USER /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
+
