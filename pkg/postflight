@@ -23,7 +23,10 @@ fi
 LAUNCH_AGENTS_DIR="/Library/LaunchAgents"
 if [ ! -d "$LAUNCH_AGENTS_DIR" ]; then
   mkdir -p "$LAUNCH_AGENTS_DIR"
+  chown root:wheel "$LAUNCH_AGENTS_DIR"
 fi
+# ensure agents are world-readable
+chmod 775 "$LAUNCH_AGENTS_DIR"
 
 # ensure that this loads on restart
 cp "$LAUNCHD_PLIST" "$LAUNCH_AGENTS_DIR"
@@ -33,15 +36,14 @@ SIMBL_PLUGINS_DIR="/Library/Application Support/SIMBL/Plugins"
 if [ ! -d "$SIMBL_PLUGINS_DIR" ]; then
   mkdir -p "$SIMBL_PLUGINS_DIR"
   chown root:admin "$SIMBL_PLUGINS_DIR"
-  chmod 775 "$SIMBL_PLUGINS_DIR"
 fi
+# ensure plugins are world-readable
+chmod 775 "$SIMBL_PLUGINS_DIR"
 
 # ensure that ScriptingAdditions is world-readable
 SCRIPTING_ADDITIONS_DIR="/Library/ScriptingAdditions"
-if [ ! -d "$SCRIPTING_ADDITIONS_DIR" ]; then
-  chown root:admin "$SCRIPTING_ADDITIONS_DIR"
-  chmod 775 "$SCRIPTING_ADDITIONS_DIR"
-fi
+chown root:admin "$SCRIPTING_ADDITIONS_DIR"
+chmod 775 "$SCRIPTING_ADDITIONS_DIR"
 
 # stop any running agent by unloading it, in case we have made changes
 # to the agent that won't take effect until the application is restarted
