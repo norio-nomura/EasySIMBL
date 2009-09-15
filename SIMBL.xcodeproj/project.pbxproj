@@ -28,6 +28,8 @@
 		27614514105F556A00F906F6 /* SIMBL Agent.app in Resources */ = {isa = PBXBuildFile; fileRef = 276144C1105F51CA00F906F6 /* SIMBL Agent.app */; };
 		27614522105F55D500F906F6 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27614521105F55D500F906F6 /* ScriptingBridge.framework */; };
 		276145E4105F55E800F906F6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0EE4A4E0693E03F0061E2D8 /* Cocoa.framework */; };
+		27614621105F94CE00F906F6 /* net.culater.SIMBL.Agent.plist in Resources */ = {isa = PBXBuildFile; fileRef = 276144D3105F523C00F906F6 /* net.culater.SIMBL.Agent.plist */; };
+		2761463C105F985500F906F6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 276144CF105F523C00F906F6 /* MainMenu.xib */; };
 		E0497390104E7B1E00D3981F /* SIMBL.r in Rez */ = {isa = PBXBuildFile; fileRef = E0497384104E7AE800D3981F /* SIMBL.r */; };
 		E04B83EF104E73D80001E0E3 /* SIMBL.sdef in Resources */ = {isa = PBXBuildFile; fileRef = E04B83EE104E73D80001E0E3 /* SIMBL.sdef */; };
 		E0C2C2FE104F376500553034 /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
@@ -246,6 +248,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2761463C105F985500F906F6 /* MainMenu.xib in Resources */,
+				27614621105F94CE00F906F6 /* net.culater.SIMBL.Agent.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,7 +514,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "ppc i386 ppc64 x86_64";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -536,7 +540,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = SIMBL;
-				PRODUCT_VERSION = 0.9.5;
+				PRODUCT_VERSION = 0.9.6;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (

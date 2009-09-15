@@ -27,8 +27,8 @@
 
 + (void) installPlugins:(NSNotification*)_notification;
 + (BOOL) loadBundleAtPath:(NSString*)_bundlePath;
-+ (BOOL) loadBundle:(SIMBLPlugin*)_bundle forApplicationIdentifiers:(NSArray*)_applicationIdentifiers;
-+ (BOOL) loadBundle:(SIMBLPlugin*)_bundle forTargetApplications:(NSArray*)_targetApplications;
++ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers;
++ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withTargetApplications:(NSArray*)_targetApplications;
 + (BOOL) loadBundle:(SIMBLPlugin*)_bundle;
 
 @end
