@@ -4,6 +4,7 @@
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
 
+#import "SIMBL.h"
 #import "SIMBLAgent.h"
 #import <ScriptingBridge/ScriptingBridge.h>
 #import <Carbon/Carbon.h>
@@ -76,6 +77,11 @@ fail:
 - (void) injectSIMBL:(NSNotification*)notification
 {
 	NSLog(@"received %@", [notification userInfo]);
+	
+	// check to see if there are plugins to load
+	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithPath:[[notification userInfo] objectForKey:@"NSApplicationPath"]]] == NO) {
+		return;
+	}
 
 	// Get the right event ID for this version of OS X
 	unsigned majorOSVersion = 0;
@@ -107,6 +113,7 @@ fail:
 }
 
 @end
+
 
 int main(int argc, char *argv[])
 {

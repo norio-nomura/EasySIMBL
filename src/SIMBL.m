@@ -33,7 +33,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 {
 	OSErr resultCode = noErr;
 	NSLog(@"InjectEventHandler");
-	[SIMBL installPlugins:nil];			
+	[SIMBL installPlugins];			
 	return resultCode;	
 }
 
@@ -53,7 +53,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 }
 
 
-+ (void) installPlugins:(NSNotification*)_notification
++ (void) installPlugins
 {
 	if (loadedBundleIdentifiers == nil)
 		loadedBundleIdentifiers = [[NSMutableDictionary alloc] init];
@@ -68,12 +68,35 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 }
 
 
++ (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle
+{
+	for (NSString* path in [SIMBL pluginPathList]) {
+		BOOL bundleLoaded = [SIMBL shouldApplication:_appBundle loadBundleAtPath:path];
+		if (bundleLoaded)
+			return YES;
+	}
+	return NO;
+}
+
+
 /**
  * get this list of allowed application identifiers from the plugin's Info.plist
  * the special value * will cause any Cocoa app to load a bundle
  * @return YES if this should be loaded
  */
 + (BOOL) shouldLoadBundleAtPath:(NSString*)_bundlePath
+{
+	NSBundle* appBundle = [NSBundle mainBundle];
+	return [SIMBL shouldApplication:appBundle loadBundleAtPath:_bundlePath];
+}
+
+
+/**
+ * get this list of allowed application identifiers from the plugin's Info.plist
+ * the special value * will cause any Cocoa app to load a bundle
+ * @return YES if this should be loaded
+ */
++ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundleAtPath:(NSString*)_bundlePath
 {
 	DTLog(DTLog_Developer, @"checking bundle %@", _bundlePath);
 	_bundlePath = [_bundlePath stringByStandardizingPath];
@@ -88,18 +111,16 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 		NSLog(@"No identifier for bundle at path '%@'", _bundlePath);
 		return NO;
 	}
-
-	NSBundle* appBundle = [NSBundle mainBundle];
 	
 	// this is the new way of specifying when to load a bundle
 	NSArray* targetApplications = [pluginBundle objectForInfoDictionaryKey:SIMBLTargetApplications];
 	if (targetApplications)
-		return [self shouldApplication:appBundle loadBundle:pluginBundle withTargetApplications:targetApplications];
+		return [self shouldApplication:_appBundle loadBundle:pluginBundle withTargetApplications:targetApplications];
 	
 	// fall back to the old method for older plugins - we should probably throw a depreaction warning
 	NSArray* applicationIdentifiers = [pluginBundle objectForInfoDictionaryKey:SIMBLApplicationIdentifier];
 	if (applicationIdentifiers)
-		return [self shouldApplication:appBundle loadBundle:pluginBundle withApplicationIdentifiers:applicationIdentifiers];
+		return [self shouldApplication:_appBundle loadBundle:pluginBundle withApplicationIdentifiers:applicationIdentifiers];
 	
 	return NO;
 }

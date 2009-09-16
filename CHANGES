@@ -1,4 +1,4 @@
-0.9.6 - Fixed installer package now that I have a better understanding of how/when LaunchAgents get started.
+0.9.6 - Fixed installer package now that I have a better understanding of how/when LaunchAgents get started. SIMBL Agent now only triggers an inject event when it is sure that there is a plugin present for the application that just loaded. This should cut down on the admittedly small overhead, but makes me feel it's much more efficient.
 
 0.9.5 - Simpler AppleEvent delivery. Better installer package - fixes some permission issues with bad installs. Properly force agent to restart after the installer runs. Added uninstall script.
 
