@@ -32,7 +32,7 @@
 			<dict>
 				<key>Handler</key>
 				<string>InjectEventHandler</string>
-				<key>Threadsafe</key>
+				<key>ThreadSafe</key>
 				<false/>
 				<key>Context</key>
 				<string>Process</string>

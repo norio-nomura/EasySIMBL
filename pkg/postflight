@@ -25,8 +25,9 @@ if [ ! -d "$LAUNCH_AGENTS_DIR" ]; then
   mkdir -p "$LAUNCH_AGENTS_DIR"
   chown root:wheel "$LAUNCH_AGENTS_DIR"
 fi
-# ensure agents are world-readable
-chmod 775 "$LAUNCH_AGENTS_DIR"
+# ensure agents are world-readable, but must be no more permissive
+# than 755, otherwise they are just skipped.
+chmod 755 "$LAUNCH_AGENTS_DIR"
 
 # ensure that this loads on restart
 cp "$LAUNCHD_PLIST" "$LAUNCH_AGENTS_DIR"
