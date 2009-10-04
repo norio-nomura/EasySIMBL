@@ -6,21 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		276144AE105F50FB00F906F6 /* All */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 276144BC105F512000F906F6 /* Build configuration list for PBXAggregateTarget "All" */;
-			buildPhases = (
-			);
-			dependencies = (
-				276144C9105F51D800F906F6 /* PBXTargetDependency */,
-				276144B5105F510500F906F6 /* PBXTargetDependency */,
-			);
-			name = All;
-			productName = All;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		276144DA105F523C00F906F6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 276144CD105F523C00F906F6 /* InfoPlist.strings */; };
 		276144DB105F523C00F906F6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 276144CF105F523C00F906F6 /* MainMenu.xib */; };
@@ -32,9 +17,8 @@
 		2761463C105F985500F906F6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 276144CF105F523C00F906F6 /* MainMenu.xib */; };
 		276156DC1060C08C00FEF11C /* SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789609B3031900F50FE7 /* SIMBL.m */; };
 		276156DF1060C09900FEF11C /* SIMBLPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */; };
-		2775BF411068A709002FDD88 /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
-		E0497390104E7B1E00D3981F /* SIMBL.r in Rez */ = {isa = PBXBuildFile; fileRef = E0497384104E7AE800D3981F /* SIMBL.r */; };
-		E04B83EF104E73D80001E0E3 /* SIMBL.sdef in Resources */ = {isa = PBXBuildFile; fileRef = E04B83EE104E73D80001E0E3 /* SIMBL.sdef */; };
+		27D59F5610791EE100424BBD /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
+		E04B83EF104E73D80001E0E3 /* SIMBL.sdef in Rez */ = {isa = PBXBuildFile; fileRef = E04B83EE104E73D80001E0E3 /* SIMBL.sdef */; };
 		E0C2C2FE104F376500553034 /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
 		E0C2C2FF104F376600553034 /* SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789609B3031900F50FE7 /* SIMBL.m */; };
 		E0C2C300104F376700553034 /* SIMBLPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */; };
@@ -42,15 +26,22 @@
 		E0EE4A500693E03F0061E2D8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0EE4A4E0693E03F0061E2D8 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		276144B4105F510500F906F6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
-			remoteInfo = SIMBL;
+/* Begin PBXBuildRule section */
+		5916EA7C1061E4DD007D63BB /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.sdef";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(INPUT_FILE_BASE).r",
+			);
+			script = "# Build resource AND copy sdef\n/usr/bin/sdp -f a -o \"${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}.r\" \"${INPUT_FILE_PATH}\"\n/bin/cp \"${INPUT_FILE_PATH}\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"";
 		};
-		276144C8105F51D800F906F6 /* PBXContainerItemProxy */ = {
+/* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+		5916EA531061E09E007D63BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
@@ -66,14 +57,12 @@
 		276144D0105F523C00F906F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		276144D1105F523C00F906F6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "SIMBL Agent/Info.plist"; sourceTree = SOURCE_ROOT; };
 		276144D3105F523C00F906F6 /* net.culater.SIMBL.Agent.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = net.culater.SIMBL.Agent.plist; sourceTree = "<group>"; };
-		276144D7105F523C00F906F6 /* SIMBL Agent_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SIMBL Agent_Prefix.pch"; sourceTree = "<group>"; };
 		276144D8105F523C00F906F6 /* SIMBLAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMBLAgent.h; sourceTree = "<group>"; };
 		276144D9105F523C00F906F6 /* SIMBLAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMBLAgent.m; sourceTree = "<group>"; };
 		27614521105F55D500F906F6 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		8D5B49B6048680CD000E48DA /* SIMBL.osax */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SIMBL.osax; sourceTree = BUILT_PRODUCTS_DIR; };
 		E043030209B300D6000FD3C5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E0497384104E7AE800D3981F /* SIMBL.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = SIMBL.r; sourceTree = "<group>"; };
-		E04B83EE104E73D80001E0E3 /* SIMBL.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.sdef; name = SIMBL.sdef; path = rez/SIMBL.sdef; sourceTree = SOURCE_ROOT; };
+		E04B83EE104E73D80001E0E3 /* SIMBL.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.sdef; path = SIMBL.sdef; sourceTree = "<group>"; };
 		E0AF789209B3031900F50FE7 /* DTMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTMacros.h; path = src/DTMacros.h; sourceTree = SOURCE_ROOT; };
 		E0AF789309B3031900F50FE7 /* NSAlert_SIMBL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAlert_SIMBL.h; sourceTree = "<group>"; };
 		E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAlert_SIMBL.m; sourceTree = "<group>"; };
@@ -143,7 +132,6 @@
 			isa = PBXGroup;
 			children = (
 				276144EB105F529100F906F6 /* Resources */,
-				276144D7105F523C00F906F6 /* SIMBL Agent_Prefix.pch */,
 				276144D8105F523C00F906F6 /* SIMBLAgent.h */,
 				276144D9105F523C00F906F6 /* SIMBLAgent.m */,
 			);
@@ -165,7 +153,6 @@
 			isa = PBXGroup;
 			children = (
 				276144C1105F51CA00F906F6 /* SIMBL Agent.app */,
-				E0497384104E7AE800D3981F /* SIMBL.r */,
 				E04B83EE104E73D80001E0E3 /* SIMBL.sdef */,
 				E043030209B300D6000FD3C5 /* Info.plist */,
 			);
@@ -214,12 +201,14 @@
 				8D5B49AF048680CD000E48DA /* Resources */,
 				8D5B49B1048680CD000E48DA /* Sources */,
 				E04B8405104E753F0001E0E3 /* ShellScript */,
-				8D5B49B5048680CD000E48DA /* Rez */,
 				8D5B49B3048680CD000E48DA /* Frameworks */,
+				5916EB511061E5E0007D63BB /* Rez */,
 			);
 			buildRules = (
+				5916EA7C1061E4DD007D63BB /* PBXBuildRule */,
 			);
 			dependencies = (
+				5916EA541061E09E007D63BB /* PBXTargetDependency */,
 			);
 			name = SIMBL;
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -244,7 +233,6 @@
 			targets = (
 				8D5B49AC048680CD000E48DA /* SIMBL */,
 				276144C0105F51CA00F906F6 /* SIMBL Agent */,
-				276144AE105F50FB00F906F6 /* All */,
 			);
 		};
 /* End PBXProject section */
@@ -263,7 +251,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E04B83EF104E73D80001E0E3 /* SIMBL.sdef in Resources */,
 				276144DA105F523C00F906F6 /* InfoPlist.strings in Resources */,
 				276144DB105F523C00F906F6 /* MainMenu.xib in Resources */,
 				27614514105F556A00F906F6 /* SIMBL Agent.app in Resources */,
@@ -273,11 +260,11 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXRezBuildPhase section */
-		8D5B49B5048680CD000E48DA /* Rez */ = {
+		5916EB511061E5E0007D63BB /* Rez */ = {
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E0497390104E7B1E00D3981F /* SIMBL.r in Rez */,
+				E04B83EF104E73D80001E0E3 /* SIMBL.sdef in Rez */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +296,7 @@
 				276144F6105F531D00F906F6 /* SIMBLAgent.m in Sources */,
 				276156DC1060C08C00FEF11C /* SIMBL.m in Sources */,
 				276156DF1060C09900FEF11C /* SIMBLPlugin.m in Sources */,
-				2775BF411068A709002FDD88 /* NSAlert_SIMBL.m in Sources */,
+				27D59F5610791EE100424BBD /* NSAlert_SIMBL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,15 +313,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		276144B5105F510500F906F6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8D5B49AC048680CD000E48DA /* SIMBL */;
-			targetProxy = 276144B4105F510500F906F6 /* PBXContainerItemProxy */;
-		};
-		276144C9105F51D800F906F6 /* PBXTargetDependency */ = {
+		5916EA541061E09E007D63BB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 276144C0105F51CA00F906F6 /* SIMBL Agent */;
-			targetProxy = 276144C8105F51D800F906F6 /* PBXContainerItemProxy */;
+			targetProxy = 5916EA531061E09E007D63BB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -358,139 +340,30 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		276144AF105F50FB00F906F6 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = All;
-			};
-			name = Development;
-		};
-		276144B0105F50FB00F906F6 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				PRODUCT_NAME = All;
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
 		276144C4105F51CB00F906F6 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_GC = unsupported;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
-				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES;
-				GCC_WARN_PEDANTIC = NO;
-				GCC_WARN_STRICT_SELECTOR_MATCH = NO;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				INFOPLIST_FILE = "SIMBL Agent/Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "SIMBL Agent";
-				PRODUCT_VERSION = 0.9.6;
-				SDKROOT = macosx10.5;
+				PRODUCT_VERSION = 0.9.7;
 			};
 			name = Development;
 		};
 		276144C5105F51CB00F906F6 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_OBJC_GC = unsupported;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
-				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES;
-				GCC_WARN_PEDANTIC = NO;
-				GCC_WARN_STRICT_SELECTOR_MATCH = NO;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				INFOPLIST_FILE = "SIMBL Agent/Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "SIMBL Agent";
-				PRODUCT_VERSION = 0.9.6;
-				SDKROOT = macosx10.5;
-				ZERO_LINK = NO;
+				PRODUCT_VERSION = 0.9.7;
 			};
 			name = Deployment;
 		};
 		E0E8F442085F4D0400DCD56F /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_OBJC_GC = supported;
-				GCC_ENABLE_PASCAL_STRINGS = NO;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = src/SIMBL_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=0";
-				GCC_VERSION = 4.2;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = rez/Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = SIMBL;
 				PRODUCT_VERSION = 0.9.7;
-				SDKROOT = macosx10.5;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
 				WRAPPER_EXTENSION = osax;
 			};
 			name = Development;
@@ -498,41 +371,9 @@
 		E0E8F443085F4D0400DCD56F /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = YES;
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_OBJC_GC = supported;
-				GCC_ENABLE_PASCAL_STRINGS = NO;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = src/SIMBL_Prefix.pch;
-				GCC_VERSION = 4.2;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = rez/Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = SIMBL;
 				PRODUCT_VERSION = 0.9.7;
-				SDKROOT = macosx10.5;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
 				WRAPPER_EXTENSION = osax;
 			};
 			name = Deployment;
@@ -540,11 +381,18 @@
 		E0E8F446085F4D0400DCD56F /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = supported;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = src/SIMBL_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=0";
+				GCC_VERSION = 4.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_VERSION = 0.9.6;
 				SDKROOT = macosx10.5;
 			};
 			name = Development;
@@ -552,11 +400,14 @@
 		E0E8F447085F4D0400DCD56F /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = supported;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = src/SIMBL_Prefix.pch;
+				GCC_VERSION = 4.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_VERSION = 0.9.6;
 				SDKROOT = macosx10.5;
 			};
 			name = Deployment;
@@ -564,15 +415,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		276144BC105F512000F906F6 /* Build configuration list for PBXAggregateTarget "All" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				276144AF105F50FB00F906F6 /* Development */,
-				276144B0105F50FB00F906F6 /* Deployment */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
-		};
 		276144C7105F51CB00F906F6 /* Build configuration list for PBXNativeTarget "SIMBL Agent" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

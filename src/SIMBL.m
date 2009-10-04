@@ -42,10 +42,10 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 {
 	NSMutableArray* pluginPathList = [NSMutableArray array];
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask | NSLocalDomainMask | NSNetworkDomainMask, YES);
-	for (NSString* libraryPath in [paths objectEnumerator]) {
+	for (NSString* libraryPath in paths) {
 		NSString* simblPath = [libraryPath stringByAppendingPathComponent:SIMBLPluginPath];
 		NSArray* simblBundles = [[[NSFileManager defaultManager] directoryContentsAtPath:simblPath] pathsMatchingExtensions:[NSArray arrayWithObject:@"bundle"]];
-		for (NSString* bundleName in [simblBundles objectEnumerator]) {
+		for (NSString* bundleName in simblBundles) {
 			[pluginPathList addObject:[simblPath stringByAppendingPathComponent:bundleName]];
 		}
 	}
@@ -159,7 +159,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 + (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers
 {	
 	NSString* appIdentifier = [_appBundle bundleIdentifier];
-	for (NSString* specifiedIdentifier in [_applicationIdentifiers objectEnumerator]) {
+	for (NSString* specifiedIdentifier in _applicationIdentifiers) {
 		DTLog(DTLog_Developer, @"checking bundle %@ for identifier %@", [_bundle bundleIdentifier], specifiedIdentifier);
 		if ([specifiedIdentifier isEqualToString:appIdentifier] == YES ||
 			[specifiedIdentifier isEqualToString:@"*"] == YES) {
@@ -182,7 +182,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 + (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withTargetApplications:(NSArray*)_targetApplications
 {
 	NSString* appIdentifier = [_appBundle bundleIdentifier];
-	for (NSDictionary* targetAppProperties in [_targetApplications objectEnumerator]) {
+	for (NSDictionary* targetAppProperties in _targetApplications) {
 		NSString* targetAppIdentifier = [targetAppProperties objectForKey:SIMBLBundleIdentifier];
 		DTLog(DTLog_Developer, @"checking target identifier %@", targetAppIdentifier);
 		if ([targetAppIdentifier isEqualToString:appIdentifier] == NO &&
