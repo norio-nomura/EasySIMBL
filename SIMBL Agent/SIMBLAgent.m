@@ -98,7 +98,7 @@ fail:
 
 	// Find the process to target
 	pid_t pid = [[[notification userInfo] objectForKey:@"NSApplicationProcessIdentifier"] intValue];
-	SBApplication *app = [SBApplication applicationWithProcessIdentifier: pid];
+	SBApplication *app = [SBApplication applicationWithProcessIdentifier:pid];
 	if (!app) {
 		NSLog(@"Can't find app with pid %d", pid);
 		return;

@@ -32,6 +32,7 @@
 		2761463C105F985500F906F6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 276144CF105F523C00F906F6 /* MainMenu.xib */; };
 		276156DC1060C08C00FEF11C /* SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789609B3031900F50FE7 /* SIMBL.m */; };
 		276156DF1060C09900FEF11C /* SIMBLPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */; };
+		2775BF411068A709002FDD88 /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
 		E0497390104E7B1E00D3981F /* SIMBL.r in Rez */ = {isa = PBXBuildFile; fileRef = E0497384104E7AE800D3981F /* SIMBL.r */; };
 		E04B83EF104E73D80001E0E3 /* SIMBL.sdef in Resources */ = {isa = PBXBuildFile; fileRef = E04B83EE104E73D80001E0E3 /* SIMBL.sdef */; };
 		E0C2C2FE104F376500553034 /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
@@ -72,7 +73,7 @@
 		8D5B49B6048680CD000E48DA /* SIMBL.osax */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SIMBL.osax; sourceTree = BUILT_PRODUCTS_DIR; };
 		E043030209B300D6000FD3C5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E0497384104E7AE800D3981F /* SIMBL.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = SIMBL.r; sourceTree = "<group>"; };
-		E04B83EE104E73D80001E0E3 /* SIMBL.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.sdef; path = SIMBL.sdef; sourceTree = "<group>"; };
+		E04B83EE104E73D80001E0E3 /* SIMBL.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.sdef; name = SIMBL.sdef; path = rez/SIMBL.sdef; sourceTree = SOURCE_ROOT; };
 		E0AF789209B3031900F50FE7 /* DTMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTMacros.h; path = src/DTMacros.h; sourceTree = SOURCE_ROOT; };
 		E0AF789309B3031900F50FE7 /* NSAlert_SIMBL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAlert_SIMBL.h; sourceTree = "<group>"; };
 		E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAlert_SIMBL.m; sourceTree = "<group>"; };
@@ -308,6 +309,7 @@
 				276144F6105F531D00F906F6 /* SIMBLAgent.m in Sources */,
 				276156DC1060C08C00FEF11C /* SIMBL.m in Sources */,
 				276156DF1060C09900FEF11C /* SIMBLPlugin.m in Sources */,
+				2775BF411068A709002FDD88 /* NSAlert_SIMBL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,10 +387,16 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_STRICT_SELECTOR_MATCH = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				INFOPLIST_FILE = "SIMBL Agent/Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -414,9 +422,15 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_STRICT_SELECTOR_MATCH = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				INFOPLIST_FILE = "SIMBL Agent/Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -469,7 +483,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = SIMBL;
-				PRODUCT_VERSION = 0.9.5;
+				PRODUCT_VERSION = 0.9.7;
 				SDKROOT = macosx10.5;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -511,7 +525,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = SIMBL;
-				PRODUCT_VERSION = 0.9.6;
+				PRODUCT_VERSION = 0.9.7;
 				SDKROOT = macosx10.5;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (

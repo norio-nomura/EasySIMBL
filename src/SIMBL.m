@@ -228,7 +228,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 		if ((maxVersion && appVersion > maxVersion) || (minVersion && appVersion < minVersion))
 		{
 			DTLog(DTLog_Developer, @"max: %d, min: %d, app: %d", maxVersion, minVersion, appVersion);
-			[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"SIMBL Error", SIMBLStringTable, DTOwnerBundle, @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"%@ %@ (v%@) has not been tested with the plugin %@ %@ (v%@). As a precaution, it has not been loaded. Please contact the plugin developer (not the SIMBL author) for further information.", SIMBLStringTable, DTOwnerBundle, @"Error alert details, substitute application and plugin version strings"), [_appBundle _dt_name], [_appBundle _dt_version], [_appBundle _dt_bundleVersion], [_bundle _dt_name], [_bundle _dt_version], [_bundle _dt_bundleVersion]];
+			[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"Error", SIMBLStringTable, DTOwnerBundle, @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"%@ %@ (v%@) has not been tested with the plugin %@ %@ (v%@). As a precaution, it has not been loaded. Please contact the plugin developer for further information.", SIMBLStringTable, DTOwnerBundle, @"Error alert details, substitute application and plugin version strings"), [_appBundle _dt_name], [_appBundle _dt_version], [_appBundle _dt_bundleVersion], [_bundle _dt_name], [_bundle _dt_version], [_bundle _dt_bundleVersion]];
 			continue;
 		}
 		
@@ -258,7 +258,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 	}
 	@catch (NSException* exception)
 	{
-		[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"SIMBL Error", SIMBLStringTable, DTOwnerBundle, @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"Failed to load the %@ plugin.\n%@", SIMBLStringTable, DTOwnerBundle, @"Error alert details, sub plugin name and error reason"), [_plugin _dt_name], [exception reason]];
+		[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"Error", SIMBLStringTable, DTOwnerBundle, @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"Failed to load the %@ plugin.\n%@", SIMBLStringTable, DTOwnerBundle, @"Error alert details, sub plugin name and error reason"), [_plugin _dt_name], [exception reason]];
 	}
 	
 	return NO;
