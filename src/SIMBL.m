@@ -32,11 +32,27 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 {
 	OSErr resultCode = noErr;
-	NSLog(@"InjectEventHandler");
-	[SIMBL installPlugins];			
-	return resultCode;	
+	SIMBLLogInfo(@"load SIMBL plugins");
+	[SIMBL installPlugins];
+	return resultCode;
 }
 
++ (void) initialize
+{
+	NSUserDefaults* defaults = [[NSUserDefaults alloc] init];
+	[defaults addSuiteNamed:@"net.culater.SIMBL"];
+	[defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:SIMBLLogLevelDefault], SIMBLPrefKeyLogLevel, nil]];
+	[defaults release];
+}
+
++ (void) logMessage:(NSString*)message atLevel:(int)level
+{
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+	[defaults addSuiteNamed:@"net.culater.SIMBL"];
+	if ([defaults integerForKey:SIMBLPrefKeyLogLevel] <= level) {
+		NSLog(@"%@", message);
+	}
+}
 
 + (NSArray*) pluginPathList
 {
@@ -58,12 +74,12 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 	if (loadedBundleIdentifiers == nil)
 		loadedBundleIdentifiers = [[NSMutableDictionary alloc] init];
 	
-	DTLog(DTLog_Developer, @"SIMBL loaded by path %@ <%@>", [[NSBundle mainBundle] bundlePath], [[NSBundle mainBundle] bundleIdentifier]);
+	SIMBLLogDebug(@"SIMBL loaded by path %@ <%@>", [[NSBundle mainBundle] bundlePath], [[NSBundle mainBundle] bundleIdentifier]);
 	
 	for (NSString* path in [SIMBL pluginPathList]) {
 		BOOL bundleLoaded = [SIMBL loadBundleAtPath:path];
 		if (bundleLoaded)
-			DTLog(DTLog_Developer, @"loaded %@", path);
+			SIMBLLogDebug(@"loaded %@", path);
 	}
 }
 
@@ -98,17 +114,17 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
  */
 + (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundleAtPath:(NSString*)_bundlePath
 {
-	DTLog(DTLog_Developer, @"checking bundle %@", _bundlePath);
+	SIMBLLogDebug(@"checking bundle %@", _bundlePath);
 	_bundlePath = [_bundlePath stringByStandardizingPath];
 	SIMBLPlugin* pluginBundle = [SIMBLPlugin bundleWithPath:_bundlePath];
 	if (pluginBundle == nil) {
-		NSLog(@"Unable to load bundle at path '%@'", _bundlePath);
+		SIMBLLogNotice(@"Unable to load bundle at path '%@'", _bundlePath);
 		return NO;
 	}
 	
 	NSString* pluginIdentifier = [pluginBundle bundleIdentifier];
 	if (pluginIdentifier == nil) {
-		NSLog(@"No identifier for bundle at path '%@'", _bundlePath);
+		SIMBLLogNotice(@"No identifier for bundle at path '%@'", _bundlePath);
 		return NO;
 	}
 	
@@ -160,11 +176,11 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 {	
 	NSString* appIdentifier = [_appBundle bundleIdentifier];
 	for (NSString* specifiedIdentifier in _applicationIdentifiers) {
-		DTLog(DTLog_Developer, @"checking bundle %@ for identifier %@", [_bundle bundleIdentifier], specifiedIdentifier);
+		SIMBLLogDebug(@"checking bundle %@ for identifier %@", [_bundle bundleIdentifier], specifiedIdentifier);
 		if ([specifiedIdentifier isEqualToString:appIdentifier] == YES ||
 			[specifiedIdentifier isEqualToString:@"*"] == YES) {
-			DTLog(DTLog_Developer, @"load bundle %@", [_bundle bundleIdentifier]);
-			NSLog(@"The plugin %@ (%@) is using a deprecated interface to SIMBL. Please contact the appropriate developer (not the SIMBL author) and refer them to http://culater.net/wiki/moin.cgi/CocoaReverseEngineering", [_bundle path], [_bundle bundleIdentifier]);
+			SIMBLLogDebug(@"load bundle %@", [_bundle bundleIdentifier]);
+			SIMBLLogNotice(@"The plugin %@ (%@) is using a deprecated interface to SIMBL. Please contact the appropriate developer (not the SIMBL author) and refer them to http://code.google.com/p/simbl/wiki/Tutorial", [_bundle path], [_bundle bundleIdentifier]);
 			return YES;
 		}
 	}
@@ -184,7 +200,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 	NSString* appIdentifier = [_appBundle bundleIdentifier];
 	for (NSDictionary* targetAppProperties in _targetApplications) {
 		NSString* targetAppIdentifier = [targetAppProperties objectForKey:SIMBLBundleIdentifier];
-		DTLog(DTLog_Developer, @"checking target identifier %@", targetAppIdentifier);
+		SIMBLLogDebug(@"checking target identifier %@", targetAppIdentifier);
 		if ([targetAppIdentifier isEqualToString:appIdentifier] == NO &&
 				[targetAppIdentifier isEqualToString:@"*"] == NO)
 			continue;
@@ -193,11 +209,12 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 		if (targetAppPath && [targetAppPath isEqualToString:[_appBundle bundlePath]] == NO)
 			continue;
 
+		// FIXME: this has never been used - it should probably be removed.
 		NSArray* requiredFrameworks = [targetAppProperties objectForKey:SIMBLRequiredFrameworks];
-		// NSLog(@"requiredFrameworks: %@", requiredFrameworks);
 		BOOL missingFramework = NO;
 		if (requiredFrameworks)
 		{
+			SIMBLLogDebug(@"requiredFrameworks: %@", requiredFrameworks);
 			NSEnumerator* requiredFrameworkEnum = [requiredFrameworks objectEnumerator];
 			NSDictionary* requiredFramework;
 			while ((requiredFramework = [requiredFrameworkEnum nextObject]) && missingFramework == NO)
@@ -227,7 +244,6 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 		
 		if ((maxVersion && appVersion > maxVersion) || (minVersion && appVersion < minVersion))
 		{
-			DTLog(DTLog_Developer, @"max: %d, min: %d, app: %d", maxVersion, minVersion, appVersion);
 			[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"Error", SIMBLStringTable, DTOwnerBundle, @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"%@ %@ (v%@) has not been tested with the plugin %@ %@ (v%@). As a precaution, it has not been loaded. Please contact the plugin developer for further information.", SIMBLStringTable, DTOwnerBundle, @"Error alert details, substitute application and plugin version strings"), [_appBundle _dt_name], [_appBundle _dt_version], [_appBundle _dt_bundleVersion], [_bundle _dt_name], [_bundle _dt_version], [_bundle _dt_bundleVersion]];
 			continue;
 		}

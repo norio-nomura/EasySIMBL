@@ -38,7 +38,7 @@
     return;
     
 fail:
-    NSLog(@"Unable to obtain system version: %ld", (long)err);
+    SIMBLLogNotice(@"Unable to obtain system version: %ld", (long)err);
     if (major) *major = 10;
     if (minor) *minor = 0;
     if (bugFix) *bugFix = 0;
@@ -54,12 +54,12 @@ fail:
 	NSProcessInfo* procInfo = [NSProcessInfo processInfo];
 	if ([(NSString*)[[procInfo arguments] lastObject] hasPrefix:@"-psn"]) {
 		// if we were started interactively, load in launchd and terminate
-		NSLog(@"installing into launchd");
+		SIMBLLogNotice(@"installing into launchd");
 		[self loadInLaunchd];
 		[NSApp terminate:nil];
 	}
 	else {
-		NSLog(@"initialized");
+		SIMBLLogInfo(@"agent started");
 		[[[NSWorkspace sharedWorkspace] notificationCenter]
 				addObserver:self selector:@selector(injectSIMBL:)
 				name:NSWorkspaceDidLaunchApplicationNotification object:nil];
@@ -71,18 +71,27 @@ fail:
 	NSTask* task = [NSTask launchedTaskWithLaunchPath:@"/bin/launchctl" arguments:[NSArray arrayWithObjects:@"load", @"-F", @"-S", @"Aqua", @"/Library/ScriptingAdditions/SIMBL.osax/Contents/Resources/SIMBL Agent.app/Contents/Resources/net.culater.SIMBL.Agent.plist", nil]];
 	[task waitUntilExit];
 	if ([task terminationStatus] != 0)
-		NSLog(@"launchctl returned %d", [task terminationStatus]);
+		SIMBLLogNotice(@"launchctl returned %d", [task terminationStatus]);
 }
 
 - (void) injectSIMBL:(NSNotification*)notification
 {
-	NSLog(@"received %@", [notification userInfo]);
+	// NOTE: if you change the log level externally, there is pretty much no way
+	// to know when the changed. Just reading from the defaults doesn't validate
+	// against the backing file very ofter, or so it seems.
+	[[NSUserDefaults standardUserDefaults] synchronize];
+
+	NSDictionary* appInfo = [notification userInfo];
+	SIMBLLogInfo(@"%@ started", [appInfo objectForKey:@"NSApplicationName"]);
+	SIMBLLogDebug(@"app start notification: %@", appInfo);
 	
 	// check to see if there are plugins to load
-	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithPath:[[notification userInfo] objectForKey:@"NSApplicationPath"]]] == NO) {
+	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithPath:[appInfo objectForKey:@"NSApplicationPath"]]] == NO) {
 		return;
 	}
 
+	SIMBLLogDebug(@"send inject event");
+	
 	// Get the right event ID for this version of OS X
 	unsigned majorOSVersion = 0;
 	unsigned minorOSVersion = 0;
@@ -90,17 +99,17 @@ fail:
 	[NSApp getSystemVersionMajor:&majorOSVersion minor:&minorOSVersion bugFix:&buxfixOSVersion];
 	
 	if (majorOSVersion != 10) {
-		NSLog(@"something fishy - OS X version %u", majorOSVersion);
+		SIMBLLogNotice(@"something fishy - OS X version %u", majorOSVersion);
 		return;
 	}
 	
 	AEEventID eventID = minorOSVersion > 5 ? 'load' : 'leop';
 
 	// Find the process to target
-	pid_t pid = [[[notification userInfo] objectForKey:@"NSApplicationProcessIdentifier"] intValue];
+	pid_t pid = [[appInfo objectForKey:@"NSApplicationProcessIdentifier"] intValue];
 	SBApplication *app = [SBApplication applicationWithProcessIdentifier:pid];
 	if (!app) {
-		NSLog(@"Can't find app with pid %d", pid);
+		SIMBLLogNotice(@"Can't find app with pid %d", pid);
 		return;
 	}
 	[app setSendMode:kAENoReply];
@@ -117,6 +126,6 @@ fail:
 
 int main(int argc, char *argv[])
 {
-    return NSApplicationMain(argc,  (const char **) argv);
+	return NSApplicationMain(argc, (const char **)argv);
 }
 

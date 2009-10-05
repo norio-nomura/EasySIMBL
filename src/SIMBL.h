@@ -17,14 +17,26 @@
 #define SIMBLTargetApplicationPath @"TargetApplicationPath"
 #define SIMBLRequiredFrameworks @"RequiredFrameworks"
 
+#define SIMBLPrefKeyLogLevel @"SIMBLLogLevel"
+#define SIMBLLogLevelDefault 2
+#define SIMBLLogLevelNotice 2
+#define SIMBLLogLevelInfo 1
+#define SIMBLLogLevelDebug 0
+
 @protocol SIMBLPlugin
 + (void) install;
 @end
+
+#define SIMBLLogDebug(format, ...) [SIMBL logMessage:[NSString stringWithFormat:format, ##__VA_ARGS__] atLevel:SIMBLLogLevelDebug]
+#define SIMBLLogInfo(format, ...) [SIMBL logMessage:[NSString stringWithFormat:format, ##__VA_ARGS__] atLevel:SIMBLLogLevelInfo]
+#define SIMBLLogNotice(format, ...) [SIMBL logMessage:[NSString stringWithFormat:format, ##__VA_ARGS__] atLevel:SIMBLLogLevelNotice]
+
 
 @interface SIMBL : NSObject
 {
 }
 
++ (void) logMessage:(NSString*)message atLevel:(int)level;
 + (void) installPlugins;
 + (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle;
 + (BOOL) loadBundleAtPath:(NSString*)_bundlePath;
