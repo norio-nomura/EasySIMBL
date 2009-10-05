@@ -12,6 +12,7 @@ RESOURCES="${PACKAGE_PATH}/Contents/Resources"
 
 # FIXME(mike) maybe we should copy this out of the install package instead?
 LAUNCHD_PLIST="/Library/ScriptingAdditions/SIMBL.osax/Contents/Resources/SIMBL Agent.app/Contents/Resources/net.culater.SIMBL.Agent.plist"
+OSAX_PLIST="/Library/ScriptingAdditions/SIMBL.osax/Contents/Info.plist"
 
 # remove old InputManager if it exists, otherwise these
 # two will contend when applications run under 32-bit mode
@@ -77,5 +78,5 @@ sudo -u $USER /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
 sw_vers | grep "ProductVersion:.*10\.6"
 if [ $? == 0 ]; then
   echo "pruning Leopard event handler"
-  /usr/libexec/PlistBuddy -c "Delete :OSAXHandlers:Events:SIMeleop" Info.plist
+  /usr/libexec/PlistBuddy -c "Delete :OSAXHandlers:Events:SIMeleop" "$OSAX_PLIST"
 fi
