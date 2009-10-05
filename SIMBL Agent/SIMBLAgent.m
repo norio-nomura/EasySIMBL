@@ -79,14 +79,29 @@ fail:
 	// NOTE: if you change the log level externally, there is pretty much no way
 	// to know when the changed. Just reading from the defaults doesn't validate
 	// against the backing file very ofter, or so it seems.
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+	[defaults synchronize];
 
 	NSDictionary* appInfo = [notification userInfo];
-	SIMBLLogInfo(@"%@ started", [appInfo objectForKey:@"NSApplicationName"]);
+	NSString* appName = [appInfo objectForKey:@"NSApplicationName"];
+	SIMBLLogInfo(@"%@ started", appName);
 	SIMBLLogDebug(@"app start notification: %@", appInfo);
-	
+		
 	// check to see if there are plugins to load
 	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithPath:[appInfo objectForKey:@"NSApplicationPath"]]] == NO) {
+		return;
+	}
+	
+	// BUG: http://code.google.com/p/simbl/issues/detail?id=11
+	// NOTE: believe it or not, some applications cause a crash deep in the
+	// ScriptingBridge code. Due to the launchd behavior of restarting crashed
+	// agents, this is mostly harmless. To reduce the crashing we leave a
+	// blacklist to prevent injection.  By default, this is empty.
+	NSString* appIdentifier = [appInfo objectForKey:@"NSApplicationBundleIdentifier"];
+	NSArray* blacklistedIdentifiers = [defaults stringArrayForKey:@"SIMBLApplicationIdentifierBlacklist"];
+	if (blacklistedIdentifiers != nil && 
+			[blacklistedIdentifiers containsObject:appIdentifier]) {
+		SIMBLLogNotice(@"ignoring injection attempt for blacklisted application %@ (%@)", appName, appIdentifier);
 		return;
 	}
 
@@ -95,8 +110,8 @@ fail:
 	// Get the right event ID for this version of OS X
 	unsigned majorOSVersion = 0;
 	unsigned minorOSVersion = 0;
-	unsigned buxfixOSVersion = 0;
-	[NSApp getSystemVersionMajor:&majorOSVersion minor:&minorOSVersion bugFix:&buxfixOSVersion];
+	unsigned bugfixOSVersion = 0;
+	[NSApp getSystemVersionMajor:&majorOSVersion minor:&minorOSVersion bugFix:&bugfixOSVersion];
 	
 	if (majorOSVersion != 10) {
 		SIMBLLogNotice(@"something fishy - OS X version %u", majorOSVersion);

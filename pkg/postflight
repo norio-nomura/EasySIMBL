@@ -69,3 +69,13 @@ echo "Start SIMBL Agent"
 echo sudo -u $USER /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
 sudo -u $USER /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
 
+# Under 10.6, the Leopard-compatible OSAX event causes a spurious entry in the
+# console. This is harmless and the warning is completely pointless, the event
+# won't ever be triggered on Snow Leopard. Equally pointless are the complaints
+# about this. If one reads the output of the Console, the least one can do is
+# be prepared to understand the statements made there.
+sw_vers | grep "ProductVersion:.*10\.6"
+if [ $? == 0 ]; then
+  echo "pruning Leopard event handler"
+  /usr/libexec/PlistBuddy -c "Delete :OSAXHandlers:Events:SIMeleop" Info.plist
+fi
