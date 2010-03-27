@@ -21,5 +21,6 @@
 - (void) applicationDidFinishLaunching:(NSNotification*)notification;
 - (void) loadInLaunchd;
 - (void) injectSIMBL:(NSNotification*)notification;
+- (void) eventDidFail:(const AppleEvent*)event withError:(NSError*)error;
 
 @end

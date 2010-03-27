@@ -122,20 +122,49 @@ fail:
 
 	// Find the process to target
 	pid_t pid = [[appInfo objectForKey:@"NSApplicationProcessIdentifier"] intValue];
-	SBApplication *app = [SBApplication applicationWithProcessIdentifier:pid];
+	SBApplication* app = [SBApplication applicationWithProcessIdentifier:pid];
+	[app setDelegate:self];
 	if (!app) {
 		SIMBLLogNotice(@"Can't find app with pid %d", pid);
 		return;
 	}
-	[app setSendMode:kAENoReply];
 	
 	// Force AppleScript to initialize in the app, by getting the dictionary
-	[app sendEvent:kASAppleScriptSuite id:kGetAEUT parameters:0];
+	// When initializing, you need to wait for the event reply, otherwise the
+	// event might get dropped on the floor. This is only seems to happen in 10.5
+	// but it shouldn't harm anything.
+	[app setSendMode:kAEWaitReply | kAENeverInteract | kAEDontRecord];
+	id initReply = [app sendEvent:kASAppleScriptSuite id:kGetAEUT parameters:0];
+
+	// the reply here is of some unknown type - it is not an Objective-C object
+	// as near as I can tell because trying to print it using "%@" or getting its
+	// class both cause the application to segfault. The pointer value always seems
+	// to be 0x10000 which is a bit fishy. It does not seem to be an AEDesc struct
+	// either.
+	// since we are waiting for a reply, it seems like this object might need to
+	// be released - but i don't know what it is or how to release it.
+	// NSLog(@"initReply: %p '%64.64s'", initReply, (char*)initReply);
 	
 	// Inject!
-	[app sendEvent:'SIMe' id:eventID parameters:0];
+	[app setSendMode:kAENoReply | kAENeverInteract | kAEDontRecord];
+	id injectReply = [app sendEvent:'SIMe' id:eventID parameters:0];
+	if (injectReply != nil) {
+		SIMBLLogNotice(@"unexpected injectReply: %@", injectReply);
+	}
 }
 
+- (void) eventDidFail:(const AppleEvent*)event withError:(NSError*)error {
+	NSDictionary* userInfo = [error userInfo];
+	NSNumber* errorNumber = [userInfo objectForKey:@"ErrorNumber"];
+	
+	// this error seems more common on Leopard
+	if (errorNumber && [errorNumber intValue] == errAEEventNotHandled) {
+		SIMBLLogDebug(@"eventDidFail:'%4.4s' error:%@ userInfo:%@", (char*)&(event->descriptorType), error, [error userInfo]);
+	}
+	else {
+		SIMBLLogNotice(@"eventDidFail:'%4.4s' error:%@ userInfo:%@", (char*)&(event->descriptorType), error, [error userInfo]);
+	}
+}
 @end
 
 
