@@ -54,8 +54,8 @@ chmod 775 "$SCRIPTING_ADDITIONS_DIR"
 # logout, so we try to kill any agents and then start the new version just for
 # this user.
 echo "Stop SIMBL Agent"
-echo sudo -u $USER /bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
-sudo -u $USER /bin/launchctl unload -F -S Aqua "${LAUNCHD_PLIST}"
+echo su -l $USER  -c "/bin/launchctl unload -F -S Aqua \"${LAUNCHD_PLIST}\""
+su -l $USER -c "/bin/launchctl unload -F -S Aqua \"${LAUNCHD_PLIST}\""
 
 # This clears out any buggy instance we may have started with previous versions
 # of the package.
@@ -67,8 +67,8 @@ echo "Stop root SIMBL Agent"
 /usr/bin/killall "SIMBL Agent"
 
 echo "Start SIMBL Agent"
-echo sudo -u $USER /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
-sudo -u $USER /bin/launchctl load -F -S Aqua "${LAUNCHD_PLIST}"
+echo su -l $USER -c "/bin/launchctl load -F -S Aqua \"${LAUNCHD_PLIST}\""
+su -l $USER -c "/bin/launchctl load -F -S Aqua \"${LAUNCHD_PLIST}\""
 
 # Under 10.6, the Leopard-compatible OSAX event causes a spurious entry in the
 # console. This is harmless and the warning is completely pointless, the event
