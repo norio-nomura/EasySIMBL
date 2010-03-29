@@ -53,7 +53,7 @@
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		276144C1105F51CA00F906F6 /* SIMBL Agent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SIMBL Agent.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		276144CE105F523C00F906F6 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		276144CE105F523C00F906F6 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		276144D0105F523C00F906F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		276144D1105F523C00F906F6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "SIMBL Agent/Info.plist"; sourceTree = SOURCE_ROOT; };
 		276144D3105F523C00F906F6 /* net.culater.SIMBL.Agent.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = net.culater.SIMBL.Agent.plist; sourceTree = "<group>"; };
@@ -345,7 +345,6 @@
 			buildSettings = {
 				INFOPLIST_FILE = "SIMBL Agent/Info.plist";
 				PRODUCT_NAME = "SIMBL Agent";
-				PRODUCT_VERSION = 0.9.7;
 			};
 			name = Development;
 		};
@@ -354,7 +353,6 @@
 			buildSettings = {
 				INFOPLIST_FILE = "SIMBL Agent/Info.plist";
 				PRODUCT_NAME = "SIMBL Agent";
-				PRODUCT_VERSION = 0.9.7;
 			};
 			name = Deployment;
 		};
@@ -363,7 +361,6 @@
 			buildSettings = {
 				INFOPLIST_FILE = rez/Info.plist;
 				PRODUCT_NAME = SIMBL;
-				PRODUCT_VERSION = 0.9.7;
 				WRAPPER_EXTENSION = osax;
 			};
 			name = Development;
@@ -373,7 +370,6 @@
 			buildSettings = {
 				INFOPLIST_FILE = rez/Info.plist;
 				PRODUCT_NAME = SIMBL;
-				PRODUCT_VERSION = 0.9.7;
 				WRAPPER_EXTENSION = osax;
 			};
 			name = Deployment;
@@ -392,7 +388,7 @@
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_VERSION = 0.9.6;
+				PRODUCT_VERSION = 0.9.8;
 				SDKROOT = macosx10.5;
 			};
 			name = Development;
@@ -407,7 +403,7 @@
 				GCC_PREFIX_HEADER = src/SIMBL_Prefix.pch;
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				PRODUCT_VERSION = 0.9.6;
+				PRODUCT_VERSION = 0.9.8;
 				SDKROOT = macosx10.5;
 			};
 			name = Deployment;

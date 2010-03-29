@@ -153,7 +153,8 @@ fail:
 	}
 }
 
-- (void) eventDidFail:(const AppleEvent*)event withError:(NSError*)error {
+- (void) eventDidFail:(const AppleEvent*)event withError:(NSError*)error
+{
 	NSDictionary* userInfo = [error userInfo];
 	NSNumber* errorNumber = [userInfo objectForKey:@"ErrorNumber"];
 	
