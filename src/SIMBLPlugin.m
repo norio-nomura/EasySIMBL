@@ -91,6 +91,15 @@
 		return [[self path] lastPathComponent];
 }
 
+- (void) dealloc 
+{
+	if (path)
+		[path release];
+	if (info)
+		[info release];
+	[super dealloc];
+}
+
 @end
 
 @implementation NSBundle (SIMBLCocoaExtensions)

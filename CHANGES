@@ -1,3 +1,5 @@
+0.9.8 - Integrated fix for installer permissions. Fixed event handling on Leopard. Changed installer not to allow relocation. Fixed potential leak. Apps could reclaim almost 100-200 bytes. Don't spend it all in one place.
+
 0.9.7 - Added variable-level logging. Tweaked the installer to prune the Leopard OSAX event. Added application blacklisting to alleviate odd and annoying crash bug in the ScriptingBridge.
 
 0.9.6 - Fixed installer package now that I have a better understanding of how/when LaunchAgents get started. SIMBL Agent now only triggers an inject event when it is sure that there is a plugin present for the application that just loaded. This should cut down on the admittedly small overhead, but makes me feel it's much more efficient.

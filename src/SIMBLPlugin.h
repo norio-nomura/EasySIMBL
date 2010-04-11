@@ -14,6 +14,7 @@
 
 + (SIMBLPlugin*) bundleWithPath:(NSString*)_path;
 - (SIMBLPlugin*) initWithPath:(NSString*)_path;
+- (void) dealloc;
 
 - (NSString*) path;
 - (void) setPath:(NSString*)_path;
