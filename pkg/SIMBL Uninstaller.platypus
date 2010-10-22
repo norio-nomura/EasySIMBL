@@ -11,7 +11,7 @@
 	<key>BundledFiles</key>
 	<array/>
 	<key>Creator</key>
-	<string>Platypus-4.2</string>
+	<string>Platypus-4.4</string>
 	<key>CustomIconPath</key>
 	<string>/usr/local/share/platypus/PlatypusDefault.icns</string>
 	<key>Destination</key>
@@ -1604,6 +1604,8 @@
 	<string>SIMBL Uninstaller</string>
 	<key>NibPath</key>
 	<string>/usr/local/share/platypus/MainMenu.nib</string>
+	<key>OptimizeApplication</key>
+	<false/>
 	<key>Output</key>
 	<string>Text Window</string>
 	<key>Parameters</key>
@@ -1620,6 +1622,13 @@
 	<false/>
 	<key>Signature</key>
 	<string>SIMu</string>
+	<key>StatusItemDisplayType</key>
+	<string>Text</string>
+	<key>StatusItemIcon</key>
+	<data>
+	</data>
+	<key>StatusItemTitle</key>
+	<string>MyApp</string>
 	<key>Suffixes</key>
 	<array>
 		<string>*</string>
@@ -1635,6 +1644,6 @@
 	<key>TextSize</key>
 	<real>10</real>
 	<key>Version</key>
-	<string>1.1</string>
+	<string>1.2</string>
 </dict>
 </plist>
