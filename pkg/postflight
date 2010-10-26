@@ -32,6 +32,9 @@ chmod 755 "$LAUNCH_AGENTS_DIR"
 
 # ensure that this loads on restart
 cp "$LAUNCHD_PLIST" "$LAUNCH_AGENTS_DIR"
+if [ $? != 0 ]; then
+  exit 1
+fi
 
 # create a system-wide location for plugins
 SIMBL_PLUGINS_DIR="/Library/Application Support/SIMBL/Plugins"
@@ -46,6 +49,9 @@ chmod 775 "$SIMBL_PLUGINS_DIR"
 SCRIPTING_ADDITIONS_DIR="/Library/ScriptingAdditions"
 chown root:admin "$SCRIPTING_ADDITIONS_DIR"
 chmod 775 "$SCRIPTING_ADDITIONS_DIR"
+if [ $? != 0 ]; then
+  exit 1
+fi
 
 # stop any running agent by unloading it, in case we have made changes
 # to the agent that won't take effect until the application is restarted
@@ -69,6 +75,9 @@ echo "Stop root SIMBL Agent"
 echo "Start SIMBL Agent"
 echo su -l $USER -c "/bin/launchctl load -F -S Aqua \"${LAUNCHD_PLIST}\""
 su -l $USER -c "/bin/launchctl load -F -S Aqua \"${LAUNCHD_PLIST}\""
+if [ $? != 0 ]; then
+  exit 1
+fi
 
 # Under 10.6, the Leopard-compatible OSAX event causes a spurious entry in the
 # console. This is harmless and the warning is completely pointless, the event
