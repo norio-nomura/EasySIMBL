@@ -1,3 +1,5 @@
+0.9.9 - Integrated fix for postinstall script which could erroneously report failure.  Incorporate patch for the Agent to more gracefully handle malformed bundles.
+
 0.9.8 - Integrated fix for installer permissions. Fixed event handling on Leopard. Changed installer not to allow relocation. Fixed potential leak. Apps could reclaim almost 100-200 bytes. Don't spend it all in one place.
 
 0.9.7 - Added variable-level logging. Tweaked the installer to prune the Leopard OSAX event. Added application blacklisting to alleviate odd and annoying crash bug in the ScriptingBridge.
