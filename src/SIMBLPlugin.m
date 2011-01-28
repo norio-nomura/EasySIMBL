@@ -53,8 +53,28 @@
 	if (!(self = [super init]))
 		return nil;
 	[self setPath:_path];
-	[self setInfo:[NSDictionary dictionaryWithContentsOfFile:[NSString pathWithComponents:[NSArray arrayWithObjects:_path, @"Contents", @"Info.plist", nil]]]];
+
+NSArray* bundlePathParts = [NSArray arrayWithObjects:_path, @"Contents", @"Info.plist", nil];
+	if (nil == bundlePathParts)
+		return nil;
+	NSString* bundlePath = [NSString pathWithComponents:bundlePathParts];
+	if (nil == bundlePath) {
+		NSLog(@"Unable to create bundle path string from components: %@", bundlePathParts);
+		return nil;
+	}
+	NSDictionary* bundleDict = [NSDictionary dictionaryWithContentsOfFile:bundlePath];
+	if (nil == bundleDict) {
+		NSLog(@"Unable to create dictionary from bundle at path '%@'", bundlePath);
+		return nil;
+	}
+	if (0 == [bundleDict count]) {
+		NSLog(@"Warning: Empty dictionary created from bundle at path '%@'", bundlePath);
+		return nil;
+	}
+
+	[self setInfo:bundleDict];
 	return self;
+
 }
 
 - (NSString*) bundleIdentifier

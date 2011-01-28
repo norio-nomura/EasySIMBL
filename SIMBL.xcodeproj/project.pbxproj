@@ -52,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		273F8C4712F3760300321488 /* SIMBLMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMBLMacros.h; sourceTree = "<group>"; };
 		276144C1105F51CA00F906F6 /* SIMBL Agent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SIMBL Agent.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		276144CE105F523C00F906F6 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		276144D0105F523C00F906F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -70,7 +71,7 @@
 		E0AF789609B3031900F50FE7 /* SIMBL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMBL.m; sourceTree = "<group>"; };
 		E0AF789709B3031900F50FE7 /* SIMBL_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMBL_Prefix.pch; sourceTree = "<group>"; };
 		E0AF789809B3031900F50FE7 /* SIMBLPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMBLPlugin.h; sourceTree = "<group>"; };
-		E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMBLPlugin.m; sourceTree = "<group>"; };
+		E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMBLPlugin.m; sourceTree = "<group>"; wrapsLines = 1; };
 		E0EE4A4D0693E03F0061E2D8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		E0EE4A4E0693E03F0061E2D8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
@@ -162,6 +163,7 @@
 		E0AF789109B3031900F50FE7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				273F8C4712F3760300321488 /* SIMBLMacros.h */,
 				E0AF789209B3031900F50FE7 /* DTMacros.h */,
 				E0AF789309B3031900F50FE7 /* NSAlert_SIMBL.h */,
 				E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */,
@@ -360,6 +362,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = "SIMBL Agent/Info.plist";
 				PRODUCT_NAME = "SIMBL Agent";
+				PRODUCT_VERSION = 0.9.9;
 			};
 			name = Deployment;
 		};
@@ -377,6 +380,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = rez/Info.plist;
 				PRODUCT_NAME = SIMBL;
+				PRODUCT_VERSION = 0.9.9;
 				WRAPPER_EXTENSION = osax;
 			};
 			name = Deployment;
