@@ -89,3 +89,5 @@ if [ $? == 0 ]; then
   echo "pruning Leopard event handler"
   /usr/libexec/PlistBuddy -c "Delete :OSAXHandlers:Events:SIMeleop" "$OSAX_PLIST"
 fi
+
+exit 0
