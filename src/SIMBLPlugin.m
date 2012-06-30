@@ -3,58 +3,30 @@
  * SIMBL is released under the GNU General Public License v2.
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
+/**
+ * Copyright 2012, Norio Nomura
+ * EasySIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
 
 #import "SIMBLPlugin.h"
 
 @implementation SIMBLPlugin
 
-+ (SIMBLPlugin*) bundleWithPath:(NSString*)_path
+@synthesize path=_path, info=_info;
+
++ (SIMBLPlugin*) bundleWithPath:(NSString*)path
 {
-	return [[[SIMBLPlugin alloc] initWithPath:_path] autorelease];
+	return [[SIMBLPlugin alloc] initWithPath:path];
 }
 
-- (NSString*) path
-{
-	return path;
-}
-
-- (void) setPath:(NSString*)_path
-{
-	if (path && (!_path || ![path isEqualToString:_path]))
-		[path autorelease];
-	
-	if (_path)
-		path = [_path copy];
-	else
-		path = _path;
-}
-
-- (NSDictionary*) info
-{
-	return info;
-}
-
-- (void) setInfo:(NSDictionary*)_info
-{
-	if (info == _info)
-		return;
-	
-	if (_info)
-		[_info retain];
-	
-	if (info)
-		[info release];
-	
-	info = _info;
-}
-
-- (SIMBLPlugin*) initWithPath:(NSString*)_path
+- (SIMBLPlugin*) initWithPath:(NSString*)path
 {
 	if (!(self = [super init]))
 		return nil;
-	[self setPath:_path];
+	self.path = path;
 
-NSArray* bundlePathParts = [NSArray arrayWithObjects:_path, @"Contents", @"Info.plist", nil];
+    NSArray* bundlePathParts = [NSArray arrayWithObjects:path, @"Contents", @"Info.plist", nil];
 	if (nil == bundlePathParts)
 		return nil;
 	NSString* bundlePath = [NSString pathWithComponents:bundlePathParts];
@@ -72,19 +44,19 @@ NSArray* bundlePathParts = [NSArray arrayWithObjects:_path, @"Contents", @"Info.
 		return nil;
 	}
 
-	[self setInfo:bundleDict];
+	self.info = bundleDict;
 	return self;
 
 }
 
 - (NSString*) bundleIdentifier
 {
-	return [info objectForKey:@"CFBundleIdentifier"];
+	return [self.info objectForKey:@"CFBundleIdentifier"];
 }
 
 - (id) objectForInfoDictionaryKey:(NSString*)key
 {
-	return [info objectForKey:key];
+	return [self.info objectForKey:key];
 }
 
 - (NSString*) _dt_info
@@ -108,17 +80,9 @@ NSArray* bundlePathParts = [NSArray arrayWithObjects:_path, @"Contents", @"Info.
 	if (name != nil)
 		return name;
 	else
-		return [[self path] lastPathComponent];
+		return [self.path lastPathComponent];
 }
 
-- (void) dealloc 
-{
-	if (path)
-		[path release];
-	if (info)
-		[info release];
-	[super dealloc];
-}
 
 @end
 

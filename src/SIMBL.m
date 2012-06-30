@@ -3,13 +3,15 @@
  * SIMBL is released under the GNU General Public License v2.
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
+/**
+ * Copyright 2012, Norio Nomura
+ * EasySIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
 
-#import "DTMacros.h"
 #import "SIMBL.h"
 #import "SIMBLPlugin.h"
 #import "NSAlert_SIMBL.h"
-
-#import <objc/objc-class.h>
 
 /*
 	<key>SIMBLTargetApplications</key>
@@ -29,20 +31,11 @@
 
 static NSMutableDictionary* loadedBundleIdentifiers = nil;
 
-OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
-{
-	OSErr resultCode = noErr;
-	SIMBLLogInfo(@"load SIMBL plugins");
-	[SIMBL installPlugins];
-	return resultCode;
-}
-
 + (void) initialize
 {
 	NSUserDefaults* defaults = [[NSUserDefaults alloc] init];
 	[defaults addSuiteNamed:@"net.culater.SIMBL"];
 	[defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:SIMBLLogLevelDefault], SIMBLPrefKeyLogLevel, nil]];
-	[defaults release];
 }
 
 + (void) logMessage:(NSString*)message atLevel:(int)level
@@ -57,10 +50,16 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 + (NSArray*) pluginPathList
 {
 	NSMutableArray* pluginPathList = [NSMutableArray array];
-	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask | NSLocalDomainMask | NSNetworkDomainMask, YES);
+	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
+    SIMBLLogDebug(@"NSLibraryDirectory: %@", paths);
 	for (NSString* libraryPath in paths) {
-		NSString* simblPath = [libraryPath stringByAppendingPathComponent:SIMBLPluginPath];
-		NSArray* simblBundles = [[[NSFileManager defaultManager] directoryContentsAtPath:simblPath] pathsMatchingExtensions:[NSArray arrayWithObject:@"bundle"]];
+        NSString* applicationSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
+		NSString* simblPath = [applicationSupportPath stringByAppendingPathComponent:SIMBLPluginPath];
+        NSError *err = NULL;
+		NSArray* simblBundles = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:simblPath error:&err] pathsMatchingExtensions:[NSArray arrayWithObject:@"bundle"]];
+        if (err) {
+            SIMBLLogDebug(@"contentsOfDirectoryAtPath err:%@",err);
+        }
 		for (NSString* bundleName in simblBundles) {
 			[pluginPathList addObject:[simblPath stringByAppendingPathComponent:bundleName]];
 		}
@@ -74,13 +73,16 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 	if (loadedBundleIdentifiers == nil)
 		loadedBundleIdentifiers = [[NSMutableDictionary alloc] init];
 	
-	SIMBLLogDebug(@"SIMBL loaded by path %@ <%@>", [[NSBundle mainBundle] bundlePath], [[NSBundle mainBundle] bundleIdentifier]);
+	SIMBLLogDebug(@"SIMBL loaded by path %@ <%@>", [[NSBundle mainBundle] bundlePath], [[NSBundle mainBundle]bundleIdentifier]);
 	
 	for (NSString* path in [SIMBL pluginPathList]) {
 		BOOL bundleLoaded = [SIMBL loadBundleAtPath:path];
 		if (bundleLoaded)
 			SIMBLLogDebug(@"loaded %@", path);
 	}
+    
+    [[NSDistributedNotificationCenter defaultCenter]postNotificationName:SIMBLHasBeenLoadedNotification
+                                                                  object:[[NSBundle mainBundle]bundleIdentifier]];
 }
 
 
@@ -244,7 +246,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 		
 		if ((maxVersion && appVersion > maxVersion) || (minVersion && appVersion < minVersion))
 		{
-			[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"Error", SIMBLStringTable, DTOwnerBundle, @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"%@ %@ (v%@) has not been tested with the plugin %@ %@ (v%@). As a precaution, it has not been loaded. Please contact the plugin developer for further information.", SIMBLStringTable, DTOwnerBundle, @"Error alert details, substitute application and plugin version strings"), [_appBundle _dt_name], [_appBundle _dt_version], [_appBundle _dt_bundleVersion], [_bundle _dt_name], [_bundle _dt_version], [_bundle _dt_bundleVersion]];
+			[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"Error", SIMBLStringTable, [NSBundle bundleForClass:[self class]], @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"%@ %@ (v%@) has not been tested with the plugin %@ %@ (v%@). As a precaution, it has not been loaded. Please contact the plugin developer for further information.", SIMBLStringTable, [NSBundle bundleForClass:[self class]], @"Error alert details, substitute application and plugin version strings"), [_appBundle _dt_name], [_appBundle _dt_version], [_appBundle _dt_bundleVersion], [_bundle _dt_name], [_bundle _dt_version], [_bundle _dt_bundleVersion]];
 			continue;
 		}
 		
@@ -264,7 +266,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 		Class principalClass = [bundle principalClass];
 		
 		// if the principal class has an + (void) install message, call it
-		if (principalClass && class_getClassMethod(principalClass, @selector(install)))
+		if (principalClass && [principalClass respondsToSelector:@selector(install)])
 			[principalClass install];
 		
 		// set that we've loaded this bundle to prevent collisions
@@ -274,7 +276,7 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 	}
 	@catch (NSException* exception)
 	{
-		[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"Error", SIMBLStringTable, DTOwnerBundle, @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"Failed to load the %@ plugin.\n%@", SIMBLStringTable, DTOwnerBundle, @"Error alert details, sub plugin name and error reason"), [_plugin _dt_name], [exception reason]];
+		[NSAlert errorAlert:NSLocalizedStringFromTableInBundle(@"Error", SIMBLStringTable, [NSBundle bundleForClass:[self class]], @"Error alert primary message") withDetails:NSLocalizedStringFromTableInBundle(@"Failed to load the %@ plugin.\n%@", SIMBLStringTable, [NSBundle bundleForClass:[self class]], @"Error alert details, sub plugin name and error reason"), [_plugin _dt_name], [exception reason]];
 	}
 	
 	return NO;

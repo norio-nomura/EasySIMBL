@@ -3,43 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIconFile</key>
+	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>com.github.norio-nomura.${PRODUCT_NAME:rfc1034identifier}.${WRAPPER_EXTENSION}</string>
+	<string>com.github.norio-nomura.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
-	<string>osax</string>
+	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>${PRODUCT_VERSION}</string>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
-	<string>ascr</string>
+	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>${PRODUCT_VERSION}</string>
+	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>${EXECUTABLE_NAME} ${PRODUCT_VERSION}, ©2003-2009 Mike Solomon, 2012 Norio Nomura</string>
+	<string>${EXECUTABLE_NAME} ${PRODUCT_VERSION}, ©2012 Norio Nomura</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
-	<string>SIMBL</string>
-	<key>OSAXHandlers</key>
-	<dict>
-		<key>Events</key>
-		<dict>
-			<key>ESIMload</key>
-			<dict>
-				<key>Context</key>
-				<string>User</string>
-				<key>Handler</key>
-				<string>InjectEventHandler</string>
-				<key>ThreadSafe</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
+	<string>NSApplication</string>
 </dict>
 </plist>

@@ -3,11 +3,21 @@
  * SIMBL is released under the GNU General Public License v2.
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
+/**
+ * Copyright 2012, Norio Nomura
+ * EasySIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
 
-#import <Foundation/Foundation.h>
 #import "SIMBLPlugin.h"
 
-#define SIMBLPluginPath @"Application Support/SIMBL/Plugins"
+#define SIMBLScriptingAdditionsPath @"ScriptingAdditions"
+#define SIMBLBundleBaseName @"EasySIMBL"
+#define SIMBLBundleExtension @"osax"
+#define SIMBLBundleName @"EasySIMBL.osax"
+#define SIMBLHasBeenLoadedNotification @"SIMBLHasBeenLoadedNotification"
+
+#define SIMBLPluginPath @"SIMBL/Plugins"
 #define SIMBLStringTable @"SIMBLStringTable"
 #define SIMBLApplicationIdentifier @"SIMBLApplicationIdentifier"
 #define SIMBLTargetApplications @"SIMBLTargetApplications"

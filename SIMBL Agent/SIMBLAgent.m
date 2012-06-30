@@ -3,78 +3,88 @@
  * SIMBL is released under the GNU General Public License v2.
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
+/**
+ * Copyright 2012, Norio Nomura
+ * EasySIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
 
-#import "SIMBL.h"
-#import "SIMBLAgent.h"
 #import <ScriptingBridge/ScriptingBridge.h>
 #import <Carbon/Carbon.h>
-
-@implementation NSApplication (SystemVersion)
-
-- (void)getSystemVersionMajor:(unsigned *)major
-                        minor:(unsigned *)minor
-                       bugFix:(unsigned *)bugFix;
-{
-    OSErr err;
-    SInt32 systemVersion, versionMajor, versionMinor, versionBugFix;
-    if ((err = Gestalt(gestaltSystemVersion, &systemVersion)) != noErr) goto fail;
-    if (systemVersion < 0x1040)
-    {
-        if (major) *major = ((systemVersion & 0xF000) >> 12) * 10 +
-            ((systemVersion & 0x0F00) >> 8);
-        if (minor) *minor = (systemVersion & 0x00F0) >> 4;
-        if (bugFix) *bugFix = (systemVersion & 0x000F);
-    }
-    else
-    {
-        if ((err = Gestalt(gestaltSystemVersionMajor, &versionMajor)) != noErr) goto fail;
-        if ((err = Gestalt(gestaltSystemVersionMinor, &versionMinor)) != noErr) goto fail;
-        if ((err = Gestalt(gestaltSystemVersionBugFix, &versionBugFix)) != noErr) goto fail;
-        if (major) *major = versionMajor;
-        if (minor) *minor = versionMinor;
-        if (bugFix) *bugFix = versionBugFix;
-    }
-    
-    return;
-    
-fail:
-    SIMBLLogNotice(@"Unable to obtain system version: %ld", (long)err);
-    if (major) *major = 10;
-    if (minor) *minor = 0;
-    if (bugFix) *bugFix = 0;
-}
-
-@end
-
+#import "SIMBL.h"
+#import "SIMBLAgent.h"
 
 @implementation SIMBLAgent
 
+@synthesize waitingInjectionNumber=_waitingInjectionNumber;
+@synthesize scriptingAdditionsPath=_scriptingAdditionsPath;
+@synthesize osaxPath=_osaxPath;
+@synthesize linkedOsaxPath=_linkedOsaxPath;
+@synthesize applicationSupportPath=_pluginsPath;
+
+#pragma NSApplicationDelegate Protocol
+
 - (void) applicationDidFinishLaunching:(NSNotification*)notificaion
 {
-	NSProcessInfo* procInfo = [NSProcessInfo processInfo];
-	if ([(NSString*)[[procInfo arguments] lastObject] hasPrefix:@"-psn"]) {
-		// if we were started interactively, load in launchd and terminate
-		SIMBLLogNotice(@"installing into launchd");
-		[self loadInLaunchd];
-		[NSApp terminate:nil];
-	}
-	else {
-		SIMBLLogInfo(@"agent started");
-		[[[NSWorkspace sharedWorkspace] notificationCenter]
-				addObserver:self selector:@selector(injectSIMBL:)
-				name:NSWorkspaceDidLaunchApplicationNotification object:nil];
-	}
+    SIMBLLogInfo(@"agent started");
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
+    self.scriptingAdditionsPath = [(NSString*)[paths objectAtIndex:0] stringByAppendingPathComponent:SIMBLScriptingAdditionsPath];
+    self.osaxPath = [[NSBundle mainBundle]pathForResource:SIMBLBundleBaseName ofType:SIMBLBundleExtension];
+    self.linkedOsaxPath = [self.scriptingAdditionsPath stringByAppendingPathComponent:SIMBLBundleName];
+    self.waitingInjectionNumber = 0;
+    paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,  NSUserDomainMask, YES);
+    self.applicationSupportPath = [(NSString*)[paths objectAtIndex:0] stringByAppendingPathComponent:@"SIMBL"];
+    
+    [[NSDistributedNotificationCenter defaultCenter]addObserver:self
+                                                       selector:@selector(receiveSIMBLHasBeenLoadedNotification:)
+                                                           name:SIMBLHasBeenLoadedNotification
+                                                         object:nil];
+    
+    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+    [[workspace notificationCenter] addObserver:self
+                                       selector:@selector(applicationLaunched:)
+                                           name:NSWorkspaceDidLaunchApplicationNotification object:nil];
+    
+    // inject into resumed applications
+    for (NSRunningApplication *appInfo in [workspace runningApplications]) {
+        [self injectSIMBL:appInfo];
+    }
 }
 
-- (void) loadInLaunchd
+#pragma mark SBApplicationDelegate Protocol
+
+- (id) eventDidFail:(const AppleEvent *)event withError:(NSError *)error;
 {
-	NSTask* task = [NSTask launchedTaskWithLaunchPath:@"/bin/launchctl" arguments:[NSArray arrayWithObjects:@"load", @"-F", @"-S", @"Aqua", @"/Library/ScriptingAdditions/SIMBL.osax/Contents/Resources/SIMBL Agent.app/Contents/Resources/net.culater.SIMBL.Agent.plist", nil]];
-	[task waitUntilExit];
-	if ([task terminationStatus] != 0)
-		SIMBLLogNotice(@"launchctl returned %d", [task terminationStatus]);
+    return nil;
 }
 
-- (void) injectSIMBL:(NSNotification*)notification
+#pragma mark NSWorkspaceDidLaunchApplicationNotification
+
+- (void) applicationLaunched:(NSNotification*)notification
+{
+	[self injectSIMBL:[[notification userInfo]objectForKey:NSWorkspaceApplicationKey]];
+}
+
+#pragma mark SIMBLHasBeenLoadedNotification
+
+- (void) receiveSIMBLHasBeenLoadedNotification:(NSNotification*)notification
+{
+    SIMBLLogDebug(@"receiveSIMBLHasBeenLoadedNotification from %@", notification.object);
+	self.waitingInjectionNumber--;
+    if (!self.waitingInjectionNumber) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager]removeItemAtPath:self.linkedOsaxPath error:&error];
+        if (error) {
+            SIMBLLogDebug(@"removeItemAtPath error:%@",error);
+        }
+    }
+    [self injectSandboxedBundleidentifier:notification.object enabled:NO];
+}
+
+#pragma mark -
+
+- (void) injectSIMBL:(NSRunningApplication *)appInfo
 {
 	// NOTE: if you change the log level externally, there is pretty much no way
 	// to know when the changed. Just reading from the defaults doesn't validate
@@ -82,13 +92,12 @@ fail:
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
 	[defaults synchronize];
 
-	NSDictionary* appInfo = [notification userInfo];
-	NSString* appName = [appInfo objectForKey:@"NSApplicationName"];
+	NSString* appName = [appInfo localizedName];
 	SIMBLLogInfo(@"%@ started", appName);
 	SIMBLLogDebug(@"app start notification: %@", appInfo);
 		
 	// check to see if there are plugins to load
-	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithPath:[appInfo objectForKey:@"NSApplicationPath"]]] == NO) {
+	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[appInfo bundleURL]]] == NO) {
 		return;
 	}
 	
@@ -97,7 +106,7 @@ fail:
 	// ScriptingBridge code. Due to the launchd behavior of restarting crashed
 	// agents, this is mostly harmless. To reduce the crashing we leave a
 	// blacklist to prevent injection.  By default, this is empty.
-	NSString* appIdentifier = [appInfo objectForKey:@"NSApplicationBundleIdentifier"];
+	NSString* appIdentifier = [appInfo bundleIdentifier];
 	NSArray* blacklistedIdentifiers = [defaults stringArrayForKey:@"SIMBLApplicationIdentifierBlacklist"];
 	if (blacklistedIdentifiers != nil && 
 			[blacklistedIdentifiers containsObject:appIdentifier]) {
@@ -107,70 +116,104 @@ fail:
 
 	SIMBLLogDebug(@"send inject event");
 	
-	// Get the right event ID for this version of OS X
-	unsigned majorOSVersion = 0;
-	unsigned minorOSVersion = 0;
-	unsigned bugfixOSVersion = 0;
-	[NSApp getSystemVersionMajor:&majorOSVersion minor:&minorOSVersion bugFix:&bugfixOSVersion];
-	
-	if (majorOSVersion != 10) {
-		SIMBLLogNotice(@"something fishy - OS X version %u", majorOSVersion);
-		return;
-	}
-	
-	AEEventID eventID = minorOSVersion > 5 ? 'load' : 'leop';
-
-	// Find the process to target
-	pid_t pid = [[appInfo objectForKey:@"NSApplicationProcessIdentifier"] intValue];
-	SBApplication* app = [SBApplication applicationWithProcessIdentifier:pid];
-	[app setDelegate:self];
-	if (!app) {
-		SIMBLLogNotice(@"Can't find app with pid %d", pid);
-		return;
-	}
-	
-	// Force AppleScript to initialize in the app, by getting the dictionary
-	// When initializing, you need to wait for the event reply, otherwise the
-	// event might get dropped on the floor. This is only seems to happen in 10.5
-	// but it shouldn't harm anything.
-	[app setSendMode:kAEWaitReply | kAENeverInteract | kAEDontRecord];
-	id initReply = [app sendEvent:kASAppleScriptSuite id:kGetAEUT parameters:0];
-
-	// the reply here is of some unknown type - it is not an Objective-C object
-	// as near as I can tell because trying to print it using "%@" or getting its
-	// class both cause the application to segfault. The pointer value always seems
-	// to be 0x10000 which is a bit fishy. It does not seem to be an AEDesc struct
-	// either.
-	// since we are waiting for a reply, it seems like this object might need to
-	// be released - but i don't know what it is or how to release it.
-	// NSLog(@"initReply: %p '%64.64s'", initReply, (char*)initReply);
-	
-	// Inject!
-	[app setSendMode:kAENoReply | kAENeverInteract | kAEDontRecord];
-	id injectReply = [app sendEvent:'SIMe' id:eventID parameters:0];
-	if (injectReply != nil) {
-		SIMBLLogNotice(@"unexpected injectReply: %@", injectReply);
-	}
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    BOOL isDirectory = NO;
+    if (![fileManager fileExistsAtPath:self.scriptingAdditionsPath isDirectory:&isDirectory]) {
+        if (![fileManager createDirectoryAtPath:self.scriptingAdditionsPath
+               withIntermediateDirectories:YES
+                                attributes:nil
+                                     error:&error]) {
+            
+            if (error) {
+                SIMBLLogDebug(@"createDirectoryAtPath error:%@",error);
+                return;
+            }
+        }
+    } else if (!isDirectory) {
+        SIMBLLogDebug(@"%@ is file. Expect are directory", self.scriptingAdditionsPath);
+        return;
+    }
+        
+    if ([fileManager fileExistsAtPath:self.osaxPath isDirectory:&isDirectory] && isDirectory) {
+        // Find the process to target
+        pid_t pid = [appInfo processIdentifier];
+        SBApplication* app = [SBApplication applicationWithProcessIdentifier:pid];
+        [app setDelegate:self];
+        if (!app) {
+            SIMBLLogNotice(@"Can't find app with pid %d", pid);
+            return;
+        }
+        
+        // hardlink SIMBL.osax to ScriptingAdditions
+        if (![fileManager fileExistsAtPath:self.linkedOsaxPath isDirectory:&isDirectory]) {
+            [fileManager linkItemAtPath:self.osaxPath toPath:self.linkedOsaxPath error:&error];
+            if (error) {
+                SIMBLLogDebug(@"linkItemAtPath error:%@",error);
+                return;
+            }
+        }
+        self.waitingInjectionNumber++;
+        
+        // hardlink SIMBL/Plugins to Container
+        [self injectSandboxedBundleidentifier:appIdentifier enabled:YES];
+        
+        
+        // Force AppleScript to initialize in the app, by getting the dictionary
+        // When initializing, you need to wait for the event reply, otherwise the
+        // event might get dropped on the floor. This is only seems to happen in 10.5
+        // but it shouldn't harm anything.
+        [app setSendMode:kAEWaitReply | kAENeverInteract | kAEDontRecord];
+        [app sendEvent:kASAppleScriptSuite id:kGetAEUT parameters:0];
+        
+        // the reply here is of some unknown type - it is not an Objective-C object
+        // as near as I can tell because trying to print it using "%@" or getting its
+        // class both cause the application to segfault. The pointer value always seems
+        // to be 0x10000 which is a bit fishy. It does not seem to be an AEDesc struct
+        // either.
+        // since we are waiting for a reply, it seems like this object might need to
+        // be released - but i don't know what it is or how to release it.
+        // NSLog(@"initReply: %p '%64.64s'", initReply, (char*)initReply);
+        
+        // Inject!
+        [app setSendMode:kAENoReply | kAENeverInteract | kAEDontRecord];
+        id injectReply = [app sendEvent:'ESIM' id:'load' parameters:0];
+        if (injectReply != nil) {
+            SIMBLLogNotice(@"unexpected injectReply: %@", injectReply);
+        }
+    }
 }
 
-- (void) eventDidFail:(const AppleEvent*)event withError:(NSError*)error
+- (void)injectSandboxedBundleidentifier:(NSString*)bundleIdentifier enabled:(BOOL)bEnabled;
 {
-	NSDictionary* userInfo = [error userInfo];
-	NSNumber* errorNumber = [userInfo objectForKey:@"ErrorNumber"];
-	
-	// this error seems more common on Leopard
-	if (errorNumber && [errorNumber intValue] == errAEEventNotHandled) {
-		SIMBLLogDebug(@"eventDidFail:'%4.4s' error:%@ userInfo:%@", (char*)&(event->descriptorType), error, [error userInfo]);
-	}
-	else {
-		SIMBLLogNotice(@"eventDidFail:'%4.4s' error:%@ userInfo:%@", (char*)&(event->descriptorType), error, [error userInfo]);
-	}
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
+    NSString *containerPath = [NSString pathWithComponents:[NSArray arrayWithObjects:[paths objectAtIndex:0], @"Containers", bundleIdentifier, nil]];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    BOOL isDirectory = NO;
+    if ([fileManager fileExistsAtPath:containerPath isDirectory:&isDirectory] && isDirectory) {
+        NSString *containerScriptingAddtionsPath = [containerPath stringByAppendingPathComponent:@"Data/Library/ScriptingAdditions"];
+        NSString *containerApplicationSupportPath = [containerPath stringByAppendingPathComponent:@"Data/Library/Application Support/SIMBL"];
+        if (bEnabled) {
+            [fileManager linkItemAtPath:self.scriptingAdditionsPath toPath:containerScriptingAddtionsPath error:&error];
+            if (error) {
+                SIMBLLogDebug(@"linkItemAtPath error:%@",error);
+            }
+            [fileManager linkItemAtPath:self.applicationSupportPath toPath:containerApplicationSupportPath error:&error];
+            if (error) {
+                SIMBLLogDebug(@"linkItemAtPath error:%@",error);
+            }
+        } else {
+            [fileManager removeItemAtPath:containerScriptingAddtionsPath error:&error];
+            if (error) {
+                SIMBLLogDebug(@"removeItemAtPath error:%@",error);
+            }
+            [fileManager removeItemAtPath:containerApplicationSupportPath error:&error];
+            if (error) {
+                SIMBLLogDebug(@"removeItemAtPath error:%@",error);
+            }
+        }
+    }
 }
+
 @end
-
-
-int main(int argc, char *argv[])
-{
-	return NSApplicationMain(argc, (const char **)argv);
-}
-

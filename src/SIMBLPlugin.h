@@ -3,23 +3,20 @@
  * SIMBL is released under the GNU General Public License v2.
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
-
-#import <Foundation/Foundation.h>
+/**
+ * Copyright 2012, Norio Nomura
+ * EasySIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
 
 @interface SIMBLPlugin : NSObject
-{
-	NSString* path;
-	NSDictionary* info;
-}
 
-+ (SIMBLPlugin*) bundleWithPath:(NSString*)_path;
-- (SIMBLPlugin*) initWithPath:(NSString*)_path;
-- (void) dealloc;
++ (SIMBLPlugin*) bundleWithPath:(NSString*)path;
+- (SIMBLPlugin*) initWithPath:(NSString*)path;
 
-- (NSString*) path;
-- (void) setPath:(NSString*)_path;
-- (NSDictionary*) info;
-- (void) setInfo:(NSDictionary*)_info;
+@property (strong, nonatomic) NSString* path;
+@property (strong, nonatomic) NSDictionary* info;
+
 - (NSString*) bundleIdentifier;
 - (id) objectForInfoDictionaryKey:(NSString*)key;
 

@@ -3,6 +3,11 @@
  * SIMBL is released under the GNU General Public License v2.
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
+/**
+ * Copyright 2012, Norio Nomura
+ * EasySIMBL is released under the GNU General Public License v2.
+ * http://www.opensource.org/licenses/gpl-2.0.php
+ */
 
 #import "NSAlert_SIMBL.h"
 
@@ -13,7 +18,7 @@
 	va_list ap;
 	va_start(ap, _details);
 
-	NSString* detailsFormatted = [[[NSString alloc] initWithFormat:_details arguments:ap] autorelease];
+	NSString* detailsFormatted = [[NSString alloc] initWithFormat:_details arguments:ap];
 	va_end(ap);
 
 	NSBeginAlertSheet(
