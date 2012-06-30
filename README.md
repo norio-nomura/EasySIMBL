@@ -1,11 +1,12 @@
 EasySIMBL
 ====================================
-Changes from original [SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
+Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 ---------------------------
-- OS X 10.7 or Later.
+- **OS X 10.7 or Later.**
+- **Reads plugins from `~/Library/Application Support/SIMBL/Plugins` only.**
+- **Never reads plugins from `/Library/Application Support/SIMBL/Plugins`.**
 - Support sandboxed application.
 - Support resumed on login application.
-- Seek `~/Library/Application Support/SIMBL/Plugins` only, no more `/Library/Application Support/SIMBL/Plugins`.
 - Drag and Drop install to `/Applications` or `~/Applications` folder, no uninstaller required.
 - Change injection method.
 
