@@ -89,7 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				6C3A4C35159E7E7000985CCD /* SIMBL Agent.app */,
-				6C3A4C37159E7E7000985CCD /* SIMBL.osax */,
+				6C3A4C37159E7E7000985CCD /* EasySIMBL.osax */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -216,7 +216,7 @@
 			remoteRef = 6C3A4C34159E7E7000985CCD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		6C3A4C37159E7E7000985CCD /* SIMBL.osax */ = {
+		6C3A4C37159E7E7000985CCD /* EasySIMBL.osax */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = EasySIMBL.osax;
