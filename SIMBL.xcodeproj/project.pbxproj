@@ -309,7 +309,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		276144C4105F51CB00F906F6 /* Development */ = {
+		276144C4105F51CB00F906F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -319,9 +319,9 @@
 				INSTALL_PATH = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Development;
+			name = Debug;
 		};
-		276144C5105F51CB00F906F6 /* Deployment */ = {
+		276144C5105F51CB00F906F6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -331,9 +331,9 @@
 				INSTALL_PATH = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Deployment;
+			name = Release;
 		};
-		E0E8F442085F4D0400DCD56F /* Development */ = {
+		E0E8F442085F4D0400DCD56F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -342,9 +342,9 @@
 				PRODUCT_NAME = EasySIMBL;
 				WRAPPER_EXTENSION = osax;
 			};
-			name = Development;
+			name = Debug;
 		};
-		E0E8F443085F4D0400DCD56F /* Deployment */ = {
+		E0E8F443085F4D0400DCD56F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -354,9 +354,9 @@
 				PRODUCT_NAME = EasySIMBL;
 				WRAPPER_EXTENSION = osax;
 			};
-			name = Deployment;
+			name = Release;
 		};
-		E0E8F446085F4D0400DCD56F /* Development */ = {
+		E0E8F446085F4D0400DCD56F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -376,9 +376,9 @@
 				PRODUCT_VERSION = 0.10.0;
 				SDKROOT = macosx;
 			};
-			name = Development;
+			name = Debug;
 		};
-		E0E8F447085F4D0400DCD56F /* Deployment */ = {
+		E0E8F447085F4D0400DCD56F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -396,7 +396,7 @@
 				PRODUCT_VERSION = 0.10.0;
 				SDKROOT = macosx;
 			};
-			name = Deployment;
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -404,29 +404,29 @@
 		276144C7105F51CB00F906F6 /* Build configuration list for PBXNativeTarget "SIMBL Agent" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				276144C4105F51CB00F906F6 /* Development */,
-				276144C5105F51CB00F906F6 /* Deployment */,
+				276144C4105F51CB00F906F6 /* Debug */,
+				276144C5105F51CB00F906F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = Release;
 		};
 		E0E8F441085F4D0400DCD56F /* Build configuration list for PBXNativeTarget "SIMBL" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E0E8F442085F4D0400DCD56F /* Development */,
-				E0E8F443085F4D0400DCD56F /* Deployment */,
+				E0E8F442085F4D0400DCD56F /* Debug */,
+				E0E8F443085F4D0400DCD56F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = Release;
 		};
 		E0E8F445085F4D0400DCD56F /* Build configuration list for PBXProject "SIMBL" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E0E8F446085F4D0400DCD56F /* Development */,
-				E0E8F447085F4D0400DCD56F /* Deployment */,
+				E0E8F446085F4D0400DCD56F /* Debug */,
+				E0E8F447085F4D0400DCD56F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
