@@ -43,7 +43,7 @@
 
     CFStringRef bundleIdentifeierRef = (__bridge CFStringRef)self.loginItemBundleIdentifier;
     if (!SMLoginItemSetEnabled(bundleIdentifeierRef, self.useSIMBL.state == NSOnState)) {
-        self.useSIMBL.state = self.useSIMBL.state ? NSOnState : NSOffState;
+        self.useSIMBL.state = self.useSIMBL.state == NSOnState ? NSOffState : NSOnState;
     }
     self.useSIMBL.state = result;
 }
