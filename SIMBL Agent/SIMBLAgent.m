@@ -76,7 +76,7 @@
         NSError *error = nil;
         [[NSFileManager defaultManager]removeItemAtPath:self.linkedOsaxPath error:&error];
         if (error) {
-            SIMBLLogDebug(@"removeItemAtPath error:%@",error);
+            SIMBLLogNotice(@"removeItemAtPath error:%@",error);
         }
     }
     [self injectSandboxedBundleidentifier:notification.object enabled:NO];
@@ -126,12 +126,12 @@
                                      error:&error]) {
             
             if (error) {
-                SIMBLLogDebug(@"createDirectoryAtPath error:%@",error);
+                SIMBLLogNotice(@"createDirectoryAtPath error:%@",error);
                 return;
             }
         }
     } else if (!isDirectory) {
-        SIMBLLogDebug(@"%@ is file. Expect are directory", self.scriptingAdditionsPath);
+        SIMBLLogNotice(@"%@ is file. Expect are directory", self.scriptingAdditionsPath);
         return;
     }
         
@@ -149,7 +149,7 @@
         if (![fileManager fileExistsAtPath:self.linkedOsaxPath isDirectory:&isDirectory]) {
             [fileManager linkItemAtPath:self.osaxPath toPath:self.linkedOsaxPath error:&error];
             if (error) {
-                SIMBLLogDebug(@"linkItemAtPath error:%@",error);
+                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
                 return;
             }
         }
@@ -197,20 +197,20 @@
         if (bEnabled) {
             [fileManager linkItemAtPath:self.scriptingAdditionsPath toPath:containerScriptingAddtionsPath error:&error];
             if (error) {
-                SIMBLLogDebug(@"linkItemAtPath error:%@",error);
+                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
             }
             [fileManager linkItemAtPath:self.applicationSupportPath toPath:containerApplicationSupportPath error:&error];
             if (error) {
-                SIMBLLogDebug(@"linkItemAtPath error:%@",error);
+                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
             }
         } else {
             [fileManager removeItemAtPath:containerScriptingAddtionsPath error:&error];
             if (error) {
-                SIMBLLogDebug(@"removeItemAtPath error:%@",error);
+                SIMBLLogNotice(@"removeItemAtPath error:%@",error);
             }
             [fileManager removeItemAtPath:containerApplicationSupportPath error:&error];
             if (error) {
-                SIMBLLogDebug(@"removeItemAtPath error:%@",error);
+                SIMBLLogNotice(@"removeItemAtPath error:%@",error);
             }
         }
     }

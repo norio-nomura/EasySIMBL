@@ -51,14 +51,13 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 {
 	NSMutableArray* pluginPathList = [NSMutableArray array];
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
-    SIMBLLogDebug(@"NSLibraryDirectory: %@", paths);
 	for (NSString* libraryPath in paths) {
         NSString* applicationSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
 		NSString* simblPath = [applicationSupportPath stringByAppendingPathComponent:SIMBLPluginPath];
         NSError *err = NULL;
 		NSArray* simblBundles = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:simblPath error:&err] pathsMatchingExtensions:[NSArray arrayWithObject:@"bundle"]];
         if (err) {
-            SIMBLLogDebug(@"contentsOfDirectoryAtPath err:%@",err);
+            SIMBLLogNotice(@"contentsOfDirectoryAtPath err:%@",err);
         }
 		for (NSString* bundleName in simblBundles) {
 			[pluginPathList addObject:[simblPath stringByAppendingPathComponent:bundleName]];
