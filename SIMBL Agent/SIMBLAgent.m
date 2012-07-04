@@ -80,6 +80,7 @@
         }
     }
     [self injectSandboxedBundleidentifier:notification.object enabled:NO];
+    [[NSProcessInfo processInfo]enableSuddenTermination];
 }
 
 #pragma mark -
@@ -181,6 +182,7 @@
         if (injectReply != nil) {
             SIMBLLogNotice(@"unexpected injectReply: %@", injectReply);
         }
+        [[NSProcessInfo processInfo]disableSuddenTermination];
     }
 }
 
