@@ -19,20 +19,6 @@
                ReferencedContainer = "container:EasySIMBL.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "276144C0105F51CA00F906F6"
-               BuildableName = "SIMBL Agent.app"
-               BlueprintName = "SIMBL Agent"
-               ReferencedContainer = "container:SIMBL.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
