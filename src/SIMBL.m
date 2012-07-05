@@ -59,10 +59,12 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 + (NSArray*) pluginPathList
 {
 	NSMutableArray* pluginPathList = [NSMutableArray array];
+    
+    // NSApplicationSupportDirectory does not return Container, so use NSLibraryDirectory.
+    
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
 	for (NSString* libraryPath in paths) {
-        NSString* applicationSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
-		NSString* simblPath = [applicationSupportPath stringByAppendingPathComponent:SIMBLPluginPath];
+		NSString* simblPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, SIMBLApplicationSupportPath, SIMBLPluginPath, nil]];
         NSError *err = NULL;
 		NSArray* simblBundles = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:simblPath error:&err] pathsMatchingExtensions:[NSArray arrayWithObject:@"bundle"]];
         if (err) {

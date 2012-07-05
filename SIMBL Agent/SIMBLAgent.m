@@ -29,12 +29,12 @@
     SIMBLLogInfo(@"agent started");
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
-    self.scriptingAdditionsPath = [(NSString*)[paths objectAtIndex:0] stringByAppendingPathComponent:SIMBLScriptingAdditionsPath];
+    NSString *libraryPath = (NSString*)[paths objectAtIndex:0];
+    self.scriptingAdditionsPath = [libraryPath stringByAppendingPathComponent:SIMBLScriptingAdditionsPath];
     self.osaxPath = [[NSBundle mainBundle]pathForResource:SIMBLBundleBaseName ofType:SIMBLBundleExtension];
     self.linkedOsaxPath = [self.scriptingAdditionsPath stringByAppendingPathComponent:SIMBLBundleName];
     self.waitingInjectionNumber = 0;
-    paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,  NSUserDomainMask, YES);
-    self.applicationSupportPath = [(NSString*)[paths objectAtIndex:0] stringByAppendingPathComponent:@"SIMBL"];
+    self.applicationSupportPath = [libraryPath stringByAppendingPathComponent:SIMBLApplicationSupportPath];
     
     [[NSDistributedNotificationCenter defaultCenter]addObserver:self
                                                        selector:@selector(receiveSIMBLHasBeenLoadedNotification:)

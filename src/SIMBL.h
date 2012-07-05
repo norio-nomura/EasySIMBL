@@ -11,13 +11,14 @@
 
 #import "SIMBLPlugin.h"
 
+#define SIMBLApplicationSupportPath @"Application Support/SIMBL"
+#define SIMBLPluginPath @"Plugins"
 #define SIMBLScriptingAdditionsPath @"ScriptingAdditions"
 #define SIMBLBundleBaseName @"EasySIMBL"
 #define SIMBLBundleExtension @"osax"
 #define SIMBLBundleName @"EasySIMBL.osax"
 #define SIMBLHasBeenLoadedNotification @"SIMBLHasBeenLoadedNotification"
 
-#define SIMBLPluginPath @"SIMBL/Plugins"
 #define SIMBLStringTable @"SIMBLStringTable"
 #define SIMBLApplicationIdentifier @"SIMBLApplicationIdentifier"
 #define SIMBLTargetApplications @"SIMBLTargetApplications"
