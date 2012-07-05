@@ -51,7 +51,7 @@
 
 - (NSString*) bundleIdentifier
 {
-	return [self.info objectForKey:@"CFBundleIdentifier"];
+	return [self.info objectForKey:(NSString*)kCFBundleIdentifierKey];
 }
 
 - (id) objectForInfoDictionaryKey:(NSString*)key
@@ -71,12 +71,12 @@
 
 - (NSString*) _dt_bundleVersion
 {
-	return [self objectForInfoDictionaryKey: @"CFBundleVersion"];
+	return [self objectForInfoDictionaryKey: (NSString*)kCFBundleVersionKey];
 }
 
 - (NSString*) _dt_name
 {
-	NSString* name = [self objectForInfoDictionaryKey:@"CFBundleName"];
+	NSString* name = [self objectForInfoDictionaryKey:(NSString*)kCFBundleNameKey];
 	if (name != nil)
 		return name;
 	else
@@ -100,12 +100,12 @@
 
 - (NSString*) _dt_bundleVersion
 {
-	return [self objectForInfoDictionaryKey: @"CFBundleVersion"];
+	return [self objectForInfoDictionaryKey: (NSString*)kCFBundleVersionKey];
 }
 
 - (NSString*) _dt_name
 {
-	return [self objectForInfoDictionaryKey:@"CFBundleName"];
+	return [self objectForInfoDictionaryKey:(NSString*)kCFBundleNameKey];
 }
 
 @end
