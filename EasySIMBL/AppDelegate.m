@@ -14,6 +14,15 @@
 @synthesize window = _window;
 @synthesize useSIMBL = _useSIMBL;
 
+#pragma mark User defaults
+
++ (void)initialize {
+    NSMutableDictionary *initialValues = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:2],@"SIMBLLogLevel", nil];
+    [[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:initialValues];
+}
+
+#pragma mark NSApplicationDelegate
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     NSError *error = nil;
@@ -37,6 +46,8 @@
         [self.useSIMBL setEnabled:NO];
     }
 }
+
+#pragma mark IBAction
 
 - (IBAction)toggleUseSIMBL:(id)sender {
     NSInteger result = self.useSIMBL.state;

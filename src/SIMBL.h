@@ -18,7 +18,7 @@
 #define SIMBLBundleExtension @"osax"
 #define SIMBLBundleName @"EasySIMBL.osax"
 #define SIMBLPreferencesPath @"Preferences"
-#define SIMBLSuiteBundleIdentifier @"net.culater.SIMBL"
+#define SIMBLSuiteBundleIdentifier @"com.github.norio-nomura.EasySIMBL"
 #define SIMBLPreferencesExtension @"plist"
 #define SIMBLHasBeenLoadedNotification @"SIMBLHasBeenLoadedNotification"
 
