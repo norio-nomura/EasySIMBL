@@ -43,14 +43,14 @@ OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
 + (void) initialize
 {
 	NSUserDefaults* defaults = [[NSUserDefaults alloc] init];
-	[defaults addSuiteNamed:@"net.culater.SIMBL"];
+	[defaults addSuiteNamed:SIMBLSuiteBundleIdentifier];
 	[defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:SIMBLLogLevelDefault], SIMBLPrefKeyLogLevel, nil]];
 }
 
 + (void) logMessage:(NSString*)message atLevel:(int)level
 {
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-	[defaults addSuiteNamed:@"net.culater.SIMBL"];
+	[defaults addSuiteNamed:SIMBLSuiteBundleIdentifier];
 	if ([defaults integerForKey:SIMBLPrefKeyLogLevel] <= level) {
 		NSLog(@"%@", message);
 	}

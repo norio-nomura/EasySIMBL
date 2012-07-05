@@ -17,5 +17,6 @@
 @property (nonatomic) NSString *osaxPath;
 @property (nonatomic) NSString *linkedOsaxPath;
 @property (nonatomic) NSString *applicationSupportPath;
+@property (nonatomic) NSString *plistPath;
 
 @end

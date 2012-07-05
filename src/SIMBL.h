@@ -17,6 +17,9 @@
 #define SIMBLBundleBaseName @"EasySIMBL"
 #define SIMBLBundleExtension @"osax"
 #define SIMBLBundleName @"EasySIMBL.osax"
+#define SIMBLPreferencesPath @"Preferences"
+#define SIMBLSuiteBundleIdentifier @"net.culater.SIMBL"
+#define SIMBLPreferencesExtension @"plist"
 #define SIMBLHasBeenLoadedNotification @"SIMBLHasBeenLoadedNotification"
 
 #define SIMBLStringTable @"SIMBLStringTable"

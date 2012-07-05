@@ -21,6 +21,7 @@
 @synthesize osaxPath=_osaxPath;
 @synthesize linkedOsaxPath=_linkedOsaxPath;
 @synthesize applicationSupportPath=_pluginsPath;
+@synthesize plistPath=_plistPath;
 
 #pragma NSApplicationDelegate Protocol
 
@@ -35,6 +36,7 @@
     self.linkedOsaxPath = [self.scriptingAdditionsPath stringByAppendingPathComponent:SIMBLBundleName];
     self.waitingInjectionNumber = 0;
     self.applicationSupportPath = [libraryPath stringByAppendingPathComponent:SIMBLApplicationSupportPath];
+    self.plistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, SIMBLPreferencesPath, [SIMBLSuiteBundleIdentifier stringByAppendingPathExtension:SIMBLPreferencesExtension], nil]];
     
     [[NSDistributedNotificationCenter defaultCenter]addObserver:self
                                                        selector:@selector(receiveSIMBLHasBeenLoadedNotification:)
@@ -194,8 +196,10 @@
     NSError *error = nil;
     BOOL isDirectory = NO;
     if ([fileManager fileExistsAtPath:containerPath isDirectory:&isDirectory] && isDirectory) {
-        NSString *containerScriptingAddtionsPath = [containerPath stringByAppendingPathComponent:@"Data/Library/ScriptingAdditions"];
-        NSString *containerApplicationSupportPath = [containerPath stringByAppendingPathComponent:@"Data/Library/Application Support/SIMBL"];
+        NSString *dataLibraryPath = @"Data/Library";
+        NSString *containerScriptingAddtionsPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, SIMBLScriptingAdditionsPath, nil]];
+        NSString *containerApplicationSupportPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, SIMBLApplicationSupportPath, nil]];
+        NSString *containerPlistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath,SIMBLPreferencesPath, [SIMBLSuiteBundleIdentifier stringByAppendingPathExtension:SIMBLPreferencesExtension], nil]];
         if (bEnabled) {
             [fileManager linkItemAtPath:self.scriptingAdditionsPath toPath:containerScriptingAddtionsPath error:&error];
             if (error) {
@@ -205,12 +209,20 @@
             if (error) {
                 SIMBLLogNotice(@"linkItemAtPath error:%@",error);
             }
+            [fileManager linkItemAtPath:self.plistPath toPath:containerPlistPath error:&error];
+            if (error) {
+                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
+            }
         } else {
             [fileManager removeItemAtPath:containerScriptingAddtionsPath error:&error];
             if (error) {
                 SIMBLLogNotice(@"removeItemAtPath error:%@",error);
             }
             [fileManager removeItemAtPath:containerApplicationSupportPath error:&error];
+            if (error) {
+                SIMBLLogNotice(@"removeItemAtPath error:%@",error);
+            }
+            [fileManager removeItemAtPath:containerPlistPath error:&error];
             if (error) {
                 SIMBLLogNotice(@"removeItemAtPath error:%@",error);
             }
