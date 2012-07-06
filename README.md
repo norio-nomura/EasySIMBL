@@ -16,8 +16,14 @@ How to install
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
 3. Launch `EasySIMBL.app` then make check `Use SIMBL`, then quit `EasySIMBL.app`.
 
-How to uninstall
+How to upgrade
 --------------
+1. Move older `EasySIMBL.app` into Trash.
+2. Move newer `EasySIMBL.app` into `/Applications` or `~/Applications`.
+3. Launch `EasySIMBL.app` and confirm `Use SIMBL` checked, then quit `EasySIMBL.app`.
+
+How to uninstall
+----------------
 1. Launch `EasySIMBL.app` then clear check `Use SIMBL`, then quit `EasySIMBL.app`.
 2. Move `EasySIMBL.app` into Trash.
 
