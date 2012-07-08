@@ -15,6 +15,9 @@
 		6C564498159E7C0900215467 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C564497159E7C0900215467 /* AppDelegate.m */; };
 		6C56449B159E7C0900215467 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C564499159E7C0900215467 /* MainMenu.xib */; };
 		6C5644B8159E7D3900215467 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C5644B7159E7D3900215467 /* ServiceManagement.framework */; };
+		AA7EB1DB15A45EC100D76CFC /* ESPluginListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7EB1DA15A45EC100D76CFC /* ESPluginListManager.m */; };
+		AA7EB1E115A4617700D76CFC /* ESPluginListTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7EB1E015A4617700D76CFC /* ESPluginListTableView.m */; };
+		AA7EB1E415A4625500D76CFC /* ESPluginListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7EB1E315A4625500D76CFC /* ESPluginListCellView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +73,12 @@
 		6C564497159E7C0900215467 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6C56449A159E7C0900215467 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		6C5644B7159E7D3900215467 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		AA7EB1D915A45EC100D76CFC /* ESPluginListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESPluginListManager.h; sourceTree = "<group>"; };
+		AA7EB1DA15A45EC100D76CFC /* ESPluginListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESPluginListManager.m; sourceTree = "<group>"; };
+		AA7EB1DF15A4617700D76CFC /* ESPluginListTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESPluginListTableView.h; sourceTree = "<group>"; };
+		AA7EB1E015A4617700D76CFC /* ESPluginListTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESPluginListTableView.m; sourceTree = "<group>"; };
+		AA7EB1E215A4625500D76CFC /* ESPluginListCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESPluginListCellView.h; sourceTree = "<group>"; };
+		AA7EB1E315A4625500D76CFC /* ESPluginListCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESPluginListCellView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +148,12 @@
 				6C564497159E7C0900215467 /* AppDelegate.m */,
 				6C564499159E7C0900215467 /* MainMenu.xib */,
 				6C56448B159E7C0800215467 /* Supporting Files */,
+				AA7EB1D915A45EC100D76CFC /* ESPluginListManager.h */,
+				AA7EB1DA15A45EC100D76CFC /* ESPluginListManager.m */,
+				AA7EB1DF15A4617700D76CFC /* ESPluginListTableView.h */,
+				AA7EB1E015A4617700D76CFC /* ESPluginListTableView.m */,
+				AA7EB1E215A4625500D76CFC /* ESPluginListCellView.h */,
+				AA7EB1E315A4625500D76CFC /* ESPluginListCellView.m */,
 			);
 			path = EasySIMBL;
 			sourceTree = "<group>";
@@ -245,6 +260,9 @@
 			files = (
 				6C564491159E7C0800215467 /* main.m in Sources */,
 				6C564498159E7C0900215467 /* AppDelegate.m in Sources */,
+				AA7EB1DB15A45EC100D76CFC /* ESPluginListManager.m in Sources */,
+				AA7EB1E115A4617700D76CFC /* ESPluginListTableView.m in Sources */,
+				AA7EB1E415A4625500D76CFC /* ESPluginListCellView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +358,7 @@
 		6C56449F159E7C0900215467 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EasySIMBL/EasySIMBL-Prefix.pch";
 				INFOPLIST_FILE = "EasySIMBL/EasySIMBL-Info.plist";
