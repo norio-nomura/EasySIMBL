@@ -10,8 +10,40 @@
  */
 
 #import "SIMBL.h"
-#import "SIMBLPlugin.h"
 #import "NSAlert_SIMBL.h"
+
+@interface NSBundle (SIMBLCocoaExtensions)
+
+- (NSString*) _dt_info;
+- (NSString*) _dt_version;
+- (NSString*) _dt_bundleVersion;
+- (NSString*) _dt_name;
+
+@end
+
+@implementation NSBundle (SIMBLCocoaExtensions)
+
+- (NSString*) _dt_info
+{
+	return [self objectForInfoDictionaryKey: @"CFBundleGetInfoString"];
+}
+
+- (NSString*) _dt_version
+{
+	return [self objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+}
+
+- (NSString*) _dt_bundleVersion
+{
+	return [self objectForInfoDictionaryKey: (NSString*)kCFBundleVersionKey];
+}
+
+- (NSString*) _dt_name
+{
+	return [self objectForInfoDictionaryKey:(NSString*)kCFBundleNameKey];
+}
+
+@end
 
 /*
 	<key>SIMBLTargetApplications</key>
@@ -119,7 +151,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 {
 	SIMBLLogDebug(@"checking bundle %@", _bundlePath);
 	_bundlePath = [_bundlePath stringByStandardizingPath];
-	SIMBLPlugin* pluginBundle = [SIMBLPlugin bundleWithPath:_bundlePath];
+	NSBundle* pluginBundle = [NSBundle bundleWithPath:_bundlePath];
 	if (pluginBundle == nil) {
 		SIMBLLogNotice(@"Unable to load bundle at path '%@'", _bundlePath);
 		return NO;
@@ -157,7 +189,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 		return NO;
 	}
 	
-	SIMBLPlugin* pluginBundle = [SIMBLPlugin bundleWithPath:_bundlePath];
+	NSBundle* pluginBundle = [NSBundle bundleWithPath:_bundlePath];
 
 	// check to see if we already loaded code for this identifier (keeps us from double loading)
 	// this is common if you have User vs. System-wide installs - probably mostly for developers
@@ -175,7 +207,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * if there is a match, this calls the main bundle's load method
  * @return YES if this bundle was loaded
  */
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers
++ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(NSBundle*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers
 {	
 	NSString* appIdentifier = [_appBundle bundleIdentifier];
 	for (NSString* specifiedIdentifier in _applicationIdentifiers) {
@@ -183,7 +215,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 		if ([specifiedIdentifier isEqualToString:appIdentifier] == YES ||
 			[specifiedIdentifier isEqualToString:@"*"] == YES) {
 			SIMBLLogDebug(@"load bundle %@", [_bundle bundleIdentifier]);
-			SIMBLLogNotice(@"The plugin %@ (%@) is using a deprecated interface to SIMBL. Please contact the appropriate developer (not the SIMBL author) and refer them to http://code.google.com/p/simbl/wiki/Tutorial", [_bundle path], [_bundle bundleIdentifier]);
+			SIMBLLogNotice(@"The plugin %@ (%@) is using a deprecated interface to SIMBL. Please contact the appropriate developer (not the SIMBL author) and refer them to http://code.google.com/p/simbl/wiki/Tutorial", [_bundle bundlePath], [_bundle bundleIdentifier]);
 			return YES;
 		}
 	}
@@ -198,7 +230,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * if there is a match, this calls the main bundle's load method
  * @return YES if this bundle was loaded
  */
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withTargetApplications:(NSArray*)_targetApplications
++ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(NSBundle*)_bundle withTargetApplications:(NSArray*)_targetApplications
 {
 	NSString* appIdentifier = [_appBundle bundleIdentifier];
 	for (NSDictionary* targetAppProperties in _targetApplications) {
@@ -258,12 +290,12 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 }
 
 
-+ (BOOL) loadBundle:(SIMBLPlugin*)_plugin
++ (BOOL) loadBundle:(NSBundle*)_plugin
 {
 	@try
 	{
 		// getting the principalClass should force the bundle to load
-		NSBundle* bundle = [NSBundle bundleWithPath:[_plugin path]];
+		NSBundle* bundle = [NSBundle bundleWithPath:[_plugin bundlePath]];
 		Class principalClass = [bundle principalClass];
 		
 		// if the principal class has an + (void) install message, call it

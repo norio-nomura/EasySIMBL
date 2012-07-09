@@ -9,8 +9,6 @@
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
 
-#import "SIMBLPlugin.h"
-
 #define SIMBLApplicationSupportPath @"Application Support/SIMBL"
 #define SIMBLPluginPath @"Plugins"
 #define SIMBLScriptingAdditionsPath @"ScriptingAdditions"

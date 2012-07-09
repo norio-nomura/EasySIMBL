@@ -11,7 +11,6 @@
 		276144F6105F531D00F906F6 /* SIMBLAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 276144D9105F523C00F906F6 /* SIMBLAgent.m */; };
 		2761463C105F985500F906F6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 276144CF105F523C00F906F6 /* MainMenu.xib */; };
 		276156DC1060C08C00FEF11C /* SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789609B3031900F50FE7 /* SIMBL.m */; };
-		276156DF1060C09900FEF11C /* SIMBLPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */; };
 		27D59F5610791EE100424BBD /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
 		6C5154DE159DC6E500DA87F0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 276144CD105F523C00F906F6 /* InfoPlist.strings */; };
 		6CBB25FE159ECD63002C455C /* EasySIMBL.osax in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D5B49B6048680CD000E48DA /* EasySIMBL.osax */; };
@@ -22,7 +21,6 @@
 		6CF6D4D3159DD18600916EA5 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CF6D4D2159DD18600916EA5 /* ScriptingBridge.framework */; };
 		E0C2C2FE104F376500553034 /* NSAlert_SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */; };
 		E0C2C2FF104F376600553034 /* SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789609B3031900F50FE7 /* SIMBL.m */; };
-		E0C2C300104F376700553034 /* SIMBLPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,10 +62,8 @@
 		E0AF789309B3031900F50FE7 /* NSAlert_SIMBL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAlert_SIMBL.h; sourceTree = "<group>"; };
 		E0AF789409B3031900F50FE7 /* NSAlert_SIMBL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAlert_SIMBL.m; sourceTree = "<group>"; };
 		E0AF789509B3031900F50FE7 /* SIMBL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SIMBL.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		E0AF789609B3031900F50FE7 /* SIMBL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMBL.m; sourceTree = "<group>"; };
+		E0AF789609B3031900F50FE7 /* SIMBL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SIMBL.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E0AF789709B3031900F50FE7 /* SIMBL_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMBL_Prefix.pch; sourceTree = "<group>"; };
-		E0AF789809B3031900F50FE7 /* SIMBLPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIMBLPlugin.h; sourceTree = "<group>"; };
-		E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIMBLPlugin.m; sourceTree = "<group>"; wrapsLines = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,8 +155,6 @@
 				E0AF789509B3031900F50FE7 /* SIMBL.h */,
 				E0AF789609B3031900F50FE7 /* SIMBL.m */,
 				E0AF789709B3031900F50FE7 /* SIMBL_Prefix.pch */,
-				E0AF789809B3031900F50FE7 /* SIMBLPlugin.h */,
-				E0AF789909B3031900F50FE7 /* SIMBLPlugin.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -262,7 +256,6 @@
 			files = (
 				276144F6105F531D00F906F6 /* SIMBLAgent.m in Sources */,
 				276156DC1060C08C00FEF11C /* SIMBL.m in Sources */,
-				276156DF1060C09900FEF11C /* SIMBLPlugin.m in Sources */,
 				27D59F5610791EE100424BBD /* NSAlert_SIMBL.m in Sources */,
 				6CDFDC75159DBC7C002E8E63 /* main.m in Sources */,
 			);
@@ -274,7 +267,6 @@
 			files = (
 				E0C2C2FE104F376500553034 /* NSAlert_SIMBL.m in Sources */,
 				E0C2C2FF104F376600553034 /* SIMBL.m in Sources */,
-				E0C2C300104F376700553034 /* SIMBLPlugin.m in Sources */,
 				6CDFDC73159DBC65002E8E63 /* osax.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
