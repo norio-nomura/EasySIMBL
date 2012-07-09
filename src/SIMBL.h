@@ -9,16 +9,16 @@
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
 
-#define SIMBLApplicationSupportPath @"Application Support/SIMBL"
-#define SIMBLPluginPath @"Plugins"
-#define SIMBLScriptingAdditionsPath @"ScriptingAdditions"
-#define SIMBLBundleBaseName @"EasySIMBL"
-#define SIMBLBundleExtension @"osax"
-#define SIMBLBundleName @"EasySIMBL.osax"
-#define SIMBLPreferencesPath @"Preferences"
-#define SIMBLSuiteBundleIdentifier @"com.github.norio-nomura.EasySIMBL"
-#define SIMBLPreferencesExtension @"plist"
-#define SIMBLHasBeenLoadedNotification @"SIMBLHasBeenLoadedNotification"
+#define EasySIMBLApplicationSupportPathComponent @"Application Support/SIMBL"
+#define EasySIMBLPluginsPathComponent @"Plugins"
+#define EasySIMBLScriptingAdditionsPathComponent @"ScriptingAdditions"
+#define EasySIMBLBundleBaseName @"EasySIMBL"
+#define EasySIMBLBundleExtension @"osax"
+#define EasySIMBLBundleName @"EasySIMBL.osax"
+#define EasySIMBLPreferencesPathComponent @"Preferences"
+#define EasySIMBLSuiteBundleIdentifier @"com.github.norio-nomura.EasySIMBL"
+#define EasySIMBLPreferencesExtension @"plist"
+#define EasySIMBLHasBeenLoadedNotification @"EasySIMBLHasBeenLoadedNotification"
 
 #define SIMBLStringTable @"SIMBLStringTable"
 #define SIMBLApplicationIdentifier @"SIMBLApplicationIdentifier"

@@ -31,16 +31,16 @@
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
     NSString *libraryPath = (NSString*)[paths objectAtIndex:0];
-    self.scriptingAdditionsPath = [libraryPath stringByAppendingPathComponent:SIMBLScriptingAdditionsPath];
-    self.osaxPath = [[NSBundle mainBundle]pathForResource:SIMBLBundleBaseName ofType:SIMBLBundleExtension];
-    self.linkedOsaxPath = [self.scriptingAdditionsPath stringByAppendingPathComponent:SIMBLBundleName];
+    self.scriptingAdditionsPath = [libraryPath stringByAppendingPathComponent:EasySIMBLScriptingAdditionsPathComponent];
+    self.osaxPath = [[NSBundle mainBundle]pathForResource:EasySIMBLBundleBaseName ofType:EasySIMBLBundleExtension];
+    self.linkedOsaxPath = [self.scriptingAdditionsPath stringByAppendingPathComponent:EasySIMBLBundleName];
     self.waitingInjectionNumber = 0;
-    self.applicationSupportPath = [libraryPath stringByAppendingPathComponent:SIMBLApplicationSupportPath];
-    self.plistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, SIMBLPreferencesPath, [SIMBLSuiteBundleIdentifier stringByAppendingPathExtension:SIMBLPreferencesExtension], nil]];
+    self.applicationSupportPath = [libraryPath stringByAppendingPathComponent:EasySIMBLApplicationSupportPathComponent];
+    self.plistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, EasySIMBLPreferencesPathComponent, [EasySIMBLSuiteBundleIdentifier stringByAppendingPathExtension:EasySIMBLPreferencesExtension], nil]];
     
     [[NSDistributedNotificationCenter defaultCenter]addObserver:self
                                                        selector:@selector(receiveSIMBLHasBeenLoadedNotification:)
-                                                           name:SIMBLHasBeenLoadedNotification
+                                                           name:EasySIMBLHasBeenLoadedNotification
                                                          object:nil];
     
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
@@ -68,7 +68,7 @@
 	[self injectSIMBL:[[notification userInfo]objectForKey:NSWorkspaceApplicationKey]];
 }
 
-#pragma mark SIMBLHasBeenLoadedNotification
+#pragma mark EasySIMBLHasBeenLoadedNotification
 
 - (void) receiveSIMBLHasBeenLoadedNotification:(NSNotification*)notification
 {
@@ -197,9 +197,9 @@
     BOOL isDirectory = NO;
     if ([fileManager fileExistsAtPath:containerPath isDirectory:&isDirectory] && isDirectory) {
         NSString *dataLibraryPath = @"Data/Library";
-        NSString *containerScriptingAddtionsPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, SIMBLScriptingAdditionsPath, nil]];
-        NSString *containerApplicationSupportPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, SIMBLApplicationSupportPath, nil]];
-        NSString *containerPlistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath,SIMBLPreferencesPath, [SIMBLSuiteBundleIdentifier stringByAppendingPathExtension:SIMBLPreferencesExtension], nil]];
+        NSString *containerScriptingAddtionsPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, EasySIMBLScriptingAdditionsPathComponent, nil]];
+        NSString *containerApplicationSupportPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, EasySIMBLApplicationSupportPathComponent, nil]];
+        NSString *containerPlistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath,EasySIMBLPreferencesPathComponent, [EasySIMBLSuiteBundleIdentifier stringByAppendingPathExtension:EasySIMBLPreferencesExtension], nil]];
         if (bEnabled) {
             [fileManager linkItemAtPath:self.scriptingAdditionsPath toPath:containerScriptingAddtionsPath error:&error];
             if (error) {

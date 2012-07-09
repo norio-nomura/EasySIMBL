@@ -66,14 +66,14 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 + (void) initialize
 {
 	NSUserDefaults* defaults = [[NSUserDefaults alloc] init];
-	[defaults addSuiteNamed:SIMBLSuiteBundleIdentifier];
+	[defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
 	[defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:SIMBLLogLevelDefault], SIMBLPrefKeyLogLevel, nil]];
 }
 
 + (void) logMessage:(NSString*)message atLevel:(int)level
 {
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-	[defaults addSuiteNamed:SIMBLSuiteBundleIdentifier];
+	[defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
 	if ([defaults integerForKey:SIMBLPrefKeyLogLevel] <= level) {
 		NSLog(@"%@", message);
 	}
@@ -87,7 +87,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
     
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
 	for (NSString* libraryPath in paths) {
-		NSString* simblPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, SIMBLApplicationSupportPath, SIMBLPluginPath, nil]];
+		NSString* simblPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, EasySIMBLApplicationSupportPathComponent, EasySIMBLPluginsPathComponent, nil]];
         NSError *err = NULL;
 		NSArray* simblBundles = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:simblPath error:&err] pathsMatchingExtensions:[NSArray arrayWithObject:@"bundle"]];
         if (err) {
@@ -114,7 +114,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 			SIMBLLogDebug(@"loaded %@", path);
 	}
     
-    [[NSDistributedNotificationCenter defaultCenter]postNotificationName:SIMBLHasBeenLoadedNotification
+    [[NSDistributedNotificationCenter defaultCenter]postNotificationName:EasySIMBLHasBeenLoadedNotification
                                                                   object:[[NSBundle mainBundle]bundleIdentifier]];
 }
 
