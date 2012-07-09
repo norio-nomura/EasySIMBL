@@ -100,7 +100,7 @@
 	SIMBLLogDebug(@"app start notification: %@", runningApp);
 		
 	// check to see if there are plugins to load
-	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[runningApp bundleURL]]] == NO) {
+	if (![runningApp bundleURL] || [SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[runningApp bundleURL]]] == NO) {
 		return;
 	}
 	
