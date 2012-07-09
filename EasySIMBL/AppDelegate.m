@@ -47,6 +47,11 @@
     }
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
+{
+    return YES;
+}
+
 #pragma mark IBAction
 
 - (IBAction)toggleUseSIMBL:(id)sender {
