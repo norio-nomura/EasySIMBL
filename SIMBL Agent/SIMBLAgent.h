@@ -18,5 +18,6 @@
 @property (nonatomic) NSString *linkedOsaxPath;
 @property (nonatomic) NSString *applicationSupportPath;
 @property (nonatomic) NSString *plistPath;
+@property (atomic) NSMutableArray *runningSandboxedApplications;
 
 @end

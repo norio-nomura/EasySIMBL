@@ -22,6 +22,9 @@
 @synthesize linkedOsaxPath=_linkedOsaxPath;
 @synthesize applicationSupportPath=_pluginsPath;
 @synthesize plistPath=_plistPath;
+@synthesize runningSandboxedApplications=_runningSandboxedApplications;
+
+NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIdentifiers";
 
 #pragma NSApplicationDelegate Protocol
 
@@ -37,11 +40,17 @@
     self.waitingInjectionNumber = 0;
     self.applicationSupportPath = [libraryPath stringByAppendingPathComponent:EasySIMBLApplicationSupportPathComponent];
     self.plistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, EasySIMBLPreferencesPathComponent, [EasySIMBLSuiteBundleIdentifier stringByAppendingPathExtension:EasySIMBLPreferencesExtension], nil]];
+    self.runningSandboxedApplications = [NSMutableArray array];
     
     [[NSDistributedNotificationCenter defaultCenter]addObserver:self
                                                        selector:@selector(receiveSIMBLHasBeenLoadedNotification:)
                                                            name:EasySIMBLHasBeenLoadedNotification
                                                          object:nil];
+    
+    // hold previous injected sandbox
+    NSMutableSet *previousInjectedSandboxBundleIdentifierSet = [NSMutableSet setWithArray:[[NSUserDefaults standardUserDefaults]objectForKey:kInjectedSandboxBundleIdentifiers]];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:kInjectedSandboxBundleIdentifiers];
+    [[NSUserDefaults standardUserDefaults]synchronize];
     
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
     [[workspace notificationCenter] addObserver:self
@@ -51,6 +60,16 @@
     // inject into resumed applications
     for (NSRunningApplication *runningApp in [workspace runningApplications]) {
         [self injectSIMBL:runningApp];
+    }
+    
+    // previous minus running, it should be uninject
+    [previousInjectedSandboxBundleIdentifierSet minusSet:[NSMutableSet setWithArray:[[NSUserDefaults standardUserDefaults]objectForKey:kInjectedSandboxBundleIdentifiers]]];
+    if ([previousInjectedSandboxBundleIdentifierSet count]) {
+        [[NSProcessInfo processInfo]disableSuddenTermination];
+        for (NSString *bundleItentifier in previousInjectedSandboxBundleIdentifierSet) {
+            [self injectContainerBundleIdentifier:bundleItentifier enabled:NO];
+        }
+        [[NSProcessInfo processInfo]enableSuddenTermination];
     }
 }
 
@@ -68,6 +87,18 @@
 	[self injectSIMBL:[[notification userInfo]objectForKey:NSWorkspaceApplicationKey]];
 }
 
+#pragma mark NSKeyValueObserving Protocol
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"isTerminated"]) {
+        SIMBLLogDebug(@"runningApp %@ isTerminated.", object);
+        [object removeObserver:self forKeyPath:keyPath];
+        
+        [self injectContainerForApplication:(NSRunningApplication*)object enabled:NO];
+    }
+}
+
 #pragma mark EasySIMBLHasBeenLoadedNotification
 
 - (void) receiveSIMBLHasBeenLoadedNotification:(NSNotification*)notification
@@ -81,7 +112,6 @@
             SIMBLLogNotice(@"removeItemAtPath error:%@",error);
         }
     }
-    [self injectSandboxedBundleidentifier:notification.object enabled:NO];
     [[NSProcessInfo processInfo]enableSuddenTermination];
 }
 
@@ -158,8 +188,8 @@
         }
         self.waitingInjectionNumber++;
         
-        // hardlink SIMBL/Plugins to Container
-        [self injectSandboxedBundleidentifier:appIdentifier enabled:YES];
+        // hardlink to Container
+        [self injectContainerForApplication:runningApp enabled:YES];
         
         
         // Force AppleScript to initialize in the app, by getting the dictionary
@@ -188,8 +218,49 @@
     }
 }
 
-- (void)injectSandboxedBundleidentifier:(NSString*)bundleIdentifier enabled:(BOOL)bEnabled;
+- (void)injectContainerForApplication:(NSRunningApplication*)runningApp enabled:(BOOL)bEnabled;
 {
+    NSString *identifier = [runningApp bundleIdentifier];
+    if ([self injectContainerBundleIdentifier:identifier enabled:bEnabled]) {
+        if (bEnabled) {
+            [runningApp addObserver:self forKeyPath:@"isTerminated" options:NSKeyValueObservingOptionNew context:NULL];
+            [self.runningSandboxedApplications addObject:runningApp];
+            
+            NSMutableSet *injectedSandboxBundleIdentifierSet = [NSMutableSet set];
+            for (NSRunningApplication *app in self.runningSandboxedApplications) {
+                [injectedSandboxBundleIdentifierSet addObject:[app bundleIdentifier]];
+            }
+            [[NSUserDefaults standardUserDefaults]setObject:[injectedSandboxBundleIdentifierSet allObjects]
+                                                     forKey:kInjectedSandboxBundleIdentifiers];
+            [[NSUserDefaults standardUserDefaults]synchronize];
+
+            [[NSProcessInfo processInfo]disableSuddenTermination];
+        } else {
+            BOOL (^hasSameBundleIdentifier)(id, NSUInteger, BOOL *) = ^(id obj, NSUInteger idx, BOOL *stop) {
+                return *stop = [identifier isEqualToString:[(NSRunningApplication*)obj bundleIdentifier]];
+            };
+            
+            [self.runningSandboxedApplications removeObject:runningApp];
+            // check multi instance application
+            if (NSNotFound == [self.runningSandboxedApplications indexOfObjectWithOptions:NSEnumerationConcurrent
+                                                                              passingTest:hasSameBundleIdentifier]) {
+                NSMutableSet *injectedSandboxBundleIdentifierSet = [NSMutableSet set];
+                for (NSRunningApplication *app in self.runningSandboxedApplications) {
+                    [injectedSandboxBundleIdentifierSet addObject:[app bundleIdentifier]];
+                }
+                [[NSUserDefaults standardUserDefaults]setObject:[injectedSandboxBundleIdentifierSet allObjects]
+                                                         forKey:kInjectedSandboxBundleIdentifiers];
+                [[NSUserDefaults standardUserDefaults]synchronize];
+            }
+            
+            [[NSProcessInfo processInfo]enableSuddenTermination];
+        }
+    }
+}
+
+- (BOOL)injectContainerBundleIdentifier:(NSString*)bundleIdentifier enabled:(BOOL)bEnabled;
+{
+    BOOL bResult = NO;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
     NSString *containerPath = [NSString pathWithComponents:[NSArray arrayWithObjects:[paths objectAtIndex:0], @"Containers", bundleIdentifier, nil]];
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -213,6 +284,7 @@
             if (error) {
                 SIMBLLogNotice(@"linkItemAtPath error:%@",error);
             }
+            bResult = YES;
         } else {
             [fileManager removeItemAtPath:containerScriptingAddtionsPath error:&error];
             if (error) {
@@ -226,8 +298,10 @@
             if (error) {
                 SIMBLLogNotice(@"removeItemAtPath error:%@",error);
             }
+            bResult = YES;
         }
     }
+    return bResult;
 }
 
 @end
