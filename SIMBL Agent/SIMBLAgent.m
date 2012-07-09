@@ -49,8 +49,8 @@
                                            name:NSWorkspaceDidLaunchApplicationNotification object:nil];
     
     // inject into resumed applications
-    for (NSRunningApplication *appInfo in [workspace runningApplications]) {
-        [self injectSIMBL:appInfo];
+    for (NSRunningApplication *runningApp in [workspace runningApplications]) {
+        [self injectSIMBL:runningApp];
     }
 }
 
@@ -87,7 +87,7 @@
 
 #pragma mark -
 
-- (void) injectSIMBL:(NSRunningApplication *)appInfo
+- (void) injectSIMBL:(NSRunningApplication *)runningApp
 {
 	// NOTE: if you change the log level externally, there is pretty much no way
 	// to know when the changed. Just reading from the defaults doesn't validate
@@ -95,12 +95,12 @@
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
 	[defaults synchronize];
 
-	NSString* appName = [appInfo localizedName];
+	NSString* appName = [runningApp localizedName];
 	SIMBLLogInfo(@"%@ started", appName);
-	SIMBLLogDebug(@"app start notification: %@", appInfo);
+	SIMBLLogDebug(@"app start notification: %@", runningApp);
 		
 	// check to see if there are plugins to load
-	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[appInfo bundleURL]]] == NO) {
+	if ([SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[runningApp bundleURL]]] == NO) {
 		return;
 	}
 	
@@ -109,7 +109,7 @@
 	// ScriptingBridge code. Due to the launchd behavior of restarting crashed
 	// agents, this is mostly harmless. To reduce the crashing we leave a
 	// blacklist to prevent injection.  By default, this is empty.
-	NSString* appIdentifier = [appInfo bundleIdentifier];
+	NSString* appIdentifier = [runningApp bundleIdentifier];
 	NSArray* blacklistedIdentifiers = [defaults stringArrayForKey:@"SIMBLApplicationIdentifierBlacklist"];
 	if (blacklistedIdentifiers != nil && 
 			[blacklistedIdentifiers containsObject:appIdentifier]) {
@@ -140,10 +140,10 @@
         
     if ([fileManager fileExistsAtPath:self.osaxPath isDirectory:&isDirectory] && isDirectory) {
         // Find the process to target
-        pid_t pid = [appInfo processIdentifier];
-        SBApplication* app = [SBApplication applicationWithProcessIdentifier:pid];
-        [app setDelegate:self];
-        if (!app) {
+        pid_t pid = [runningApp processIdentifier];
+        SBApplication* sbApp = [SBApplication applicationWithProcessIdentifier:pid];
+        [sbApp setDelegate:self];
+        if (!sbApp) {
             SIMBLLogNotice(@"Can't find app with pid %d", pid);
             return;
         }
@@ -166,8 +166,8 @@
         // When initializing, you need to wait for the event reply, otherwise the
         // event might get dropped on the floor. This is only seems to happen in 10.5
         // but it shouldn't harm anything.
-        [app setSendMode:kAEWaitReply | kAENeverInteract | kAEDontRecord];
-        [app sendEvent:kASAppleScriptSuite id:kGetAEUT parameters:0];
+        [sbApp setSendMode:kAEWaitReply | kAENeverInteract | kAEDontRecord];
+        [sbApp sendEvent:kASAppleScriptSuite id:kGetAEUT parameters:0];
         
         // the reply here is of some unknown type - it is not an Objective-C object
         // as near as I can tell because trying to print it using "%@" or getting its
@@ -179,8 +179,8 @@
         // NSLog(@"initReply: %p '%64.64s'", initReply, (char*)initReply);
         
         // Inject!
-        [app setSendMode:kAENoReply | kAENeverInteract | kAEDontRecord];
-        id injectReply = [app sendEvent:'ESIM' id:'load' parameters:0];
+        [sbApp setSendMode:kAENoReply | kAENeverInteract | kAEDontRecord];
+        id injectReply = [sbApp sendEvent:'ESIM' id:'load' parameters:0];
         if (injectReply != nil) {
             SIMBLLogNotice(@"unexpected injectReply: %@", injectReply);
         }
