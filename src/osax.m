@@ -16,3 +16,12 @@ static void EasySIMBLInitializer()
     }
 }
 
+__attribute__((visibility("default")))
+OSErr InjectEventHandler(const AppleEvent *ev, AppleEvent *reply, long refcon)
+{
+	// do nothings, because sandboxed app call this. But leave this function for preventing errors are logged.
+    // Now EasySIMBLInitializer() is used instead.
+    SIMBLLogDebug(@"InjectEventHandler has called, but do nothings.");
+	return noErr;
+}
+
