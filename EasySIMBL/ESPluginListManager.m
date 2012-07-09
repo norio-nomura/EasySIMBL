@@ -274,6 +274,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         
         [alert beginSheetModalForWindow:self.listView.window modalDelegate:self
                          didEndSelector:@selector(installAlertDidEnd:returnCode:contextInfo:) contextInfo:nil];
+        [NSApp runModalForWindow:self.listView.window];
         return;
     }else {
         installPath=[self.pluginsDirectory stringByAppendingPathComponent:[path lastPathComponent]];
@@ -285,6 +286,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 
 - (void)installAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
+    [NSApp stopModal];
     if (returnCode==1) {
         NSDictionary* pathInfo=(NSDictionary*)objc_getAssociatedObject(alert, &ESPluginListManagerAlertAssociatedObjectKey);
         NSString* path=[pathInfo objectForKey:@"from"];
