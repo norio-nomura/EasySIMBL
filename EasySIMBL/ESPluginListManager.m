@@ -96,11 +96,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 }
 
 - (void)scanPlugins{
-    if (_scanning) {
-        return;
-    }
-    _scanning=YES;
-
+    @synchronized (self) {
     //scan plugins
     NSString* pluginPath=self.pluginsDirectory;
     NSMutableArray* plugins=[self scanPluginsInDirectory:pluginPath];
@@ -132,7 +128,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     }
     
     self.plugins=plugins;
-    _scanning=NO;
+    }
 }
 
 #pragma mark - action

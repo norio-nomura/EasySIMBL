@@ -10,7 +10,6 @@
 
 @interface ESPluginListManager : NSObject{
     FSEventStreamRef _eventStream;
-    BOOL _scanning;
 }
 
 @property (nonatomic) NSMutableArray* plugins;
