@@ -47,17 +47,9 @@
 
 
 @interface SIMBL : NSObject
-{
-}
 
 + (void) logMessage:(NSString*)message atLevel:(int)level;
 + (void) installPlugins;
 + (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle;
-+ (BOOL) loadBundleAtPath:(NSString*)_bundlePath;
-+ (BOOL) shouldLoadBundleAtPath:(NSString*)_bundlePath;
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundleAtPath:(NSString*)_bundlePath;
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers;
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(SIMBLPlugin*)_bundle withTargetApplications:(NSArray*)_targetApplications;
-+ (BOOL) loadBundle:(SIMBLPlugin*)_bundle;
 
 @end
