@@ -96,7 +96,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 }
 
 - (void)scanPlugins{
-    @synchronized (self) {
+    
     //scan plugins
     NSString* pluginPath=self.pluginsDirectory;
     NSMutableArray* plugins=[self scanPluginsInDirectory:pluginPath];
@@ -128,7 +128,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     }
     
     self.plugins=plugins;
-    }
+    
 }
 
 #pragma mark - action
