@@ -139,7 +139,16 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     ESPluginListCellView* cellView=(ESPluginListCellView*)[sender superview];
     NSMutableDictionary* target=cellView.objectValue;
     //enabled value is already new
-    [self switchEnabled:[[target objectForKey:@"enabled"]boolValue] forPlugin:[target objectForKey:@"path"]];
+    BOOL bEnabled = [[target objectForKey:@"enabled"]boolValue];
+    if ([[NSApp currentEvent]modifierFlags] & NSCommandKeyMask) {
+        for (NSMutableDictionary *plugin in self.plugins) {
+            [self switchEnabled:bEnabled forPlugin:[plugin objectForKey:@"path"]];
+        }
+    } else {
+        [self switchEnabled:bEnabled forPlugin:[target objectForKey:@"path"]];
+    }
+    
+    [self scanPlugins];
 }
 
 // from x button on tableview
@@ -241,8 +250,6 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     }
     destination=[destination stringByAppendingPathComponent:[path lastPathComponent]];
     [[NSFileManager defaultManager]moveItemAtPath:path toPath:destination error:nil];
-    
-    [self scanPlugins];
 }
 
 
