@@ -1,4 +1,4 @@
-EasySIMBL![EasySIMBL](/raw/master/icon.iconset/icon_32x32@2x.png)
+EasySIMBL![EasySIMBL](https://github.com/norio-nomura/EasySIMBL/raw/master/icon.iconset/icon_32x32@2x.png)
 ====================================
 Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 ---------------------------
