@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6C3A4C44159EADF900985CCD /* SIMBL Agent.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6C3A4C35159E7E7000985CCD /* SIMBL Agent.app */; };
+		6C4AAA6B15AEE600009B0BBA /* icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 6C4AAA6A15AEE600009B0BBA /* icon.iconset */; };
 		6C564485159E7C0800215467 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C564484159E7C0800215467 /* Cocoa.framework */; };
 		6C56448F159E7C0800215467 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6C56448D159E7C0800215467 /* InfoPlist.strings */; };
 		6C564491159E7C0800215467 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C564490159E7C0800215467 /* main.m */; };
@@ -60,6 +61,7 @@
 
 /* Begin PBXFileReference section */
 		6C3A4C2B159E7E6F00985CCD /* SIMBL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SIMBL.xcodeproj; sourceTree = "<group>"; };
+		6C4AAA6A15AEE600009B0BBA /* icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; name = icon.iconset; path = ../icon.iconset; sourceTree = "<group>"; };
 		6C564480159E7C0800215467 /* EasySIMBL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasySIMBL.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C564484159E7C0800215467 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6C564487159E7C0800215467 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -147,6 +149,7 @@
 		6C56448A159E7C0800215467 /* EasySIMBL */ = {
 			isa = PBXGroup;
 			children = (
+				6C4AAA6A15AEE600009B0BBA /* icon.iconset */,
 				6CCA2AEE15AAB8670085ABB4 /* SIMBL.h */,
 				6CCA2AEF15AAB8670085ABB4 /* SIMBL.m */,
 				6C564496159E7C0900215467 /* AppDelegate.h */,
@@ -253,6 +256,7 @@
 				6C56448F159E7C0800215467 /* InfoPlist.strings in Resources */,
 				6C564495159E7C0900215467 /* Credits.rtf in Resources */,
 				6C56449B159E7C0900215467 /* MainMenu.xib in Resources */,
+				6C4AAA6B15AEE600009B0BBA /* icon.iconset in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
