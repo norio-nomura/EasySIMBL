@@ -65,15 +65,19 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 
 + (void) initialize
 {
-	NSUserDefaults* defaults = [[NSUserDefaults alloc] init];
-	[defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
-	[defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:SIMBLLogLevelDefault], SIMBLPrefKeyLogLevel, nil]];
+    if (![[[NSBundle mainBundle]bundleIdentifier] isEqualToString:EasySIMBLSuiteBundleIdentifier]) {
+        NSUserDefaults* defaults = [[NSUserDefaults alloc] init];
+        [defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
+        [defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:SIMBLLogLevelDefault], SIMBLPrefKeyLogLevel, nil]];
+    }
 }
 
 + (void) logMessage:(NSString*)message atLevel:(int)level
 {
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-	[defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
+    if (![[[NSBundle mainBundle]bundleIdentifier] isEqualToString:EasySIMBLSuiteBundleIdentifier]) {
+        [defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
+    }
 	if ([defaults integerForKey:SIMBLPrefKeyLogLevel] <= level) {
 		NSLog(@"%@", message);
 	}

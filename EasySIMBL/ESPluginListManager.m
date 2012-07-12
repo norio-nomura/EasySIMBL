@@ -322,7 +322,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 {
     NSError *err;
     if (![[NSFileManager defaultManager]copyItemAtPath:path toPath:installPath error:&err]){
-        NSLog(@"install error:%@", err);
+        SIMBLLogNotice(@"install error:%@", err);
     }
 }
 

@@ -6,6 +6,7 @@
 
 #import <ServiceManagement/SMLoginItem.h>
 #import "AppDelegate.h"
+#import "SIMBL.h"
 
 @implementation AppDelegate
 
@@ -17,7 +18,8 @@
 #pragma mark User defaults
 
 + (void)initialize {
-    NSMutableDictionary *initialValues = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:2],@"SIMBLLogLevel", nil];
+    NSDictionary *initialValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:2],@"SIMBLLogLevel", nil];
+    [[NSUserDefaults standardUserDefaults]registerDefaults:initialValues];
     [[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:initialValues];
 }
 
@@ -31,9 +33,9 @@
                            pathsMatchingExtensions:[NSArray arrayWithObject:@"app"]];
     NSString *loginItemBundleVersion = nil;
     if (error) {
-        NSLog(@"contentsOfDirectoryAtPath error:%@", error);
+        SIMBLLogNotice(@"contentsOfDirectoryAtPath error:%@", error);
     } else if (![loginItems count]) {
-        NSLog(@"no loginItems found at %@", loginItemsPath);
+        SIMBLLogNotice(@"no loginItems found at %@", loginItemsPath);
     } else {
         NSString *loginItemPath = [loginItemsPath stringByAppendingPathComponent:[loginItems objectAtIndex:0]];
         NSBundle *loginItemBundle = [NSBundle bundleWithPath:loginItemPath];
@@ -56,7 +58,6 @@
                     state = NSOffState;
                     [app addObserver:self forKeyPath:@"isTerminated" options:NSKeyValueObservingOptionNew context:(__bridge_retained void*)app];
                     if (!SMLoginItemSetEnabled(bundleIdentifeierRef, NO)) {
-                        NSLog(@"SMLoginItemSetEnabled(YES) failed!");
                     }
                 }
             }
@@ -91,7 +92,7 @@
     CFStringRef bundleIdentifeierRef = (__bridge CFStringRef)self.loginItemBundleIdentifier;
     if (!SMLoginItemSetEnabled(bundleIdentifeierRef, self.useSIMBL.state == NSOnState)) {
         self.useSIMBL.state = self.useSIMBL.state == NSOnState ? NSOffState : NSOnState;
-        NSLog(@"SMLoginItemSetEnabled() failed!");
+        SIMBLLogNotice(@"SMLoginItemSetEnabled() failed!");
     }
     self.useSIMBL.state = result;
 }
