@@ -2,7 +2,7 @@ EasySIMBL
 ====================================
 Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 ---------------------------
-- **OS X 10.7 or Later.**
+- **OS X 10.7, 10.8**
 - **Reads plugins from `~/Library/Application Support/SIMBL/Plugins` only.**
 - **Never reads plugins from `/Library/Application Support/SIMBL/Plugins`.**
 - Support sandboxed application.
