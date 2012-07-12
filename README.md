@@ -14,13 +14,13 @@ How to install
 --------------
 1. Download [EasySIMBL-1.0.zip](http://github.com/downloads/norio-nomura/EasySIMBL/EasySIMBL-1.0.zip) (2012/06/30 updated)
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
-3. Launch `EasySIMBL.app` then make check `Use SIMBL`, then quit `EasySIMBL.app`.
+3. Launch `EasySIMBL.app` and make check `Use SIMBL`, then quit `EasySIMBL.app`.
 
 How to upgrade
 --------------
 1. Move older `EasySIMBL.app` into Trash.
 2. Move newer `EasySIMBL.app` into `/Applications` or `~/Applications`.
-3. Launch `EasySIMBL.app` and confirm `Use SIMBL` checked, then quit `EasySIMBL.app`.
+3. Launch `EasySIMBL.app` and make check `Use SIMBL`, then quit `EasySIMBL.app`.
 
 How to uninstall
 ----------------
