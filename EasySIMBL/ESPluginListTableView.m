@@ -16,15 +16,29 @@
     [self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,nil]];
 }
 
+- (NSArray*)filesFromPasteboard:(NSPasteboard*)pasteboard
+{
+    NSArray *files = [[pasteboard propertyListForType:NSFilenamesPboardType]pathsMatchingExtensions:[NSArray arrayWithObject:@"bundle"]];
+    return files;
+}
+
 - (NSDragOperation)draggingUpdated:(id<NSDraggingInfo>)sender
 {
+    if ([[self filesFromPasteboard:[sender draggingPasteboard]]count]) {
     return NSDragOperationCopy;
+    } else {
+        return NSDragOperationNone;
+    }
 }
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
+    if ([[self filesFromPasteboard:[sender draggingPasteboard]]count]) {
     [self setBackgroundColor:[NSColor selectedControlColor]];
     return NSDragOperationCopy;
+    } else {
+        return NSDragOperationNone;
+    }
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
@@ -33,16 +47,19 @@
 }
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender {
+    if ([[self filesFromPasteboard:[sender draggingPasteboard]]count]) {
     [self setBackgroundColor:[NSColor controlBackgroundColor]];
     return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
     BOOL handled=NO;
     
-    NSPasteboard *poPasteBd = [sender draggingPasteboard];
-    NSArray *files = [poPasteBd propertyListForType:NSFilenamesPboardType];
+    NSArray *files = [self filesFromPasteboard:[sender draggingPasteboard]];
     for (NSString* path in files) {
         if ([path hasSuffix:@".bundle"]) {
             handled=YES;
