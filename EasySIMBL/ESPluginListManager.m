@@ -65,9 +65,9 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
             NSString* path=[dir stringByAppendingPathComponent:fileName];
             NSString* name=[fileName stringByDeletingPathExtension];
             //check Info.plist
-            NSString* plistPath=[path stringByAppendingPathComponent:@"Contents/Info.plist"];
-            NSDictionary* info=[NSDictionary dictionaryWithContentsOfFile:plistPath];
-            NSString* bundleIdentifier=[info objectForKey:(NSString*)kCFBundleIdentifierKey];
+            NSBundle* bundle = [NSBundle bundleWithPath:path];
+            NSDictionary* info=[bundle infoDictionary];
+            NSString* bundleIdentifier=[bundle bundleIdentifier];
             if(![bundleIdentifier length])bundleIdentifier=@"(null)";
             
             NSString* bundleVersion=[info objectForKey:@"CFBundleShortVersionString"];
