@@ -248,11 +248,14 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 
 
 // install. copy to plugin dir
-- (void)installPlugin:(NSString*)path
+- (void)installPlugins:(NSArray *)plugins
 {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    NSInteger waitCount = 0;
+    for (NSString *path in plugins) {
     //check from plugin folder
     if ([path hasPrefix:self.pluginsDirectory]) {
-        return;
+            continue;
     }
     
     //check already installed
@@ -269,15 +272,21 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         objc_setAssociatedObject(alert, &ESPluginListManagerAlertAssociatedObjectKey, pathInfo, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         
         [alert beginSheetModalForWindow:self.listView.window modalDelegate:self
-                         didEndSelector:@selector(installAlertDidEnd:returnCode:contextInfo:) contextInfo:nil];
+                             didEndSelector:@selector(installAlertDidEnd:returnCode:contextInfo:) contextInfo:semaphore];
         [NSApp runModalForWindow:self.listView.window];
-        return;
+            waitCount++;
     }else {
         installPath=[self.pluginsDirectory stringByAppendingPathComponent:[path lastPathComponent]];
-    }
-    
     [self installPlugin:path toPath:installPath];
-
+        }
+    }
+    dispatch_async(dispatch_get_current_queue(), ^{
+        for (NSInteger i=0; i<waitCount; i++) {
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        }
+        dispatch_release(semaphore);
+        [self scanPlugins];
+    });
 }
 
 - (void)installAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -290,9 +299,15 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 
         NSURL* URL=[NSURL fileURLWithPath:installPath];
         NSArray *URLs=[NSArray arrayWithObject:URL];
-        [[NSWorkspace sharedWorkspace]recycleURLs:URLs completionHandler:^(NSDictionary *newURLs, NSError *error){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+            [[NSWorkspace sharedWorkspace]recycleURLs:URLs
+                                    completionHandler:^(NSDictionary *newURLs, NSError *error){
             [self installPlugin:path toPath:installPath];
+                                        dispatch_semaphore_signal(contextInfo);
         }];
+        });
+    } else {
+        dispatch_semaphore_signal(contextInfo);
     }
 }
 
@@ -301,8 +316,6 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     NSError *err;
     if (![[NSFileManager defaultManager]copyItemAtPath:path toPath:installPath error:&err]){
         NSLog(@"install error:%@", err);
-    }else {
-        [self scanPlugins];
     }
 }
 

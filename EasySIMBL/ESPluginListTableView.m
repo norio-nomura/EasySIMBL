@@ -25,7 +25,7 @@
 - (NSDragOperation)draggingUpdated:(id<NSDraggingInfo>)sender
 {
     if ([[self filesFromPasteboard:[sender draggingPasteboard]]count]) {
-    return NSDragOperationCopy;
+        return NSDragOperationCopy;
     } else {
         return NSDragOperationNone;
     }
@@ -34,8 +34,8 @@
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
     if ([[self filesFromPasteboard:[sender draggingPasteboard]]count]) {
-    [self setBackgroundColor:[NSColor selectedControlColor]];
-    return NSDragOperationCopy;
+        [self setBackgroundColor:[NSColor selectedControlColor]];
+        return NSDragOperationCopy;
     } else {
         return NSDragOperationNone;
     }
@@ -48,8 +48,8 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender {
     if ([[self filesFromPasteboard:[sender draggingPasteboard]]count]) {
-    [self setBackgroundColor:[NSColor controlBackgroundColor]];
-    return YES;
+        [self setBackgroundColor:[NSColor controlBackgroundColor]];
+        return YES;
     } else {
         return NO;
     }
@@ -60,12 +60,10 @@
     BOOL handled=NO;
     
     NSArray *files = [self filesFromPasteboard:[sender draggingPasteboard]];
-    for (NSString* path in files) {
-        if ([path hasSuffix:@".bundle"]) {
-            handled=YES;
-            ESPluginListManager* manager=(ESPluginListManager*)self.delegate;
-            [manager installPlugin:path];
-        }
+    if ([files count]) {
+        handled=YES;
+        ESPluginListManager* manager=(ESPluginListManager*)self.delegate;
+        [manager performSelector:@selector(installPlugins:) withObject:files afterDelay:0];
     }
     
     return handled;

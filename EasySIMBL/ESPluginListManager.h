@@ -20,7 +20,7 @@
 @property (nonatomic) NSString *disabledPluginsDirectory;
 
 
-- (void)installPlugin:(NSString*)path;
+- (void)installPlugins:(NSArray*)plugins;
 - (NSMenu*)menuForTableView:(NSTableView*)tableView row:(NSInteger)row;
 
 @end
