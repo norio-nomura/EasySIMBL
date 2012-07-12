@@ -47,10 +47,15 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
                                                            name:EasySIMBLHasBeenLoadedNotification
                                                          object:nil];
     
+    // Save version information
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:[[NSBundle mainBundle]objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey]
+                forKey:[[NSBundle mainBundle]bundleIdentifier]];
+    
     // hold previous injected sandbox
-    NSMutableSet *previousInjectedSandboxBundleIdentifierSet = [NSMutableSet setWithArray:[[NSUserDefaults standardUserDefaults]objectForKey:kInjectedSandboxBundleIdentifiers]];
-    [[NSUserDefaults standardUserDefaults]removeObjectForKey:kInjectedSandboxBundleIdentifiers];
-    [[NSUserDefaults standardUserDefaults]synchronize];
+    NSMutableSet *previousInjectedSandboxBundleIdentifierSet = [NSMutableSet setWithArray:[defaults objectForKey:kInjectedSandboxBundleIdentifiers]];
+    [defaults removeObjectForKey:kInjectedSandboxBundleIdentifiers];
+    [defaults synchronize];
     
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
     [[workspace notificationCenter] addObserver:self
@@ -63,7 +68,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     }
     
     // previous minus running, it should be uninject
-    [previousInjectedSandboxBundleIdentifierSet minusSet:[NSMutableSet setWithArray:[[NSUserDefaults standardUserDefaults]objectForKey:kInjectedSandboxBundleIdentifiers]]];
+    [previousInjectedSandboxBundleIdentifierSet minusSet:[NSMutableSet setWithArray:[defaults objectForKey:kInjectedSandboxBundleIdentifiers]]];
     if ([previousInjectedSandboxBundleIdentifierSet count]) {
         [[NSProcessInfo processInfo]disableSuddenTermination];
         for (NSString *bundleItentifier in previousInjectedSandboxBundleIdentifierSet) {
