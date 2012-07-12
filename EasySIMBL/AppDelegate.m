@@ -27,40 +27,53 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    NSString *loginItemBundlePath = nil;
+    NSBundle *loginItemBundle = nil;
+    NSString *loginItemBundleVersion = nil;
     NSError *error = nil;
     NSString *loginItemsPath = [[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Library/LoginItems"];
     NSArray *loginItems = [[[NSFileManager defaultManager]contentsOfDirectoryAtPath:loginItemsPath error:&error]
                            pathsMatchingExtensions:[NSArray arrayWithObject:@"app"]];
-    NSString *loginItemBundleVersion = nil;
     if (error) {
         SIMBLLogNotice(@"contentsOfDirectoryAtPath error:%@", error);
     } else if (![loginItems count]) {
         SIMBLLogNotice(@"no loginItems found at %@", loginItemsPath);
     } else {
-        NSString *loginItemPath = [loginItemsPath stringByAppendingPathComponent:[loginItems objectAtIndex:0]];
-        NSBundle *loginItemBundle = [NSBundle bundleWithPath:loginItemPath];
-        self.loginItemBundleIdentifier = [loginItemBundle bundleIdentifier];
+        loginItemBundlePath = [loginItemsPath stringByAppendingPathComponent:[loginItems objectAtIndex:0]];
+        loginItemBundle = [NSBundle bundleWithPath:loginItemBundlePath];
         loginItemBundleVersion = [loginItemBundle objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
+        self.loginItemBundleIdentifier = [loginItemBundle bundleIdentifier];
     }
     if (self.loginItemBundleIdentifier && loginItemBundleVersion) {
         NSArray *runningApplications = [NSRunningApplication runningApplicationsWithBundleIdentifier:self.loginItemBundleIdentifier];
         
         NSInteger state = NSOffState;
         if ([runningApplications count]) {
-            state = NSOnState;
-            for (NSRunningApplication *app in runningApplications) {
-                NSString *runningBundleVersion = [[NSBundle bundleWithURL:[app bundleURL]]objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults addSuiteNamed:self.loginItemBundleIdentifier];
+            
+            if ([[defaults objectForKey:self.loginItemBundleIdentifier] isEqualToString:loginItemBundleVersion]) {
+                SIMBLLogInfo(@"Already my 'SIMBL Agent' is running.");
                 
-                // if running agent's bundle version is different from my bundle, need restart agent from my bundle.
-                if (![loginItemBundleVersion isEqualToString:runningBundleVersion]) {
-                    CFStringRef bundleIdentifeierRef = (__bridge CFStringRef)self.loginItemBundleIdentifier;
-                    [self.useSIMBL setEnabled:NO];
-                    state = NSOffState;
-                    [app addObserver:self forKeyPath:@"isTerminated" options:NSKeyValueObservingOptionNew context:(__bridge_retained void*)app];
-                    if (!SMLoginItemSetEnabled(bundleIdentifeierRef, NO)) {
-                    }
+                state = NSOnState;
+            } else {
+                // if running agent's bundle is different from my bundle, need restart agent from my bundle.
+                SIMBLLogInfo(@"Already 'SIMBL Agent' is running, but version is different.");
+                
+                CFStringRef bundleIdentifeierRef = (__bridge CFStringRef)self.loginItemBundleIdentifier;
+                [self.useSIMBL setEnabled:NO];
+                state = NSOffState;
+                NSRunningApplication *runningApplication = [runningApplications objectAtIndex:0];
+                [runningApplication addObserver:self
+                                     forKeyPath:@"isTerminated"
+                                        options:NSKeyValueObservingOptionNew
+                                        context:(__bridge_retained void*)runningApplication];
+                if (!SMLoginItemSetEnabled(bundleIdentifeierRef, NO)) {
+                    SIMBLLogNotice(@"SMLoginItemSetEnabled(YES) failed!");
                 }
             }
+        } else {
+            SIMBLLogInfo(@"'SIMBL Agent' is not running.");
         }
         self.useSIMBL.state = state;
     } else {
