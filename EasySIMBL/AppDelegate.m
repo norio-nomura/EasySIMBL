@@ -78,13 +78,6 @@
 {
     if ([keyPath isEqualToString:@"isTerminated"]) {
         [object removeObserver:self forKeyPath:keyPath];
-        CFStringRef bundleIdentifeierRef = (__bridge CFStringRef)self.loginItemBundleIdentifier;
-        if (!SMLoginItemSetEnabled(bundleIdentifeierRef, YES)) {
-            self.useSIMBL.state = NSOffState;
-            NSLog(@"SMLoginItemSetEnabled(YES) failed!");
-        } else {
-            self.useSIMBL.state = NSOnState;
-        }
         [self.useSIMBL setEnabled:YES];
         CFRelease((CFTypeRef)context);
     }
