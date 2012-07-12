@@ -38,7 +38,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     self.osaxPath = [[NSBundle mainBundle]pathForResource:EasySIMBLBundleBaseName ofType:EasySIMBLBundleExtension];
     self.linkedOsaxPath = [self.scriptingAdditionsPath stringByAppendingPathComponent:EasySIMBLBundleName];
     self.waitingInjectionNumber = 0;
-    self.applicationSupportPath = [libraryPath stringByAppendingPathComponent:EasySIMBLApplicationSupportPathComponent];
+    self.applicationSupportPath = [SIMBL applicationSupportPath];
     self.plistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:libraryPath, EasySIMBLPreferencesPathComponent, [EasySIMBLSuiteBundleIdentifier stringByAppendingPathExtension:EasySIMBLPreferencesExtension], nil]];
     self.runningSandboxedApplications = [NSMutableArray array];
     
@@ -124,11 +124,11 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 	// against the backing file very ofter, or so it seems.
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
 	[defaults synchronize];
-
+    
 	NSString* appName = [runningApp localizedName];
 	SIMBLLogInfo(@"%@ started", appName);
 	SIMBLLogDebug(@"app start notification: %@", runningApp);
-		
+    
 	// check to see if there are plugins to load
 	if (![runningApp bundleURL] || [SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[runningApp bundleURL]]] == NO) {
 		return;
@@ -142,11 +142,11 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 	NSString* appIdentifier = [runningApp bundleIdentifier];
 	NSArray* blacklistedIdentifiers = [defaults stringArrayForKey:@"SIMBLApplicationIdentifierBlacklist"];
 	if (blacklistedIdentifiers != nil && 
-			[blacklistedIdentifiers containsObject:appIdentifier]) {
+        [blacklistedIdentifiers containsObject:appIdentifier]) {
 		SIMBLLogNotice(@"ignoring injection attempt for blacklisted application %@ (%@)", appName, appIdentifier);
 		return;
 	}
-
+    
 	SIMBLLogDebug(@"send inject event");
 	
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -154,9 +154,9 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     BOOL isDirectory = NO;
     if (![fileManager fileExistsAtPath:self.scriptingAdditionsPath isDirectory:&isDirectory]) {
         if (![fileManager createDirectoryAtPath:self.scriptingAdditionsPath
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:&error]) {
+                    withIntermediateDirectories:YES
+                                     attributes:nil
+                                          error:&error]) {
             
             if (error) {
                 SIMBLLogNotice(@"createDirectoryAtPath error:%@",error);
@@ -167,7 +167,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
         SIMBLLogNotice(@"%@ is file. Expect are directory", self.scriptingAdditionsPath);
         return;
     }
-        
+    
     if ([fileManager fileExistsAtPath:self.osaxPath isDirectory:&isDirectory] && isDirectory) {
         // Find the process to target
         pid_t pid = [runningApp processIdentifier];

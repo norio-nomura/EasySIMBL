@@ -15,6 +15,7 @@
 		6C564498159E7C0900215467 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C564497159E7C0900215467 /* AppDelegate.m */; };
 		6C56449B159E7C0900215467 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C564499159E7C0900215467 /* MainMenu.xib */; };
 		6C5644B8159E7D3900215467 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C5644B7159E7D3900215467 /* ServiceManagement.framework */; };
+		6CCA2AF115AAC6200085ABB4 /* SIMBL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCA2AEF15AAB8670085ABB4 /* SIMBL.m */; };
 		AA7EB1DB15A45EC100D76CFC /* ESPluginListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7EB1DA15A45EC100D76CFC /* ESPluginListManager.m */; };
 		AA7EB1E115A4617700D76CFC /* ESPluginListTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7EB1E015A4617700D76CFC /* ESPluginListTableView.m */; };
 		AA7EB1E415A4625500D76CFC /* ESPluginListCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7EB1E315A4625500D76CFC /* ESPluginListCellView.m */; };
@@ -73,6 +74,8 @@
 		6C564497159E7C0900215467 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6C56449A159E7C0900215467 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		6C5644B7159E7D3900215467 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		6CCA2AEE15AAB8670085ABB4 /* SIMBL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = SIMBL.h; path = ../src/SIMBL.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		6CCA2AEF15AAB8670085ABB4 /* SIMBL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = SIMBL.m; path = ../src/SIMBL.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AA7EB1D915A45EC100D76CFC /* ESPluginListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESPluginListManager.h; sourceTree = "<group>"; };
 		AA7EB1DA15A45EC100D76CFC /* ESPluginListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESPluginListManager.m; sourceTree = "<group>"; };
 		AA7EB1DF15A4617700D76CFC /* ESPluginListTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESPluginListTableView.h; sourceTree = "<group>"; };
@@ -144,6 +147,8 @@
 		6C56448A159E7C0800215467 /* EasySIMBL */ = {
 			isa = PBXGroup;
 			children = (
+				6CCA2AEE15AAB8670085ABB4 /* SIMBL.h */,
+				6CCA2AEF15AAB8670085ABB4 /* SIMBL.m */,
 				6C564496159E7C0900215467 /* AppDelegate.h */,
 				6C564497159E7C0900215467 /* AppDelegate.m */,
 				6C564499159E7C0900215467 /* MainMenu.xib */,
@@ -263,6 +268,7 @@
 				AA7EB1DB15A45EC100D76CFC /* ESPluginListManager.m in Sources */,
 				AA7EB1E115A4617700D76CFC /* ESPluginListTableView.m in Sources */,
 				AA7EB1E415A4625500D76CFC /* ESPluginListCellView.m in Sources */,
+				6CCA2AF115AAC6200085ABB4 /* SIMBL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -130,6 +130,19 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 }
 
 
++ (NSString*)applicationSupportPath;
+{
+    static NSString *applicationSupportPath = nil;
+    if (!applicationSupportPath) {
+        
+        // NSApplicationSupportDirectory does not return Container, so use NSLibraryDirectory.
+        
+        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
+        applicationSupportPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:EasySIMBLApplicationSupportPathComponent];
+    }
+    return applicationSupportPath;
+}
+
 /**
  * get this list of allowed application identifiers from the plugin's Info.plist
  * the special value * will cause any Cocoa app to load a bundle

@@ -50,4 +50,6 @@
 + (void) installPlugins;
 + (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle;
 
++ (NSString*)applicationSupportPath;
+
 @end

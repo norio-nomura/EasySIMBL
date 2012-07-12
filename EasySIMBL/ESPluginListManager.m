@@ -5,6 +5,7 @@
  */
 
 #import <objc/message.h>
+#import "SIMBL.h"
 #import "ESPluginListManager.h"
 #import "ESPluginListCellView.h"
 
@@ -24,10 +25,9 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     self = [super init];
     if (self) {
         _eventStream=nil;
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,  NSUserDomainMask, YES);
-        NSString *applicationSupportPath = [(NSString*)[paths objectAtIndex:0] stringByAppendingPathComponent:@"SIMBL"];
-        self.pluginsDirectory = [applicationSupportPath stringByAppendingPathComponent:@"Plugins"];
-        self.disabledPluginsDirectory = [applicationSupportPath stringByAppendingPathComponent:@"Plugins (Disabled)"];
+        NSString *applicationSupportPath = [SIMBL applicationSupportPath];
+        self.pluginsDirectory = [applicationSupportPath stringByAppendingPathComponent:EasySIMBLPluginsPathComponent];
+        self.disabledPluginsDirectory = [applicationSupportPath stringByAppendingPathComponent:[EasySIMBLPluginsPathComponent stringByAppendingString:@" (Disabled)"]];
         if (![[NSFileManager defaultManager]fileExistsAtPath:self.pluginsDirectory]) {
             [[NSFileManager defaultManager]createDirectoryAtPath:self.pluginsDirectory withIntermediateDirectories:YES attributes:nil error:nil];
         }
@@ -37,7 +37,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setup:) name:NSApplicationDidFinishLaunchingNotification object:NSApp];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(cleanup:) name:NSApplicationWillTerminateNotification object:NSApp];
-
+        
     }
     return self;
 }
@@ -56,7 +56,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 }
 
 - (NSMutableArray*)scanPluginsInDirectory:(NSString*)dir{
-
+    
     NSArray* files=[[NSFileManager defaultManager]contentsOfDirectoryAtPath:dir error:nil];
     NSMutableArray* ary=[NSMutableArray arrayWithCapacity:[files count]];
     
@@ -85,7 +85,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
                                       [NSNumber numberWithBool:YES], @"enabled",
                                       [NSNumber numberWithBool:NO], @"fileSystemConflict",
                                       nil];
-
+            
             if (itm) {
                 [ary addObject:itm];
             }
@@ -157,8 +157,8 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     NSString* caption=[NSString stringWithFormat:captionTemplate, [target objectForKey:@"name"]];
     
     [self.removePopoverCaption setStringValue:caption];
-
-   
+    
+    
     //popover の delegate でアンインストールするプラグインを把握
     [self.removePopover setDelegate:cellView];
     [self.removePopover showRelativeToRect:[[self.removePopover.contentViewController view]bounds] ofView:cellView preferredEdge:CGRectMinYEdge];
@@ -216,7 +216,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         if (number) {
             maxVer=[number integerValue];
         }
-
+        
         item = [menu addItemWithTitle:appID action:nil keyEquivalent:@""];
         [item setIndentationLevel:1];
         if (minVer || maxVer) {
@@ -253,31 +253,31 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     NSInteger waitCount = 0;
     for (NSString *path in plugins) {
-    //check from plugin folder
-    if ([path hasPrefix:self.pluginsDirectory]) {
+        //check from plugin folder
+        if ([path hasPrefix:self.pluginsDirectory]) {
             continue;
-    }
-    
-    //check already installed
-    NSString* installPath=[self installedPathForFileName:[path lastPathComponent]];
-    if (installPath) {
-        //already installed
-        //
-        NSString* alertText=@"\"%@\" is already exists. Do you want to replace?";
+        }
+        
+        //check already installed
+        NSString* installPath=[self installedPathForFileName:[path lastPathComponent]];
+        if (installPath) {
+            //already installed
+            //
+            NSString* alertText=@"\"%@\" is already exists. Do you want to replace?";
             NSString* const informativeText=@"If replace, existing file is moved to trash.";
-        alertText=[NSString stringWithFormat:alertText, [path lastPathComponent]];
-        NSAlert *alert=[NSAlert alertWithMessageText:alertText defaultButton:@"Replace" alternateButton:@"Cancel" otherButton:nil informativeTextWithFormat:informativeText];
-        
-        NSDictionary* pathInfo=[NSDictionary dictionaryWithObjectsAndKeys:path, @"from", installPath, @"to", nil];
-        objc_setAssociatedObject(alert, &ESPluginListManagerAlertAssociatedObjectKey, pathInfo, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        
-        [alert beginSheetModalForWindow:self.listView.window modalDelegate:self
+            alertText=[NSString stringWithFormat:alertText, [path lastPathComponent]];
+            NSAlert *alert=[NSAlert alertWithMessageText:alertText defaultButton:@"Replace" alternateButton:@"Cancel" otherButton:nil informativeTextWithFormat:informativeText];
+            
+            NSDictionary* pathInfo=[NSDictionary dictionaryWithObjectsAndKeys:path, @"from", installPath, @"to", nil];
+            objc_setAssociatedObject(alert, &ESPluginListManagerAlertAssociatedObjectKey, pathInfo, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            
+            [alert beginSheetModalForWindow:self.listView.window modalDelegate:self
                              didEndSelector:@selector(installAlertDidEnd:returnCode:contextInfo:) contextInfo:semaphore];
-        [NSApp runModalForWindow:self.listView.window];
+            [NSApp runModalForWindow:self.listView.window];
             waitCount++;
-    }else {
-        installPath=[self.pluginsDirectory stringByAppendingPathComponent:[path lastPathComponent]];
-    [self installPlugin:path toPath:installPath];
+        }else {
+            installPath=[self.pluginsDirectory stringByAppendingPathComponent:[path lastPathComponent]];
+            [self installPlugin:path toPath:installPath];
         }
     }
     dispatch_async(dispatch_get_current_queue(), ^{
@@ -296,15 +296,15 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         NSDictionary* pathInfo=(NSDictionary*)objc_getAssociatedObject(alert, &ESPluginListManagerAlertAssociatedObjectKey);
         NSString* path=[pathInfo objectForKey:@"from"];
         NSString* installPath=[pathInfo objectForKey:@"to"];
-
+        
         NSURL* URL=[NSURL fileURLWithPath:installPath];
         NSArray *URLs=[NSArray arrayWithObject:URL];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
             [[NSWorkspace sharedWorkspace]recycleURLs:URLs
                                     completionHandler:^(NSDictionary *newURLs, NSError *error){
-            [self installPlugin:path toPath:installPath];
+                                        [self installPlugin:path toPath:installPath];
                                         dispatch_semaphore_signal(contextInfo);
-        }];
+                                    }];
         });
     } else {
         dispatch_semaphore_signal(contextInfo);
@@ -352,12 +352,12 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
 #define ESFSEventStreamLatency			((CFTimeInterval)3.0)
 
 static void ESFSEventsCallback(
-               ConstFSEventStreamRef streamRef,
-               void *callbackCtxInfo,
-               size_t numEvents,
-               void *eventPaths,
-               const FSEventStreamEventFlags eventFlags[],
-               const FSEventStreamEventId eventIds[])
+                               ConstFSEventStreamRef streamRef,
+                               void *callbackCtxInfo,
+                               size_t numEvents,
+                               void *eventPaths,
+                               const FSEventStreamEventFlags eventFlags[],
+                               const FSEventStreamEventId eventIds[])
 {
 	ESPluginListManager *watcher = (__bridge ESPluginListManager *)callbackCtxInfo;
     [watcher scanPlugins];
