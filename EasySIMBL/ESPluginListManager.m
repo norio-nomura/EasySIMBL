@@ -220,7 +220,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         item = [menu addItemWithTitle:appID action:nil keyEquivalent:@""];
         [item setIndentationLevel:1];
         if (minVer || maxVer) {
-            NSString* verStr=[NSString stringWithFormat:@"version:%i - %i", minVer, maxVer];
+            NSString* verStr=[NSString stringWithFormat:@"version:%li - %li", minVer, maxVer];
             item = [menu addItemWithTitle:verStr action:nil keyEquivalent:@""];
             [item setIndentationLevel:2];
         }
@@ -261,7 +261,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         //already installed
         //
         NSString* alertText=@"\"%@\" is already exists. Do you want to replace?";
-        NSString* informativeText=@"If replace, existing file is moved to trash.";
+            NSString* const informativeText=@"If replace, existing file is moved to trash.";
         alertText=[NSString stringWithFormat:alertText, [path lastPathComponent]];
         NSAlert *alert=[NSAlert alertWithMessageText:alertText defaultButton:@"Replace" alternateButton:@"Cancel" otherButton:nil informativeTextWithFormat:informativeText];
         
