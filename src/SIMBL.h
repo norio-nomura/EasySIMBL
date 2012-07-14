@@ -9,6 +9,15 @@
  * http://www.opensource.org/licenses/gpl-2.0.php
  */
 
+@interface NSBundle (SIMBLCocoaExtensions)
+
+- (NSString*) _dt_info;
+- (NSString*) _dt_version;
+- (NSString*) _dt_bundleVersion;
+- (NSString*) _dt_name;
+
+@end
+
 #define EasySIMBLApplicationSupportPathComponent @"Application Support/SIMBL"
 #define EasySIMBLPluginsPathComponent @"Plugins"
 #define EasySIMBLScriptingAdditionsPathComponent @"ScriptingAdditions"

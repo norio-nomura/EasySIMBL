@@ -70,8 +70,8 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
             NSString* bundleIdentifier=[bundle bundleIdentifier];
             if(![bundleIdentifier length])bundleIdentifier=@"(null)";
             
-            NSString* bundleVersion=[info objectForKey:@"CFBundleShortVersionString"];
-            if(![bundleVersion length])bundleVersion=[info objectForKey:(NSString*)kCFBundleVersionKey];
+            NSString* bundleVersion=[bundle _dt_version];
+            if(![bundleVersion length])bundleVersion=[bundle _dt_bundleVersion];
             
             NSString* description=bundleIdentifier;
             if([bundleVersion length]){

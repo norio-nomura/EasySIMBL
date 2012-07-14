@@ -49,7 +49,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     
     // Save version information
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setValue:[[NSBundle mainBundle]objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey]
+    [defaults setValue:[[NSBundle mainBundle]_dt_bundleVersion]
                 forKey:[[NSBundle mainBundle]bundleIdentifier]];
     
     // hold previous injected sandbox

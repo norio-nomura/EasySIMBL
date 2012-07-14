@@ -12,15 +12,6 @@
 #import "SIMBL.h"
 #import "NSAlert_SIMBL.h"
 
-@interface NSBundle (SIMBLCocoaExtensions)
-
-- (NSString*) _dt_info;
-- (NSString*) _dt_version;
-- (NSString*) _dt_bundleVersion;
-- (NSString*) _dt_name;
-
-@end
-
 @implementation NSBundle (SIMBLCocoaExtensions)
 
 - (NSString*) _dt_info

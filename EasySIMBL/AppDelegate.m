@@ -41,7 +41,7 @@
     } else {
         loginItemBundlePath = [loginItemsPath stringByAppendingPathComponent:[loginItems objectAtIndex:0]];
         loginItemBundle = [NSBundle bundleWithPath:loginItemBundlePath];
-        loginItemBundleVersion = [loginItemBundle objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
+        loginItemBundleVersion = [loginItemBundle _dt_bundleVersion];
         self.loginItemBundleIdentifier = [loginItemBundle bundleIdentifier];
     }
     if (self.loginItemBundleIdentifier && loginItemBundleVersion) {
