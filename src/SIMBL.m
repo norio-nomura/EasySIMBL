@@ -37,18 +37,18 @@
 @end
 
 /*
-	<key>SIMBLTargetApplications</key>
-	<array>
-		<dict>
-			<key>BundleIdentifier</key>
-			<string>com.apple.Safari</string>
-			<key>MinBundleVersion</key>
-			<integer>125</integer>
-			<key>MaxBundleVersion</key>
-			<integer>125</integer>
-		</dict>
-	</array>
-*/
+ <key>SIMBLTargetApplications</key>
+ <array>
+ <dict>
+ <key>BundleIdentifier</key>
+ <string>com.apple.Safari</string>
+ <key>MinBundleVersion</key>
+ <integer>125</integer>
+ <key>MaxBundleVersion</key>
+ <integer>125</integer>
+ </dict>
+ </array>
+ */
 
 @implementation SIMBL
 
@@ -198,7 +198,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 	}
 	
 	NSBundle* pluginBundle = [NSBundle bundleWithPath:_bundlePath];
-
+    
 	// check to see if we already loaded code for this identifier (keeps us from double loading)
 	// this is common if you have User vs. System-wide installs - probably mostly for developers
 	// "physician, heal thyself!"
@@ -216,7 +216,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * @return YES if this bundle was loaded
  */
 + (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(NSBundle*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers
-{	
+{
 	NSString* appIdentifier = [_appBundle bundleIdentifier];
 	for (NSString* specifiedIdentifier in _applicationIdentifiers) {
 		SIMBLLogDebug(@"checking bundle %@ for identifier %@", [_bundle bundleIdentifier], specifiedIdentifier);
@@ -245,13 +245,13 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 		NSString* targetAppIdentifier = [targetAppProperties objectForKey:SIMBLBundleIdentifier];
 		SIMBLLogDebug(@"checking target identifier %@", targetAppIdentifier);
 		if ([targetAppIdentifier isEqualToString:appIdentifier] == NO &&
-				[targetAppIdentifier isEqualToString:@"*"] == NO)
+            [targetAppIdentifier isEqualToString:@"*"] == NO)
 			continue;
-
+        
 		NSString* targetAppPath = [targetAppProperties objectForKey:SIMBLTargetApplicationPath];
 		if (targetAppPath && [targetAppPath isEqualToString:[_appBundle bundlePath]] == NO)
 			continue;
-
+        
 		// FIXME: this has never been used - it should probably be removed.
 		NSArray* requiredFrameworks = [targetAppProperties objectForKey:SIMBLRequiredFrameworks];
 		BOOL missingFramework = NO;
@@ -265,7 +265,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 				NSBundle* framework = [NSBundle bundleWithIdentifier:[requiredFramework objectForKey:@"BundleIdentifier"]];
 				NSString* frameworkPath = [framework bundlePath];
 				NSString* requiredPath = [requiredFramework objectForKey:@"BundlePath"];
-				if ([frameworkPath isEqualToString:requiredPath] == NO) {				
+				if ([frameworkPath isEqualToString:requiredPath] == NO) {
 					missingFramework = YES;
 				}
 			}
@@ -280,7 +280,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 		NSNumber* number;
 		if ((number = [targetAppProperties objectForKey:SIMBLMinBundleVersion]))
 			minVersion = [number intValue];
-			
+        
 		int maxVersion = 0;
 		if ((number = [targetAppProperties objectForKey:SIMBLMaxBundleVersion]))
 			maxVersion = [number intValue];
@@ -297,6 +297,10 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 	return NO;
 }
 
++ (BOOL) isRunningOriginalSIMBLAgent
+{
+    return [[NSRunningApplication runningApplicationsWithBundleIdentifier:EasySIMBLOriginalSIMBLAgentBundleIdentifier]count];
+}
 
 + (BOOL) loadBundle:(NSBundle*)_plugin
 {
@@ -307,8 +311,13 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 		Class principalClass = [bundle principalClass];
 		
 		// if the principal class has an + (void) install message, call it
-		if (principalClass && [principalClass respondsToSelector:@selector(install)])
-			[principalClass install];
+		if (principalClass && [principalClass respondsToSelector:@selector(install)]) {
+            if ([self isRunningOriginalSIMBLAgent]) {
+                SIMBLLogNotice(@"It seems the original SIMBL Agent is running. So, I don't call +install because which cause double initialization problem of plugin.");
+            } else {
+                [principalClass install];
+            }
+        }
 		
 		// set that we've loaded this bundle to prevent collisions
 		[loadedBundleIdentifiers setObject:@"loaded" forKey:[bundle bundleIdentifier]];

@@ -28,6 +28,7 @@
 #define EasySIMBLSuiteBundleIdentifier @"com.github.norio-nomura.EasySIMBL"
 #define EasySIMBLPreferencesExtension @"plist"
 #define EasySIMBLHasBeenLoadedNotification @"EasySIMBLHasBeenLoadedNotification"
+#define EasySIMBLOriginalSIMBLAgentBundleIdentifier @"net.culater.SIMBL_Agent"
 
 #define SIMBLStringTable @"SIMBLStringTable"
 #define SIMBLApplicationIdentifier @"SIMBLApplicationIdentifier"
