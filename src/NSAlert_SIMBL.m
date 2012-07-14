@@ -17,22 +17,22 @@
 {
 	va_list ap;
 	va_start(ap, _details);
-
+    
 	NSString* detailsFormatted = [[NSString alloc] initWithFormat:_details arguments:ap];
 	va_end(ap);
-
+    
 	NSBeginAlertSheet(
-		_message,         // sheet message
-		nil,              // default button label
-		nil,              // alternate button label
-		nil,              // no third button
-		nil,              // window sheet is attached to fixme: should i attach to the front-most window
-		nil,              // we don't need a delegate
-		nil,              // did-end selector
-		nil,              // no need for did-dismiss selector
-		nil,              // context info
-		detailsFormatted,	// additional text
-		nil);             // no parameters in message
+                      _message,         // sheet message
+                      nil,              // default button label
+                      nil,              // alternate button label
+                      nil,              // no third button
+                      nil,              // window sheet is attached to fixme: should i attach to the front-most window
+                      nil,              // we don't need a delegate
+                      nil,              // did-end selector
+                      nil,              // no need for did-dismiss selector
+                      nil,              // context info
+                      detailsFormatted,	// additional text
+                      nil);             // no parameters in message
 }
 
 @end

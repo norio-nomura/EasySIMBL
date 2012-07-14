@@ -146,7 +146,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 	// blacklist to prevent injection.  By default, this is empty.
 	NSString* appIdentifier = [runningApp bundleIdentifier];
 	NSArray* blacklistedIdentifiers = [defaults stringArrayForKey:@"SIMBLApplicationIdentifierBlacklist"];
-	if (blacklistedIdentifiers != nil && 
+	if (blacklistedIdentifiers != nil &&
         [blacklistedIdentifiers containsObject:appIdentifier]) {
 		SIMBLLogNotice(@"ignoring injection attempt for blacklisted application %@ (%@)", appName, appIdentifier);
 		return;
@@ -238,7 +238,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
             [[NSUserDefaults standardUserDefaults]setObject:[injectedSandboxBundleIdentifierSet allObjects]
                                                      forKey:kInjectedSandboxBundleIdentifiers];
             [[NSUserDefaults standardUserDefaults]synchronize];
-
+            
             [[NSProcessInfo processInfo]disableSuddenTermination];
         } else {
             BOOL (^hasSameBundleIdentifier)(id, NSUInteger, BOOL *) = ^(id obj, NSUInteger idx, BOOL *stop) {
