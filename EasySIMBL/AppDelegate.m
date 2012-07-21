@@ -88,6 +88,12 @@
     return YES;
 }
 
+- (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames
+{
+    [self.pluginListManager installPlugins:filenames];
+    [sender replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+}
+
 #pragma mark NSKeyValueObserving Protocol
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
