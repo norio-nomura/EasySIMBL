@@ -7,6 +7,7 @@
 #import <ServiceManagement/SMLoginItem.h>
 #import "AppDelegate.h"
 #import "SIMBL.h"
+#import "ESPluginListManager.h"
 
 @implementation AppDelegate
 
@@ -14,6 +15,7 @@
 
 @synthesize window = _window;
 @synthesize useSIMBL = _useSIMBL;
+@synthesize pluginListManager = _pluginListManager;
 
 #pragma mark User defaults
 
