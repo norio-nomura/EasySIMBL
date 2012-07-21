@@ -9,10 +9,11 @@ Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 - Support resumed on login application.
 - Drag and Drop install to `/Applications` or `~/Applications` folder, no uninstaller required.
 - Change injection method.
+- Install plugins(.bundle) from Finder.
 
 How to install
 --------------
-1. Download [EasySIMBL-1.1.1.zip](http://github.com/downloads/norio-nomura/EasySIMBL/EasySIMBL-1.1.1.zip) (2012/07/14 updated)
+1. Download [EasySIMBL-1.2.zip](http://github.com/downloads/norio-nomura/EasySIMBL/EasySIMBL-1.2.zip) (2012/07/21 updated)
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
 3. Launch `EasySIMBL.app` and make check `Use SIMBL`, then quit `EasySIMBL.app`.
 
