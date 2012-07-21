@@ -25,7 +25,7 @@
 
 #pragma mark NSApplicationDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
     NSString *loginItemBundlePath = nil;
     NSBundle *loginItemBundle = nil;

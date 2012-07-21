@@ -35,7 +35,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
             [[NSFileManager defaultManager]createDirectoryAtPath:self.disabledPluginsDirectory withIntermediateDirectories:YES attributes:nil error:nil];
         }
         
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setup:) name:NSApplicationDidFinishLaunchingNotification object:NSApp];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setup:) name:NSApplicationWillFinishLaunchingNotification object:NSApp];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(cleanup:) name:NSApplicationWillTerminateNotification object:NSApp];
         
     }
