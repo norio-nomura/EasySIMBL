@@ -33,6 +33,9 @@
                       nil,              // context info
                       detailsFormatted,	// additional text
                       nil);             // no parameters in message
+#if !__has_feature(objc_arc)
+    [detailsFormatted release];
+#endif
 }
 
 @end
