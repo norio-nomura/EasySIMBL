@@ -13,7 +13,7 @@ Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 
 How to install
 --------------
-1. Download [EasySIMBL-1.3.zip](http://github.com/downloads/norio-nomura/EasySIMBL/EasySIMBL-1.3.zip) (2012/09/04 updated)
+1. Download [EasySIMBL-1.3.zip](http://github.com/downloads/norio-nomura/EasySIMBL/EasySIMBL-1.3.zip) (2012/10/04 updated)
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
 3. Launch `EasySIMBL.app` and make check `Use SIMBL`, then quit `EasySIMBL.app`.
 
