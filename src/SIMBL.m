@@ -60,6 +60,9 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
         NSUserDefaults* defaults = [[NSUserDefaults alloc] init];
         [defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
         [defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:SIMBLLogLevelDefault], SIMBLPrefKeyLogLevel, nil]];
+#if !__has_feature(objc_arc)
+        [defaults release];
+#endif
     }
 }
 
