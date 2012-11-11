@@ -183,12 +183,36 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
             return;
         }
         
-        // hardlink SIMBL.osax to ScriptingAdditions
-        if (![fileManager fileExistsAtPath:self.linkedOsaxPath isDirectory:&isDirectory]) {
-            [fileManager linkItemAtPath:self.osaxPath toPath:self.linkedOsaxPath error:&error];
+        // create SIMBL.osax to ScriptingAdditions
+        if (!self.waitingInjectionNumber) {
+            [fileManager removeItemAtPath:self.linkedOsaxPath error:nil];
+            
+            // check fileSystems
+            id fsOflinkedOsax = [[fileManager attributesOfItemAtPath:self.scriptingAdditionsPath error:&error] objectForKey:NSFileSystemNumber];
             if (error) {
-                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
+                SIMBLLogNotice(@"attributesOfItemAtPath error:%@",error);
                 return;
+            }
+            id fsOfOsax = [[fileManager attributesOfItemAtPath:self.osaxPath error:&error] objectForKey:NSFileSystemNumber];
+            if (error) {
+                SIMBLLogNotice(@"attributesOfItemAtPath error:%@",error);
+                return;
+            }
+            
+            if ([fsOflinkedOsax isEqual:fsOfOsax]) {
+                // create hard link
+                [fileManager linkItemAtPath:self.osaxPath toPath:self.linkedOsaxPath error:&error];
+                if (error) {
+                    SIMBLLogNotice(@"linkItemAtPath error:%@",error);
+                    return;
+                }
+            } else {
+                // create copy
+                [fileManager copyItemAtPath:self.osaxPath toPath:self.linkedOsaxPath error:&error];
+                if (error) {
+                    SIMBLLogNotice(@"copyItemAtPath error:%@",error);
+                    return;
+                }
             }
         }
         self.waitingInjectionNumber++;
