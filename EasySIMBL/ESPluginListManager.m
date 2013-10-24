@@ -65,14 +65,13 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
             NSString* path=[dir stringByAppendingPathComponent:fileName];
             NSString* name=[fileName stringByDeletingPathExtension];
             //check Info.plist
-            //NSBundle has cache. read Info.plist directly.
-            NSString* infoPath = [path stringByAppendingPathComponent:@"/Contents/Info.plist"];
-            NSDictionary* info=[NSDictionary dictionaryWithContentsOfFile:infoPath];
-            NSString* bundleIdentifier=[info objectForKey:(NSString*)kCFBundleIdentifierKey];
+            NSBundle* bundle = [NSBundle bundleWithPath:path];
+            NSDictionary* info=[bundle SIMBL_infoDictionary];
+            NSString* bundleIdentifier=[bundle bundleIdentifier];
             if(![bundleIdentifier length])bundleIdentifier=@"(null)";
             
-            NSString* bundleVersion=[info objectForKey:@"CFBundleShortVersionString"];
-            if(![bundleVersion length])bundleVersion=[info objectForKey:(NSString*)kCFBundleVersionKey];
+            NSString* bundleVersion=[bundle _dt_version];
+            if(![bundleVersion length])bundleVersion=[bundle _dt_bundleVersion];
             
             NSString* description=bundleIdentifier;
             if([bundleVersion length]){
