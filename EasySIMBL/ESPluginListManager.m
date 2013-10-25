@@ -209,7 +209,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     
     
     [menu addItem:[NSMenuItem separatorItem]];
-    item = [menu addItemWithTitle:@"SIMBLTargetApplications:" action:nil keyEquivalent:@""];
+    [menu addItemWithTitle:@"SIMBLTargetApplications:" action:nil keyEquivalent:@""];
     NSDictionary* bundleInfo = [pluginInfo objectForKey:@"bundleInfo"];
     NSArray* targetApps = [bundleInfo objectForKey:@"SIMBLTargetApplications"];
     for (NSDictionary* targetApp in targetApps) {
