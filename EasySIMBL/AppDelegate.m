@@ -20,7 +20,7 @@
 #pragma mark User defaults
 
 + (void)initialize {
-    NSDictionary *initialValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:2],@"SIMBLLogLevel", nil];
+    NSDictionary *initialValues = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:2],SIMBLPrefKeyLogLevel, nil];
     [[NSUserDefaults standardUserDefaults]registerDefaults:initialValues];
     [[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:initialValues];
 }

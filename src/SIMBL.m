@@ -14,24 +14,49 @@
 
 @implementation NSBundle (SIMBLCocoaExtensions)
 
+/*!
+ *  Non cached version of -infoDictionary
+ *
+ *  @return A dictionary, constructed from the bundle's Info.plist file, that contains information about the receiver.
+ *          If the bundle does not contain an Info.plist file, a empty dictionary is returned.
+ */
+- (NSDictionary*) SIMBL_infoDictionary;
+{
+    NSString* infoPath = [[self bundlePath]stringByAppendingPathComponent:@"/Contents/Info.plist"];
+    NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:infoPath];
+    return dictionary;
+}
+
+/*!
+ *  Non cached and non localized version of -objectForInfoDictionaryKey: key
+ *
+ *  @param key A key in the receiver's property list.
+ *
+ *  @return The value associated with key in the receiver's property list (Info.plist).
+ */
+- (id) SIMBL_objectForInfoDictionaryKey: (NSString*)key
+{
+    return [[self SIMBL_infoDictionary]objectForKey:key];
+}
+
 - (NSString*) _dt_info
 {
-	return [self objectForInfoDictionaryKey: @"CFBundleGetInfoString"];
+	return [self SIMBL_objectForInfoDictionaryKey: @"CFBundleGetInfoString"];
 }
 
 - (NSString*) _dt_version
 {
-	return [self objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+	return [self SIMBL_objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
 }
 
 - (NSString*) _dt_bundleVersion
 {
-	return [self objectForInfoDictionaryKey: (NSString*)kCFBundleVersionKey];
+	return [self SIMBL_objectForInfoDictionaryKey: (NSString*)kCFBundleVersionKey];
 }
 
 - (NSString*) _dt_name
 {
-	return [self objectForInfoDictionaryKey:(NSString*)kCFBundleNameKey];
+	return [self SIMBL_objectForInfoDictionaryKey:(NSString*)kCFBundleNameKey];
 }
 
 @end
@@ -175,12 +200,12 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 	}
 	
 	// this is the new way of specifying when to load a bundle
-	NSArray* targetApplications = [pluginBundle objectForInfoDictionaryKey:SIMBLTargetApplications];
+	NSArray* targetApplications = [pluginBundle SIMBL_objectForInfoDictionaryKey:SIMBLTargetApplications];
 	if (targetApplications)
 		return [self shouldApplication:_appBundle loadBundle:pluginBundle withTargetApplications:targetApplications];
 	
 	// fall back to the old method for older plugins - we should probably throw a depreaction warning
-	NSArray* applicationIdentifiers = [pluginBundle objectForInfoDictionaryKey:SIMBLApplicationIdentifier];
+	NSArray* applicationIdentifiers = [pluginBundle SIMBL_objectForInfoDictionaryKey:SIMBLApplicationIdentifier];
 	if (applicationIdentifiers)
 		return [self shouldApplication:_appBundle loadBundle:pluginBundle withApplicationIdentifiers:applicationIdentifiers];
 	

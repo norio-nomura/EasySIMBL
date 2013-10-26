@@ -2,7 +2,7 @@ EasySIMBL![EasySIMBL](https://github.com/norio-nomura/EasySIMBL/raw/master/icon.
 ====================================
 Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 ---------------------------
-- **OS X 10.7, 10.8**
+- **OS X 10.7, 10.8, 10.9**
 - **Reads plugins from `~/Library/Application Support/SIMBL/Plugins` only.**
 - **Never reads plugins from `/Library/Application Support/SIMBL/Plugins`.**
 - Support sandboxed application.
@@ -13,7 +13,7 @@ Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 
 How to install
 --------------
-1. Download [EasySIMBL-1.4.zip](http://github.com/downloads/norio-nomura/EasySIMBL/EasySIMBL-1.4.zip) (2012/11/11 updated)
+1. Download [EasySIMBL-1.5.zip](http://github.com/norio-nomura/EasySIMBL/releases/download/EasySIMBL-1.5/EasySIMBL-1.5.zip) (2013/10/26 updated)
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
 3. Launch `EasySIMBL.app` and make check `Use SIMBL`, then quit `EasySIMBL.app`.
 
@@ -27,6 +27,12 @@ How to uninstall
 ----------------
 1. Launch `EasySIMBL.app` then clear check `Use SIMBL`, then quit `EasySIMBL.app`.
 2. Move `EasySIMBL.app` into Trash.
+
+Tested combinations of OS X and applications
+--------------------------------------------
+- OS X 10.7.5 (11G63) : [Echofon for Mac 1.8.0](https://itunes.apple.com/jp/app/echofon-for-twitter/id403830270?mt=12) & [SimblPluginsForEchofon-1.4](https://github.com/norio-nomura/SimblPluginsForEchofon)
+- OS X 10.8.5 (12F45) : Safari 6.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand), [Echofon for Mac 1.8.0](https://itunes.apple.com/jp/app/echofon-for-twitter/id403830270?mt=12) & [SimblPluginsForEchofon-1.4](https://github.com/norio-nomura/SimblPluginsForEchofon)
+- OS X 10.9 (13A603) : Safari 7.0 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand), [Echofon for Mac 1.8.0](https://itunes.apple.com/jp/app/echofon-for-twitter/id403830270?mt=12) & [SimblPluginsForEchofon-1.4](https://github.com/norio-nomura/SimblPluginsForEchofon)
 
 License
 -------

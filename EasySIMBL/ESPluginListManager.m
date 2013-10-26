@@ -66,7 +66,7 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
             NSString* name=[fileName stringByDeletingPathExtension];
             //check Info.plist
             NSBundle* bundle = [NSBundle bundleWithPath:path];
-            NSDictionary* info=[bundle infoDictionary];
+            NSDictionary* info=[bundle SIMBL_infoDictionary];
             NSString* bundleIdentifier=[bundle bundleIdentifier];
             if(![bundleIdentifier length])bundleIdentifier=@"(null)";
             
@@ -209,19 +209,19 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     
     
     [menu addItem:[NSMenuItem separatorItem]];
-    item = [menu addItemWithTitle:@"SIMBLTargetApplications:" action:nil keyEquivalent:@""];
+    [menu addItemWithTitle:@"SIMBLTargetApplications:" action:nil keyEquivalent:@""];
     NSDictionary* bundleInfo = [pluginInfo objectForKey:@"bundleInfo"];
-    NSArray* targetApps = [bundleInfo objectForKey:@"SIMBLTargetApplications"];
+    NSArray* targetApps = [bundleInfo objectForKey:SIMBLTargetApplications];
     for (NSDictionary* targetApp in targetApps) {
         NSNumber* number;
-        NSString* appID = [targetApp objectForKey:@"BundleIdentifier"];
+        NSString* appID = [targetApp objectForKey:SIMBLBundleIdentifier];
         NSInteger minVer = 0;
         NSInteger maxVer = 0;
-        number=[targetApp objectForKey:@"MinBundleVersion"];
+        number=[targetApp objectForKey:SIMBLMinBundleVersion];
         if (number) {
             minVer=[number integerValue];
         }
-        number = [targetApp objectForKey:@"MaxBundleVersion"];
+        number = [targetApp objectForKey:SIMBLMaxBundleVersion];
         if (number) {
             maxVer=[number integerValue];
         }
@@ -229,7 +229,9 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         item = [menu addItemWithTitle:appID action:nil keyEquivalent:@""];
         [item setIndentationLevel:1];
         if (minVer || maxVer) {
-            NSString* verStr=[NSString stringWithFormat:@"version:%li - %li", minVer, maxVer];
+            NSString* minVerStr = minVer ? [NSString stringWithFormat:@"%li", minVer] : @"";
+            NSString* maxVerStr = maxVer ? [NSString stringWithFormat:@"%li", maxVer] : @"";
+            NSString* verStr=[NSString stringWithFormat:@"version:%@ - %@", minVerStr, maxVerStr];
             item = [menu addItemWithTitle:verStr action:nil keyEquivalent:@""];
             [item setIndentationLevel:2];
         }

@@ -11,6 +11,8 @@
 
 @interface NSBundle (SIMBLCocoaExtensions)
 
+- (NSDictionary*) SIMBL_infoDictionary;
+- (id) SIMBL_objectForInfoDictionaryKey: (NSString*)key;
 - (NSString*) _dt_info;
 - (NSString*) _dt_version;
 - (NSString*) _dt_bundleVersion;
