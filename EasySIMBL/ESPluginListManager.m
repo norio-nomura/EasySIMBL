@@ -229,7 +229,9 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
         item = [menu addItemWithTitle:appID action:nil keyEquivalent:@""];
         [item setIndentationLevel:1];
         if (minVer || maxVer) {
-            NSString* verStr=[NSString stringWithFormat:@"version:%li - %li", minVer, maxVer];
+            NSString* minVerStr = minVer ? [NSString stringWithFormat:@"%li", minVer] : @"";
+            NSString* maxVerStr = maxVer ? [NSString stringWithFormat:@"%li", maxVer] : @"";
+            NSString* verStr=[NSString stringWithFormat:@"version:%@ - %@", minVerStr, maxVerStr];
             item = [menu addItemWithTitle:verStr action:nil keyEquivalent:@""];
             [item setIndentationLevel:2];
         }
