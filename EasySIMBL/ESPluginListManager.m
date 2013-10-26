@@ -211,17 +211,17 @@ static char ESPluginListManagerAlertAssociatedObjectKey;
     [menu addItem:[NSMenuItem separatorItem]];
     [menu addItemWithTitle:@"SIMBLTargetApplications:" action:nil keyEquivalent:@""];
     NSDictionary* bundleInfo = [pluginInfo objectForKey:@"bundleInfo"];
-    NSArray* targetApps = [bundleInfo objectForKey:@"SIMBLTargetApplications"];
+    NSArray* targetApps = [bundleInfo objectForKey:SIMBLTargetApplications];
     for (NSDictionary* targetApp in targetApps) {
         NSNumber* number;
-        NSString* appID = [targetApp objectForKey:@"BundleIdentifier"];
+        NSString* appID = [targetApp objectForKey:SIMBLBundleIdentifier];
         NSInteger minVer = 0;
         NSInteger maxVer = 0;
-        number=[targetApp objectForKey:@"MinBundleVersion"];
+        number=[targetApp objectForKey:SIMBLMinBundleVersion];
         if (number) {
             minVer=[number integerValue];
         }
-        number = [targetApp objectForKey:@"MaxBundleVersion"];
+        number = [targetApp objectForKey:SIMBLMaxBundleVersion];
         if (number) {
             maxVer=[number integerValue];
         }
