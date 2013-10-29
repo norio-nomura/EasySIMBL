@@ -35,7 +35,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
     NSString *libraryPath = (NSString*)[paths objectAtIndex:0];
     self.scriptingAdditionsPath = [libraryPath stringByAppendingPathComponent:EasySIMBLScriptingAdditionsPathComponent];
-    self.osaxPath = [[NSBundle mainBundle]pathForResource:EasySIMBLBundleBaseName ofType:EasySIMBLBundleExtension];
+    self.osaxPath = [[[[NSBundle mainBundle]builtInPlugInsPath]stringByAppendingPathComponent:EasySIMBLBundleBaseName]stringByAppendingPathExtension:EasySIMBLBundleExtension];
     self.linkedOsaxPath = [self.scriptingAdditionsPath stringByAppendingPathComponent:EasySIMBLBundleName];
     self.waitingInjectionNumber = 0;
     self.applicationSupportPath = [SIMBL applicationSupportPath];
@@ -219,7 +219,12 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
         // When initializing, you need to wait for the event reply, otherwise the
         // event might get dropped on the floor. This is only seems to happen in 10.5
         // but it shouldn't harm anything.
-        [sbApp setSendMode:kAEWaitReply | kAENeverInteract | kAEDontRecord];
+        
+        // 10.9 stop responding here when injecting into some non-sandboxed apps,
+        // because those target apps never reply.
+        // EasySIMBL stop waiting reply.
+        // It works on OS X 10.7, 10.8 and 10.9 all of EasySIMBL target.
+        [sbApp setSendMode:kAENoReply | kAENeverInteract | kAEDontRecord];
         [sbApp sendEvent:kASAppleScriptSuite id:kGetAEUT parameters:0];
         
         // the reply here is of some unknown type - it is not an Objective-C object
