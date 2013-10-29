@@ -59,6 +59,16 @@
 	return [self SIMBL_objectForInfoDictionaryKey:(NSString*)kCFBundleNameKey];
 }
 
+- (BOOL) SIMBL_isLSUIElement
+{
+    return [[self SIMBL_objectForInfoDictionaryKey:@"LSUIElement"]boolValue];
+}
+
+- (BOOL) SIMBL_isLSBackgroundOnly
+{
+    return [[self SIMBL_objectForInfoDictionaryKey:@"LSBackgroundOnly"]boolValue];
+}
+
 @end
 
 /*
@@ -251,7 +261,10 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 	for (NSString* specifiedIdentifier in _applicationIdentifiers) {
 		SIMBLLogDebug(@"checking bundle %@ for identifier %@", [_bundle bundleIdentifier], specifiedIdentifier);
 		if ([specifiedIdentifier isEqualToString:appIdentifier] == YES ||
-			[specifiedIdentifier isEqualToString:@"*"] == YES) {
+            // wildcard targeting plugins should not be loaded into background apps or agent apps
+			([specifiedIdentifier isEqualToString:@"*"] == YES &&
+             [_appBundle SIMBL_isLSUIElement] == NO &&
+             [_appBundle SIMBL_isLSBackgroundOnly] == NO)) {
 			SIMBLLogDebug(@"load bundle %@", [_bundle bundleIdentifier]);
 			SIMBLLogNotice(@"The plugin %@ (%@) is using a deprecated interface to SIMBL. Please contact the appropriate developer (not the SIMBL author) and refer them to http://code.google.com/p/simbl/wiki/Tutorial", [_bundle bundlePath], [_bundle bundleIdentifier]);
 			return YES;
@@ -274,6 +287,13 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 	for (NSDictionary* targetAppProperties in _targetApplications) {
 		NSString* targetAppIdentifier = [targetAppProperties objectForKey:SIMBLBundleIdentifier];
 		SIMBLLogDebug(@"checking target identifier %@", targetAppIdentifier);
+        
+        // wildcard targeting plugins should not be loaded into background apps or agent apps
+        if ([targetAppIdentifier isEqualToString:@"*"] == YES &&
+            ([_appBundle SIMBL_isLSUIElement] == YES ||
+             [_appBundle SIMBL_isLSBackgroundOnly] == YES))
+            continue;
+        
 		if ([targetAppIdentifier isEqualToString:appIdentifier] == NO &&
             [targetAppIdentifier isEqualToString:@"*"] == NO)
 			continue;

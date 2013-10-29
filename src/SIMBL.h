@@ -17,6 +17,8 @@
 - (NSString*) _dt_version;
 - (NSString*) _dt_bundleVersion;
 - (NSString*) _dt_name;
+- (BOOL) SIMBL_isLSUIElement;
+- (BOOL) SIMBL_isLSBackgroundOnly;
 
 @end
 
