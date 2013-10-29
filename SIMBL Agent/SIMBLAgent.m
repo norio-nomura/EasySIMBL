@@ -58,9 +58,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     [defaults synchronize];
     
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-    [[workspace notificationCenter] addObserver:self
-                                       selector:@selector(applicationLaunched:)
-                                           name:NSWorkspaceDidLaunchApplicationNotification object:nil];
+    [workspace addObserver:self forKeyPath:@"runningApplications" options:NSKeyValueObservingOptionNew context:NULL];
     
     // inject into resumed applications
     for (NSRunningApplication *runningApp in [workspace runningApplications]) {
@@ -101,6 +99,10 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
         [object removeObserver:self forKeyPath:keyPath];
         
         [self injectContainerForApplication:(NSRunningApplication*)object enabled:NO];
+    } else if ([keyPath isEqualToString:@"runningApplications"]) {
+		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeNewKey]) {
+            [self injectSIMBL:app];
+		}
     }
 }
 
