@@ -98,7 +98,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
         [defaults addSuiteNamed:EasySIMBLSuiteBundleIdentifier];
     }
 	if ([defaults integerForKey:SIMBLPrefKeyLogLevel] <= level) {
-		NSLog(@"%@", message);
+		NSLog(@"#EasySIMBL %@", message);
 	}
 }
 
