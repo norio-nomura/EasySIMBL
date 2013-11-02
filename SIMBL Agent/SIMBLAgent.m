@@ -261,8 +261,6 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
             [[NSUserDefaults standardUserDefaults]setObject:[injectedSandboxBundleIdentifierSet allObjects]
                                                      forKey:kInjectedSandboxBundleIdentifiers];
             [[NSUserDefaults standardUserDefaults]synchronize];
-            
-            [[NSProcessInfo processInfo]disableSuddenTermination];
         }
     } else {
         BOOL (^hasSameBundleIdentifier)(id, NSUInteger, BOOL *) = ^(id obj, NSUInteger idx, BOOL *stop) {
@@ -282,8 +280,6 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
                 [[NSUserDefaults standardUserDefaults]setObject:[injectedSandboxBundleIdentifierSet allObjects]
                                                          forKey:kInjectedSandboxBundleIdentifiers];
                 [[NSUserDefaults standardUserDefaults]synchronize];
-                
-                [[NSProcessInfo processInfo]enableSuddenTermination];
             }
         }
     }
