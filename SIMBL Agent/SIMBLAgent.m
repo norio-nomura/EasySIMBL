@@ -58,7 +58,10 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     [defaults synchronize];
     
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-    [workspace addObserver:self forKeyPath:@"runningApplications" options:NSKeyValueObservingOptionNew context:NULL];
+    [workspace addObserver:self
+                forKeyPath:@"runningApplications"
+                   options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld
+                   context:NULL];
     
     // inject into resumed applications
     for (NSRunningApplication *runningApp in [workspace runningApplications]) {
@@ -100,18 +103,29 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
         
         [self injectContainerForApplication:(NSRunningApplication*)object enabled:NO];
     } else if ([keyPath isEqualToString:@"runningApplications"]) {
+        // for apps which will be terminated without called @"isFinishedLaunching"
+        static NSMutableSet *appsObservingFinishedLaunching = nil;
+        if (!appsObservingFinishedLaunching) {
+            appsObservingFinishedLaunching = [NSMutableSet set];
+        }
+        
 		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeNewKey]) {
             if (app.isFinishedLaunching) {
                 SIMBLLogDebug(@"runningApp %@ is already isFinishedLaunching", app);
                 [self injectSIMBL:app];
             } else {
                 [app addObserver:self forKeyPath:@"isFinishedLaunching" options:NSKeyValueObservingOptionNew context:NULL];
+                [appsObservingFinishedLaunching addObject:app];
             }
 		}
+		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeOldKey]) {
+            if ([appsObservingFinishedLaunching containsObject:app]) {
+                [app removeObserver:self forKeyPath:@"isFinishedLaunching"];
+                [appsObservingFinishedLaunching removeObject:app];
+            }
+        }
     } else if ([keyPath isEqualToString:@"isFinishedLaunching"]) {
         SIMBLLogDebug(@"runningApp %@ isFinishedLaunching.", object);
-        [object removeObserver:self forKeyPath:keyPath];
-        
         [self injectSIMBL:(NSRunningApplication*)object];
     }
 }
