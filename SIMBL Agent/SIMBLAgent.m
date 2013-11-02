@@ -101,8 +101,18 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
         [self injectContainerForApplication:(NSRunningApplication*)object enabled:NO];
     } else if ([keyPath isEqualToString:@"runningApplications"]) {
 		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeNewKey]) {
-            [self injectSIMBL:app];
+            if (app.isFinishedLaunching) {
+                SIMBLLogDebug(@"runningApp %@ is already isFinishedLaunching", app);
+                [self injectSIMBL:app];
+            } else {
+                [app addObserver:self forKeyPath:@"isFinishedLaunching" options:NSKeyValueObservingOptionNew context:NULL];
+            }
 		}
+    } else if ([keyPath isEqualToString:@"isFinishedLaunching"]) {
+        SIMBLLogDebug(@"runningApp %@ isFinishedLaunching.", object);
+        [object removeObserver:self forKeyPath:keyPath];
+        
+        [self injectSIMBL:(NSRunningApplication*)object];
     }
 }
 
