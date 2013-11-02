@@ -249,8 +249,8 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 - (void)injectContainerForApplication:(NSRunningApplication*)runningApp enabled:(BOOL)bEnabled;
 {
     NSString *identifier = [runningApp bundleIdentifier];
-    if ([self injectContainerBundleIdentifier:identifier enabled:bEnabled]) {
-        if (bEnabled) {
+    if (bEnabled) {
+        if ([self injectContainerBundleIdentifier:identifier enabled:YES]) {
             [runningApp addObserver:self forKeyPath:@"isTerminated" options:NSKeyValueObservingOptionNew context:NULL];
             [self.runningSandboxedApplications addObject:runningApp];
             
@@ -263,15 +263,18 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
             [[NSUserDefaults standardUserDefaults]synchronize];
             
             [[NSProcessInfo processInfo]disableSuddenTermination];
-        } else {
-            BOOL (^hasSameBundleIdentifier)(id, NSUInteger, BOOL *) = ^(id obj, NSUInteger idx, BOOL *stop) {
-                return *stop = [identifier isEqualToString:[(NSRunningApplication*)obj bundleIdentifier]];
-            };
-            
-            [self.runningSandboxedApplications removeObject:runningApp];
-            // check multi instance application
-            if (NSNotFound == [self.runningSandboxedApplications indexOfObjectWithOptions:NSEnumerationConcurrent
-                                                                              passingTest:hasSameBundleIdentifier]) {
+        }
+    } else {
+        BOOL (^hasSameBundleIdentifier)(id, NSUInteger, BOOL *) = ^(id obj, NSUInteger idx, BOOL *stop) {
+            return *stop = [identifier isEqualToString:[(NSRunningApplication*)obj bundleIdentifier]];
+        };
+        
+        [self.runningSandboxedApplications removeObject:runningApp];
+        // check multi instance application
+        if (NSNotFound == [self.runningSandboxedApplications indexOfObjectWithOptions:NSEnumerationConcurrent
+                                                                          passingTest:hasSameBundleIdentifier]) {
+            if ([self injectContainerBundleIdentifier:identifier enabled:NO]) {
+                
                 NSMutableSet *injectedSandboxBundleIdentifierSet = [NSMutableSet set];
                 for (NSRunningApplication *app in self.runningSandboxedApplications) {
                     [injectedSandboxBundleIdentifierSet addObject:[app bundleIdentifier]];
@@ -279,9 +282,9 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
                 [[NSUserDefaults standardUserDefaults]setObject:[injectedSandboxBundleIdentifierSet allObjects]
                                                          forKey:kInjectedSandboxBundleIdentifiers];
                 [[NSUserDefaults standardUserDefaults]synchronize];
+                
+                [[NSProcessInfo processInfo]enableSuddenTermination];
             }
-            
-            [[NSProcessInfo processInfo]enableSuddenTermination];
         }
     }
 }
