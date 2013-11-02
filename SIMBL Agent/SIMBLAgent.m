@@ -141,6 +141,10 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
 	[defaults synchronize];
     
+    if ([[NSRunningApplication currentApplication]isEqual:runningApp]) {
+        return;
+    }
+    
 	NSString* appName = [runningApp localizedName];
 	SIMBLLogInfo(@"%@ started", appName);
 	SIMBLLogDebug(@"app start notification: %@", runningApp);
