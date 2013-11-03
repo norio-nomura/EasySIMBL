@@ -86,13 +86,6 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     return nil;
 }
 
-#pragma mark NSWorkspaceDidLaunchApplicationNotification
-
-- (void) applicationLaunched:(NSNotification*)notification
-{
-	[self injectSIMBL:[[notification userInfo]objectForKey:NSWorkspaceApplicationKey]];
-}
-
 #pragma mark NSKeyValueObserving Protocol
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
