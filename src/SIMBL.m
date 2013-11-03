@@ -145,9 +145,11 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 + (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle
 {
 	for (NSString* path in [SIMBL pluginPathList]) {
-		BOOL bundleLoaded = [SIMBL shouldApplication:_appBundle loadBundleAtPath:path];
-		if (bundleLoaded)
+		BOOL bundleShouldInstallPlugins = [SIMBL shouldApplication:_appBundle loadBundleAtPath:path];
+		if (bundleShouldInstallPlugins) {
+			SIMBLLogDebug(@"should install plugin %@", path);
 			return YES;
+        }
 	}
 	return NO;
 }

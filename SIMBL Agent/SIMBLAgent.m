@@ -251,6 +251,8 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     NSString *identifier = [runningApp bundleIdentifier];
     if (bEnabled) {
         if ([self injectContainerBundleIdentifier:identifier enabled:YES]) {
+            SIMBLLogDebug(@"Start observing %@'s 'isTerminated'.", identifier);
+            
             [runningApp addObserver:self forKeyPath:@"isTerminated" options:NSKeyValueObservingOptionNew context:NULL];
             [self.runningSandboxedApplications addObject:runningApp];
             
@@ -309,6 +311,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
                 SIMBLLogNotice(@"linkItemAtPath error:%@",error);
             }
             bResult = YES;
+            SIMBLLogDebug(@"%@'s container has been injected.", bundleIdentifier);
         } else {
             if (![fileManager removeItemAtPath:containerScriptingAddtionsPath error:&error]) {
                 SIMBLLogNotice(@"removeItemAtPath error:%@",error);
@@ -320,6 +323,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
                 SIMBLLogNotice(@"removeItemAtPath error:%@",error);
             }
             bResult = YES;
+            SIMBLLogDebug(@"%@'s container has been uninjected.", bundleIdentifier);
         }
     }
     return bResult;
