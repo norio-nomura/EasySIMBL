@@ -159,18 +159,11 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 	// check to see if there are plugins to load
     NSURL *runningAppBundleURL = [runningApp bundleURL];
     NSBundle *runningAppBundle = runningAppBundleURL ? [NSBundle bundleWithURL:runningAppBundleURL] : nil;
-    // some runningApplications bundleURL returns nil whether bundle exists.
-    if (!runningAppBundle) {
-        SIMBLLogDebug(@"Try guessing bundle of %@", runningApp);
-        // try to get bundle by guessing bundleURL from executableURL
-        runningAppBundleURL = [runningApp executableURL];
-        if (runningAppBundleURL) {
-            for (int i = 0; i<3 && !runningAppBundle; i++) {
-                runningAppBundleURL = [runningAppBundleURL URLByDeletingLastPathComponent];
-                runningAppBundle = [NSBundle bundleWithURL:runningAppBundleURL];
-            }
-        }
-    }
+    // Some runningApplications bundleURL returns nil whether bundle exists.
+    // Guessing bundleURL from executableURL cause many problems.
+    // com.apple.security.pboxd retuns nil as bundleURL,
+    // but com.apple.security.pboxd run with caller process's mainBundle as com.apple.security.pboxd's mainBundle.
+    // It cause injecting plugins for other apps into com.apple.security.pboxd.
 	if (!runningAppBundle) {
         SIMBLLogDebug(@"Cant find bundle of %@", runningApp);
         return;
