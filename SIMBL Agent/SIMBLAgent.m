@@ -157,7 +157,26 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 	SIMBLLogDebug(@"app start notification: %@", runningApp);
     
 	// check to see if there are plugins to load
-	if (![runningApp bundleURL] || [SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[runningApp bundleURL]]] == NO) {
+    NSURL *runningAppBundleURL = [runningApp bundleURL];
+    NSBundle *runningAppBundle = runningAppBundleURL ? [NSBundle bundleWithURL:runningAppBundleURL] : nil;
+    // some runningApplications bundleURL returns nil whether bundle exists.
+    if (!runningAppBundle) {
+        SIMBLLogDebug(@"Try guessing bundle of %@", runningApp);
+        // try to get bundle by guessing bundleURL from executableURL
+        runningAppBundleURL = [runningApp executableURL];
+        if (runningAppBundleURL) {
+            for (int i = 0; i<3 && !runningAppBundle; i++) {
+                runningAppBundleURL = [runningAppBundleURL URLByDeletingLastPathComponent];
+                runningAppBundle = [NSBundle bundleWithURL:runningAppBundleURL];
+            }
+        }
+    }
+	if (!runningAppBundle) {
+        SIMBLLogDebug(@"Cant find bundle of %@", runningApp);
+        return;
+    }
+    if ([SIMBL shouldInstallPluginsIntoApplication:runningAppBundle] == NO) {
+        SIMBLLogDebug(@"No plugins match for %@", runningApp);
 		return;
 	}
 	
