@@ -15,17 +15,17 @@ How to install
 --------------
 1. Download [EasySIMBL-1.5.1.zip](http://github.com/norio-nomura/EasySIMBL/releases/download/EasySIMBL-1.5.1/EasySIMBL-1.5.1.zip) (2013/10/29 updated)
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
-3. Launch `EasySIMBL.app` and make check `Use SIMBL`, then quit `EasySIMBL.app`.
+3. Launch `EasySIMBL.app` and check `Use SIMBL`, then quit `EasySIMBL.app`.
 
 How to upgrade
 --------------
 1. Move older `EasySIMBL.app` into Trash.
 2. Move newer `EasySIMBL.app` into `/Applications` or `~/Applications`.
-3. Launch `EasySIMBL.app` and make check `Use SIMBL`, then quit `EasySIMBL.app`.
+3. Launch `EasySIMBL.app` and check `Use SIMBL`, then quit `EasySIMBL.app`.
 
 How to uninstall
 ----------------
-1. Launch `EasySIMBL.app` then clear check `Use SIMBL`, then quit `EasySIMBL.app`.
+1. Launch `EasySIMBL.app` then uncheck `Use SIMBL`, then quit `EasySIMBL.app`.
 2. Move `EasySIMBL.app` into Trash.
 
 Tested combinations of OS X and applications
