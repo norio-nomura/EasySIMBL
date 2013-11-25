@@ -253,7 +253,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * get this list of allowed application identifiers from the plugin's Info.plist
  * the special value * will cause any Cocoa app to load a bundle
  * if there is a match, this calls the main bundle's load method
- * @return YES if this bundle was loaded
+ * @return YES if this bundle should be loaded
  */
 + (BOOL) shouldApplication:(NSRunningApplication*)runningApp loadBundle:(NSBundle*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers
 {
@@ -279,7 +279,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * get this list of allowed target applications from the plugin's Info.plist
  * the special value * will cause any Cocoa app to load a bundle
  * if there is a match, this calls the main bundle's load method
- * @return YES if this bundle was loaded
+ * @return YES if this bundle should be loaded
  */
 + (BOOL) shouldApplication:(NSRunningApplication*)runningApp loadBundle:(NSBundle*)_bundle withTargetApplications:(NSArray*)_targetApplications
 {
