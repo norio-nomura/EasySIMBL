@@ -62,7 +62,7 @@
 
 + (void) logMessage:(NSString*)message atLevel:(int)level;
 + (void) installPlugins;
-+ (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle;
++ (BOOL) shouldInstallPluginsIntoApplication:(NSRunningApplication*)runningApp;
 
 + (NSString*)applicationSupportPath;
 

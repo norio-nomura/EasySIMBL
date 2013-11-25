@@ -152,10 +152,10 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 }
 
 
-+ (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle
++ (BOOL) shouldInstallPluginsIntoApplication:(NSRunningApplication*)runningApp;
 {
 	for (NSString* path in [SIMBL pluginPathList]) {
-		BOOL bundleShouldInstallPlugins = [SIMBL shouldApplication:_appBundle loadBundleAtPath:path];
+		BOOL bundleShouldInstallPlugins = [SIMBL shouldApplication:runningApp loadBundleAtPath:path];
 		if (bundleShouldInstallPlugins) {
 			SIMBLLogDebug(@"should install plugin %@", path);
 			return YES;
@@ -185,8 +185,8 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  */
 + (BOOL) shouldLoadBundleAtPath:(NSString*)_bundlePath
 {
-	NSBundle* appBundle = [NSBundle mainBundle];
-	return [SIMBL shouldApplication:appBundle loadBundleAtPath:_bundlePath];
+	NSRunningApplication *runningApp = [NSRunningApplication currentApplication];
+	return [SIMBL shouldApplication:runningApp loadBundleAtPath:_bundlePath];
 }
 
 
@@ -195,7 +195,7 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * the special value * will cause any Cocoa app to load a bundle
  * @return YES if this should be loaded
  */
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundleAtPath:(NSString*)_bundlePath
++ (BOOL) shouldApplication:(NSRunningApplication*)runningApp loadBundleAtPath:(NSString*)_bundlePath
 {
 	SIMBLLogDebug(@"checking bundle %@", _bundlePath);
 	_bundlePath = [_bundlePath stringByStandardizingPath];
@@ -214,12 +214,12 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
 	// this is the new way of specifying when to load a bundle
 	NSArray* targetApplications = [pluginBundle SIMBL_objectForInfoDictionaryKey:SIMBLTargetApplications];
 	if (targetApplications)
-		return [self shouldApplication:_appBundle loadBundle:pluginBundle withTargetApplications:targetApplications];
+		return [self shouldApplication:runningApp loadBundle:pluginBundle withTargetApplications:targetApplications];
 	
 	// fall back to the old method for older plugins - we should probably throw a depreaction warning
 	NSArray* applicationIdentifiers = [pluginBundle SIMBL_objectForInfoDictionaryKey:SIMBLApplicationIdentifier];
 	if (applicationIdentifiers)
-		return [self shouldApplication:_appBundle loadBundle:pluginBundle withApplicationIdentifiers:applicationIdentifiers];
+		return [self shouldApplication:runningApp loadBundle:pluginBundle withApplicationIdentifiers:applicationIdentifiers];
 	
 	return NO;
 }
@@ -255,16 +255,16 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * if there is a match, this calls the main bundle's load method
  * @return YES if this bundle was loaded
  */
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(NSBundle*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers
++ (BOOL) shouldApplication:(NSRunningApplication*)runningApp loadBundle:(NSBundle*)_bundle withApplicationIdentifiers:(NSArray*)_applicationIdentifiers
 {
-	NSString* appIdentifier = [_appBundle bundleIdentifier];
+	NSString* appIdentifier = [runningApp bundleIdentifier];
 	for (NSString* specifiedIdentifier in _applicationIdentifiers) {
 		SIMBLLogDebug(@"checking bundle %@ for identifier %@", [_bundle bundleIdentifier], specifiedIdentifier);
 		if ([specifiedIdentifier isEqualToString:appIdentifier] == YES ||
             // wildcard targeting plugins should not be loaded into background apps or agent apps
 			([specifiedIdentifier isEqualToString:@"*"] == YES &&
-             [_appBundle SIMBL_isLSUIElement] == NO &&
-             [_appBundle SIMBL_isLSBackgroundOnly] == NO)) {
+             runningApp.activationPolicy != NSApplicationActivationPolicyAccessory &&
+             runningApp.activationPolicy != NSApplicationActivationPolicyProhibited)) {
 			SIMBLLogDebug(@"load bundle %@", [_bundle bundleIdentifier]);
 			SIMBLLogNotice(@"The plugin %@ (%@) is using a deprecated interface to SIMBL. Please contact the appropriate developer (not the SIMBL author) and refer them to http://code.google.com/p/simbl/wiki/Tutorial", [_bundle bundlePath], [_bundle bundleIdentifier]);
 			return YES;
@@ -281,17 +281,19 @@ static NSMutableDictionary* loadedBundleIdentifiers = nil;
  * if there is a match, this calls the main bundle's load method
  * @return YES if this bundle was loaded
  */
-+ (BOOL) shouldApplication:(NSBundle*)_appBundle loadBundle:(NSBundle*)_bundle withTargetApplications:(NSArray*)_targetApplications
++ (BOOL) shouldApplication:(NSRunningApplication*)runningApp loadBundle:(NSBundle*)_bundle withTargetApplications:(NSArray*)_targetApplications
 {
-	NSString* appIdentifier = [_appBundle bundleIdentifier];
+	NSString* appIdentifier = [runningApp bundleIdentifier];
+    NSURL *bundleURL = runningApp.bundleURL;
+    NSBundle *_appBundle = bundleURL ? [NSBundle bundleWithURL:bundleURL] : nil;
 	for (NSDictionary* targetAppProperties in _targetApplications) {
 		NSString* targetAppIdentifier = [targetAppProperties objectForKey:SIMBLBundleIdentifier];
 		SIMBLLogDebug(@"checking target identifier %@", targetAppIdentifier);
         
         // wildcard targeting plugins should not be loaded into background apps or agent apps
         if ([targetAppIdentifier isEqualToString:@"*"] == YES &&
-            ([_appBundle SIMBL_isLSUIElement] == YES ||
-             [_appBundle SIMBL_isLSBackgroundOnly] == YES))
+            (runningApp.activationPolicy == NSApplicationActivationPolicyAccessory ||
+             runningApp.activationPolicy == NSApplicationActivationPolicyProhibited))
             continue;
         
 		if ([targetAppIdentifier isEqualToString:appIdentifier] == NO &&
