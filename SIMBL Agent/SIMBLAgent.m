@@ -58,9 +58,10 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     [defaults synchronize];
     
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-    [[workspace notificationCenter] addObserver:self
-                                       selector:@selector(applicationLaunched:)
-                                           name:NSWorkspaceDidLaunchApplicationNotification object:nil];
+    [workspace addObserver:self
+                forKeyPath:@"runningApplications"
+                   options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld
+                   context:NULL];
     
     // inject into resumed applications
     for (NSRunningApplication *runningApp in [workspace runningApplications]) {
@@ -85,13 +86,6 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     return nil;
 }
 
-#pragma mark NSWorkspaceDidLaunchApplicationNotification
-
-- (void) applicationLaunched:(NSNotification*)notification
-{
-	[self injectSIMBL:[[notification userInfo]objectForKey:NSWorkspaceApplicationKey]];
-}
-
 #pragma mark NSKeyValueObserving Protocol
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -101,6 +95,31 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
         [object removeObserver:self forKeyPath:keyPath];
         
         [self injectContainerForApplication:(NSRunningApplication*)object enabled:NO];
+    } else if ([keyPath isEqualToString:@"runningApplications"]) {
+        // for apps which will be terminated without called @"isFinishedLaunching"
+        static NSMutableSet *appsObservingFinishedLaunching = nil;
+        if (!appsObservingFinishedLaunching) {
+            appsObservingFinishedLaunching = [NSMutableSet set];
+        }
+        
+		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeNewKey]) {
+            if (app.isFinishedLaunching) {
+                SIMBLLogDebug(@"runningApp %@ is already isFinishedLaunching", app);
+                [self injectSIMBL:app];
+            } else {
+                [app addObserver:self forKeyPath:@"isFinishedLaunching" options:NSKeyValueObservingOptionNew context:NULL];
+                [appsObservingFinishedLaunching addObject:app];
+            }
+		}
+		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeOldKey]) {
+            if ([appsObservingFinishedLaunching containsObject:app]) {
+                [app removeObserver:self forKeyPath:@"isFinishedLaunching"];
+                [appsObservingFinishedLaunching removeObject:app];
+            }
+        }
+    } else if ([keyPath isEqualToString:@"isFinishedLaunching"]) {
+        SIMBLLogDebug(@"runningApp %@ isFinishedLaunching.", object);
+        [self injectSIMBL:(NSRunningApplication*)object];
     }
 }
 
@@ -129,12 +148,17 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
 	[defaults synchronize];
     
+    if ([[NSRunningApplication currentApplication]isEqual:runningApp]) {
+        return;
+    }
+    
 	NSString* appName = [runningApp localizedName];
 	SIMBLLogInfo(@"%@ started", appName);
 	SIMBLLogDebug(@"app start notification: %@", runningApp);
     
 	// check to see if there are plugins to load
-	if (![runningApp bundleURL] || [SIMBL shouldInstallPluginsIntoApplication:[NSBundle bundleWithURL:[runningApp bundleURL]]] == NO) {
+    if ([SIMBL shouldInstallPluginsIntoApplication:runningApp] == NO) {
+        SIMBLLogDebug(@"No plugins match for %@", runningApp);
 		return;
 	}
 	

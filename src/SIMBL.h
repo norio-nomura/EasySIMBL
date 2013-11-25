@@ -17,6 +17,8 @@
 - (NSString*) _dt_version;
 - (NSString*) _dt_bundleVersion;
 - (NSString*) _dt_name;
+- (BOOL) SIMBL_isLSUIElement;
+- (BOOL) SIMBL_isLSBackgroundOnly;
 
 @end
 
@@ -60,7 +62,7 @@
 
 + (void) logMessage:(NSString*)message atLevel:(int)level;
 + (void) installPlugins;
-+ (BOOL) shouldInstallPluginsIntoApplication:(NSBundle*)_appBundle;
++ (BOOL) shouldInstallPluginsIntoApplication:(NSRunningApplication*)runningApp;
 
 + (NSString*)applicationSupportPath;
 
