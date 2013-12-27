@@ -31,18 +31,18 @@ How to uninstall
 
 Tested combinations of OS X and applications
 --------------------------------------------
-- OS X 10.7.5 (11G63)
-	- Finder & [ColorfulSidebar 1.1.1](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
-	- [Echofon for Mac 1.8.0](https://itunes.apple.com/jp/app/echofon-for-twitter/id403830270?mt=12) & [SimblPluginsForEchofon-1.4](https://github.com/norio-nomura/SimblPluginsForEchofon)  (Some plugins are outdated.)
+- OS X 10.9.1 (13B42)
+	- Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
+	- Safari 7.0.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
+	- Dock & [BlackDock 0.8.0](http://cooviewerzoom.web.fc2.com/blackdock.html) (without InjectIntoDock.scpt)
+	- [Tweetbot for Mac 1.4(14001)](https://itunes.apple.com/jp/app/tweetbot-for-twitter/id557168941?mt=12) & [Twitter for Mac 3.0.1(3.0.1)](https://itunes.apple.com/jp/app/twitter/id409789998?mt=12) & [SyncTwitterClient 0.2](https://github.com/norio-nomura/SyncTwitterClient)
 - OS X 10.8.5 (12F45)
 	- Finder & [ColorfulSidebar 1.1.1](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
 	- Safari 6.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
 	- [Echofon for Mac 1.8.0](https://itunes.apple.com/jp/app/echofon-for-twitter/id403830270?mt=12) & [SimblPluginsForEchofon-1.4](https://github.com/norio-nomura/SimblPluginsForEchofon)  (Some plugins are outdated.)
-- OS X 10.9 (13A603)
+- OS X 10.7.5 (11G63)
 	- Finder & [ColorfulSidebar 1.1.1](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
-	- Safari 7.0 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
-	- [Echofon for Mac 1.8.0](https://itunes.apple.com/jp/app/echofon-for-twitter/id403830270?mt=12) & [SimblPluginsForEchofon-1.4](https://github.com/norio-nomura/SimblPluginsForEchofon) (Some plugins are outdated.)
-	- Dock & [BlackDock 0.8.0](http://cooviewerzoom.web.fc2.com/blackdock.html) (without InjectIntoDock.scpt)
+	- [Echofon for Mac 1.8.0](https://itunes.apple.com/jp/app/echofon-for-twitter/id403830270?mt=12) & [SimblPluginsForEchofon-1.4](https://github.com/norio-nomura/SimblPluginsForEchofon)  (Some plugins are outdated.)
 
 _PowerboxInjector is not compatible with EasySIMBL. Sorry, the reason exists on EasySIMBL side._
 
