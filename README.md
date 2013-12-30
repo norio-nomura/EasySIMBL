@@ -31,6 +31,10 @@ How to uninstall
 
 Tested combinations of OS X and applications
 --------------------------------------------
+**If you want to provide another plugin's information, please use a [wiki](https://github.com/norio-nomura/EasySIMBL/wiki/Reports-by-users). Thanks.**
+
+*This list includes combinations which I tested on my Mac.*
+
 - OS X 10.9.1 (13B42)
 	- Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
 	- Safari 7.0.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
