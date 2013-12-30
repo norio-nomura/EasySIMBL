@@ -36,7 +36,7 @@ Tested combinations of OS X and applications
 *This list includes combinations which I tested on my Mac.*
 
 - OS X 10.9.1 (13B42)
-	- Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
+	- Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector) OR [aFloat 2.4](https://github.com/millenomi/afloat/)
 	- Safari 7.0.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
 	- Dock & [BlackDock 0.8.0](http://cooviewerzoom.web.fc2.com/blackdock.html) (without InjectIntoDock.scpt)
 	- [Tweetbot for Mac 1.4(14001)](https://itunes.apple.com/jp/app/tweetbot-for-twitter/id557168941?mt=12) & [Twitter for Mac 3.0.1(3.0.1)](https://itunes.apple.com/jp/app/twitter/id409789998?mt=12) & [SyncTwitterClient 0.2](https://github.com/norio-nomura/SyncTwitterClient)
