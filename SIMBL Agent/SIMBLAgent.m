@@ -314,40 +314,42 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 - (BOOL)injectContainerBundleIdentifier:(NSString*)bundleIdentifier enabled:(BOOL)bEnabled;
 {
     BOOL bResult = NO;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
-    NSString *containerPath = [NSString pathWithComponents:[NSArray arrayWithObjects:[paths objectAtIndex:0], @"Containers", bundleIdentifier, nil]];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSError *error = nil;
-    BOOL isDirectory = NO;
-    if ([fileManager fileExistsAtPath:containerPath isDirectory:&isDirectory] && isDirectory) {
-        NSString *dataLibraryPath = @"Data/Library";
-        NSString *containerScriptingAddtionsPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, EasySIMBLScriptingAdditionsPathComponent, nil]];
-        NSString *containerApplicationSupportPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, EasySIMBLApplicationSupportPathComponent, nil]];
-        NSString *containerPlistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath,EasySIMBLPreferencesPathComponent, [EasySIMBLSuiteBundleIdentifier stringByAppendingPathExtension:EasySIMBLPreferencesExtension], nil]];
-        if (bEnabled) {
-            if (![fileManager linkItemAtPath:self.scriptingAdditionsPath toPath:containerScriptingAddtionsPath error:&error]) {
-                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
+    if ([bundleIdentifier length]>0) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory,  NSUserDomainMask, YES);
+        NSString *containerPath = [NSString pathWithComponents:[NSArray arrayWithObjects:[paths objectAtIndex:0], @"Containers", bundleIdentifier, nil]];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error = nil;
+        BOOL isDirectory = NO;
+        if ([fileManager fileExistsAtPath:containerPath isDirectory:&isDirectory] && isDirectory) {
+            NSString *dataLibraryPath = @"Data/Library";
+            NSString *containerScriptingAddtionsPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, EasySIMBLScriptingAdditionsPathComponent, nil]];
+            NSString *containerApplicationSupportPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath, EasySIMBLApplicationSupportPathComponent, nil]];
+            NSString *containerPlistPath = [NSString pathWithComponents:[NSArray arrayWithObjects:containerPath, dataLibraryPath,EasySIMBLPreferencesPathComponent, [EasySIMBLSuiteBundleIdentifier stringByAppendingPathExtension:EasySIMBLPreferencesExtension], nil]];
+            if (bEnabled) {
+                if (![fileManager linkItemAtPath:self.scriptingAdditionsPath toPath:containerScriptingAddtionsPath error:&error]) {
+                    SIMBLLogNotice(@"linkItemAtPath error:%@",error);
+                }
+                if (![fileManager linkItemAtPath:self.applicationSupportPath toPath:containerApplicationSupportPath error:&error]) {
+                    SIMBLLogNotice(@"linkItemAtPath error:%@",error);
+                }
+                if (![fileManager linkItemAtPath:self.plistPath toPath:containerPlistPath error:&error]) {
+                    SIMBLLogNotice(@"linkItemAtPath error:%@",error);
+                }
+                bResult = YES;
+                SIMBLLogDebug(@"%@'s container has been injected.", bundleIdentifier);
+            } else {
+                if (![fileManager removeItemAtPath:containerScriptingAddtionsPath error:&error]) {
+                    SIMBLLogNotice(@"removeItemAtPath error:%@",error);
+                }
+                if (![fileManager removeItemAtPath:containerApplicationSupportPath error:&error]) {
+                    SIMBLLogNotice(@"removeItemAtPath error:%@",error);
+                }
+                if (![fileManager removeItemAtPath:containerPlistPath error:&error]) {
+                    SIMBLLogNotice(@"removeItemAtPath error:%@",error);
+                }
+                bResult = YES;
+                SIMBLLogDebug(@"%@'s container has been uninjected.", bundleIdentifier);
             }
-            if (![fileManager linkItemAtPath:self.applicationSupportPath toPath:containerApplicationSupportPath error:&error]) {
-                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
-            }
-            if (![fileManager linkItemAtPath:self.plistPath toPath:containerPlistPath error:&error]) {
-                SIMBLLogNotice(@"linkItemAtPath error:%@",error);
-            }
-            bResult = YES;
-            SIMBLLogDebug(@"%@'s container has been injected.", bundleIdentifier);
-        } else {
-            if (![fileManager removeItemAtPath:containerScriptingAddtionsPath error:&error]) {
-                SIMBLLogNotice(@"removeItemAtPath error:%@",error);
-            }
-            if (![fileManager removeItemAtPath:containerApplicationSupportPath error:&error]) {
-                SIMBLLogNotice(@"removeItemAtPath error:%@",error);
-            }
-            if (![fileManager removeItemAtPath:containerPlistPath error:&error]) {
-                SIMBLLogNotice(@"removeItemAtPath error:%@",error);
-            }
-            bResult = YES;
-            SIMBLLogDebug(@"%@'s container has been uninjected.", bundleIdentifier);
         }
     }
     return bResult;
