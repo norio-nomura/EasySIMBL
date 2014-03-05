@@ -332,7 +332,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
                 if (![fileManager linkItemAtPath:self.applicationSupportPath toPath:containerApplicationSupportPath error:&error]) {
                     SIMBLLogNotice(@"linkItemAtPath error:%@",error);
                 }
-                if (![fileManager linkItemAtPath:self.plistPath toPath:containerPlistPath error:&error]) {
+                if ([fileManager fileExistsAtPath:self.plistPath] && ![fileManager linkItemAtPath:self.plistPath toPath:containerPlistPath error:&error]) {
                     SIMBLLogNotice(@"linkItemAtPath error:%@",error);
                 }
                 bResult = YES;
@@ -344,7 +344,7 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
                 if (![fileManager removeItemAtPath:containerApplicationSupportPath error:&error]) {
                     SIMBLLogNotice(@"removeItemAtPath error:%@",error);
                 }
-                if (![fileManager removeItemAtPath:containerPlistPath error:&error]) {
+                if ([fileManager fileExistsAtPath:containerPlistPath] && ![fileManager removeItemAtPath:containerPlistPath error:&error]) {
                     SIMBLLogNotice(@"removeItemAtPath error:%@",error);
                 }
                 bResult = YES;
