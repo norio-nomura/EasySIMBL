@@ -40,6 +40,7 @@ Tested combinations of OS X and applications
 	- Safari 7.0.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
 	- Dock & [BlackDock 0.8.0](http://cooviewerzoom.web.fc2.com/blackdock.html) (without InjectIntoDock.scpt)
 	- [Tweetbot for Mac 1.4(14001)](https://itunes.apple.com/jp/app/tweetbot-for-twitter/id557168941?mt=12) & [Twitter for Mac 3.0.1(3.0.1)](https://itunes.apple.com/jp/app/twitter/id409789998?mt=12) & [SyncTwitterClient 0.2](https://github.com/norio-nomura/SyncTwitterClient)
+	- 64-bit apps and [Afloat](https://github.com/vjt/afloat#readme)
 - OS X 10.8.5 (12F45)
 	- Finder & [ColorfulSidebar 1.1.1](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
 	- Safari 6.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
