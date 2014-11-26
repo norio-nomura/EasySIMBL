@@ -15,7 +15,7 @@ Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 
 How to install
 --------------
-1. Download [EasySIMBL-1.7.zip](http://github.com/norio-nomura/EasySIMBL/releases/download/EasySIMBL-1.7/EasySIMBL-1.7.zip) (2014/11/25 updated)
+1. Download [EasySIMBL-1.7.1.zip](http://github.com/norio-nomura/EasySIMBL/releases/download/EasySIMBL-1.7.1/EasySIMBL-1.7.1.zip) (2014/11/26 updated)
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
 3. Launch `EasySIMBL.app` and check `Use SIMBL`, then quit `EasySIMBL.app`.
 
@@ -37,20 +37,22 @@ Tested combinations of OS X and applications
 *This list includes combinations which I tested on my Mac.*
 
 - OS X 10.10.1 (14B25)
+    - Launchpad & [SpringboardSearchInRomanOnly 0.1](https://github.com/norio-nomura/SpringboardSearchInRomanOnly)
     - Maps 2.0 & [CopyLatLngOnMaps 0.1](https://github.com/norio-nomura/CopyLatLngOnMaps)
     - Safari 8.0 & [SafariStand 8.0.208](https://github.com/hetima/SafariStand)
     - Google Chrome 38.0.2125.122(32-bit) & [NoFavicons 1.2](https://github.com/michaelphines/NoFavicons)
     - [Twitter for Mac 3.1.0](https://itunes.apple.com/jp/app/twitter/id409789998?mt=12) & [SimblPluginsForTwitter 1.5](https://github.com/norio-nomura/SimblPluginsForTwitter)
 - OS X 10.9.5 (13F34)
     - Dock & [BlackDock 0.8.0](http://cooviewerzoom.web.fc2.com/blackdock.html) (without InjectIntoDock.scpt)
-	- Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
-	- Safari 7.0.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
+    - Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
+    - Launchpad & [SpringboardSearchInRomanOnly 0.1](https://github.com/norio-nomura/SpringboardSearchInRomanOnly)
+    - Safari 7.0.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
     - [Twitter for Mac 3.1.0](https://itunes.apple.com/jp/app/twitter/id409789998?mt=12) & [SimblPluginsForTwitter 1.5](https://github.com/norio-nomura/SimblPluginsForTwitter)
 - OS X 10.8.5 (12F45)
-	- Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
-	- Safari 6.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
+    - Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
+    - Safari 6.1 & [SafariStand 6.0.200](https://github.com/hetima/SafariStand)
 - OS X 10.7.5 (11G63)
-	- Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
+    - Finder & [ColorfulSidebar 1.1.2](http://cooviewerzoom.web.fc2.com/colorfulsidebar.html) (without PowerboxInjector)
 
 _PowerboxInjector is not compatible with EasySIMBL. Sorry, the reason exists on EasySIMBL side._
 
