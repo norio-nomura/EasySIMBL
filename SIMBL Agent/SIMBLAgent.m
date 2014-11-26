@@ -60,13 +60,8 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
     [workspace addObserver:self
                 forKeyPath:@"runningApplications"
-                   options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld
+                   options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld|NSKeyValueObservingOptionInitial
                    context:NULL];
-    
-    // inject into resumed applications
-    for (NSRunningApplication *runningApp in [workspace runningApplications]) {
-        [self injectSIMBL:runningApp];
-    }
     
     // previous minus running, it should be uninject
     [previousInjectedSandboxBundleIdentifierSet minusSet:[NSMutableSet setWithArray:[defaults objectForKey:kInjectedSandboxBundleIdentifiers]]];
@@ -90,34 +85,19 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"isTerminated"]) {
-        SIMBLLogDebug(@"runningApp %@ isTerminated.", object);
-        [object removeObserver:self forKeyPath:keyPath];
-        
-        [self injectContainerForApplication:(NSRunningApplication*)object enabled:NO];
-    } else if ([keyPath isEqualToString:@"runningApplications"]) {
-        // for apps which will be terminated without called @"isFinishedLaunching"
-        static NSMutableSet *appsObservingFinishedLaunching = nil;
-        if (!appsObservingFinishedLaunching) {
-            appsObservingFinishedLaunching = [NSMutableSet set];
-        }
-        
+    if ([keyPath isEqualToString:@"runningApplications"]) {
 		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeNewKey]) {
-            if (app.isFinishedLaunching) {
-                SIMBLLogDebug(@"runningApp %@ is already isFinishedLaunching", app);
-                [self injectSIMBL:app];
-            } else {
-                [app addObserver:self forKeyPath:@"isFinishedLaunching" options:NSKeyValueObservingOptionNew context:NULL];
-                [appsObservingFinishedLaunching addObject:app];
-            }
+            SIMBLLogDebug(@"add runningApp %@.", app);
+            [app addObserver:self forKeyPath:@"isFinishedLaunching" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionInitial context:NULL];
 		}
 		for (NSRunningApplication *app in [change objectForKey:NSKeyValueChangeOldKey]) {
-            if ([appsObservingFinishedLaunching containsObject:app]) {
-                [app removeObserver:self forKeyPath:@"isFinishedLaunching"];
-                [appsObservingFinishedLaunching removeObject:app];
+            SIMBLLogDebug(@"remove runningApp %@.", app);
+            [app removeObserver:self forKeyPath:@"isFinishedLaunching"];
+            if ([self.runningSandboxedApplications containsObject:app]) {
+                [self injectContainerForApplication:app enabled:NO];
             }
         }
-    } else if ([keyPath isEqualToString:@"isFinishedLaunching"]) {
+    } else if ([keyPath isEqualToString:@"isFinishedLaunching"] && [change[NSKeyValueChangeNewKey]boolValue]) {
         SIMBLLogDebug(@"runningApp %@ isFinishedLaunching.", object);
         [self injectSIMBL:(NSRunningApplication*)object];
     }
@@ -275,9 +255,6 @@ NSString * const kInjectedSandboxBundleIdentifiers = @"InjectedSandboxBundleIden
     NSString *identifier = [runningApp bundleIdentifier];
     if (bEnabled) {
         if ([self injectContainerBundleIdentifier:identifier enabled:YES]) {
-            SIMBLLogDebug(@"Start observing %@'s 'isTerminated'.", identifier);
-            
-            [runningApp addObserver:self forKeyPath:@"isTerminated" options:NSKeyValueObservingOptionNew context:NULL];
             [self.runningSandboxedApplications addObject:runningApp];
             
             NSMutableSet *injectedSandboxBundleIdentifierSet = [NSMutableSet set];
