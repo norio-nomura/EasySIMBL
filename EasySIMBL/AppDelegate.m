@@ -81,6 +81,24 @@
     } else {
         [self.useSIMBL setEnabled:NO];
     }
+    // enable/disable agent via command line
+    NSNumber *enableCommand = [[NSUserDefaults standardUserDefaults] objectForKey:@"enabled"];
+    if(enableCommand != nil && self.useSIMBL.enabled) { // checks existence of "enabled" parameter
+        BOOL wantsEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"enabled"]; // BOOL can be 0/1, YES/NO, Y/N,...
+        BOOL isEnabled = self.useSIMBL.state == NSOnState;
+        if(wantsEnabled != isEnabled) { // toggle
+            SIMBLLogInfo(@"'SIMBL Agent' toggling state via command line.");
+            self.useSIMBL.state = wantsEnabled ? NSOnState : NSOffState;
+            [self toggleUseSIMBL:nil];
+        } else {
+            SIMBLLogInfo(@"'SIMBL Agent' is already in the desired state.");
+        }
+        // also check for command "quit"
+        BOOL quitCommand = [[NSUserDefaults standardUserDefaults] boolForKey:@"quit"];
+        if(quitCommand) {
+            [[NSApplication sharedApplication] terminate:self];
+        }
+    }
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
