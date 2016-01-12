@@ -1,5 +1,9 @@
-EasySIMBL![EasySIMBL](https://github.com/norio-nomura/EasySIMBL/raw/master/icon.iconset/icon_32x32@2x.png)
+EasySIMBL![EasySIMBL](https://github.com/norio-nomura/EasySIMBL/raw/master/icon.iconset/icon_32x32@2x.png)  (30 June 2012 – 30 June 2015)
 ====================================
+Notes for using [SIMBL-0.9.9](http://www.culater.net/software/SIMBL/SIMBL.php) on OS X 10.11 is [here](https://github.com/norio-nomura/EasySIMBL/issues/26#issuecomment-117028426).
+---------------------------
+
+
 Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 ---------------------------
 - **OS X 10.7, 10.8, 10.9, 10.10**
@@ -15,7 +19,7 @@ Changes from [original SIMBL](http://www.culater.net/software/SIMBL/SIMBL.php)
 
 How to install
 --------------
-1. Download [EasySIMBL-1.7.1.zip](http://github.com/norio-nomura/EasySIMBL/releases/download/EasySIMBL-1.7.1/EasySIMBL-1.7.1.zip) (2014/11/26 updated)
+1. ~~Download [EasySIMBL-1.7.1.zip](http://github.com/norio-nomura/EasySIMBL/releases/download/EasySIMBL-1.7.1/EasySIMBL-1.7.1.zip) (2014/11/26 updated)~~
 2. Extract and move `EasySIMBL.app` into `/Applications` or `~/Applications`.
 3. Launch `EasySIMBL.app` and check `Use SIMBL`, then quit `EasySIMBL.app`.
 
