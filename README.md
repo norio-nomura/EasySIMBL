@@ -60,6 +60,26 @@ Tested combinations of OS X and applications
 
 _PowerboxInjector is not compatible with EasySIMBL. Sorry, the reason exists on EasySIMBL side._
 
+Automated install/uninstall
+---------------------------
+
+You can enable/disable SIMBL by running the application with some command line parameters:
+
+To enable:
+```
+$ /Applications/EasySIMBL.app/Contents/MacOS/EasySIMBL -enabled YES
+```
+
+To disable:
+```
+$ /Applications/EasySIMBL.app/Contents/MacOS/EasySIMBL -enabled NO
+```
+
+You can also quit EasySIMBL immediately after doing the change: 
+```
+$ /Applications/EasySIMBL.app/Contents/MacOS/EasySIMBL -enabled YES -quit YES
+```
+
 License
 -------
 	Copyright 2003-2009, Mike Solomon <mas63@cornell.edu>
